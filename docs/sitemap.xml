@@ -2,28 +2,84 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://blog.hancher.top/categories/</loc>
-    <lastmod>2021-09-09T17:17:48+08:00</lastmod>
-  </url><url>
-    <loc>https://blog.hancher.top/post/first-post/</loc>
-    <lastmod>2021-09-09T17:17:48+08:00</lastmod>
-  </url><url>
     <loc>https://blog.hancher.top/</loc>
-    <lastmod>2021-09-09T17:17:48+08:00</lastmod>
+    <lastmod>2021-08-20T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://blog.hancher.top/post/</loc>
-    <lastmod>2021-09-09T17:17:48+08:00</lastmod>
+    <lastmod>2021-08-20T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://blog.hancher.top/tags/tag_name1/</loc>
-    <lastmod>2021-09-09T17:17:48+08:00</lastmod>
+    <loc>https://blog.hancher.top/post/notices/</loc>
+    <lastmod>2021-08-20T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://blog.hancher.top/tags/tag_name2/</loc>
-    <lastmod>2021-09-09T17:17:48+08:00</lastmod>
+    <loc>https://blog.hancher.top/archives/</loc>
+    <lastmod>2019-05-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.hancher.top/categories/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.hancher.top/tags/css/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.hancher.top/tags/destacado/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.hancher.top/tags/featured/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.hancher.top/post/markdown-syntax.pt/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.hancher.top/tags/html/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.hancher.top/tags/markdown/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.hancher.top/post/markdown-syntax/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.hancher.top/categories/sintaxe/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.hancher.top/categories/syntax/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://blog.hancher.top/tags/</loc>
-    <lastmod>2021-09-09T17:17:48+08:00</lastmod>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://blog.hancher.top/categories/technology/</loc>
-    <lastmod>2021-09-09T17:17:48+08:00</lastmod>
+    <loc>https://blog.hancher.top/tags/temas/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.hancher.top/categories/temas/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.hancher.top/tags/themes/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.hancher.top/categories/themes/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.hancher.top/post/placeholder-text/</loc>
+    <lastmod>2019-03-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.hancher.top/tags/text/</loc>
+    <lastmod>2019-03-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.hancher.top/post/math-typesetting/</loc>
+    <lastmod>2019-03-08T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.hancher.top/tags/emoji/</loc>
+    <lastmod>2019-03-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.hancher.top/post/emoji-support/</loc>
+    <lastmod>2019-03-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.hancher.top/about/</loc>
+    <lastmod>2019-02-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.hancher.top/about.pt/</loc>
+    <lastmod>2019-02-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://blog.hancher.top/tags/index/</loc>
   </url>
 </urlset>
