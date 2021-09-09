@@ -1,8 +1,14 @@
 # hancher's blog
 
-## 启动
+## 常用操作
+本地启动
 ```bash
-hugo -D server
+hugo server -D
+```
+打包
+```bash
+hugo -D
+
 ```
 
 ## 包结构
