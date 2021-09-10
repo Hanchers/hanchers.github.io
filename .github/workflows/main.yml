@@ -15,6 +15,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
@@ -38,8 +39,15 @@ jobs:
       - name: build content
         run: hugo -D --minify -v
 
+      - name: deploy to website
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          external_repository: Hanchers/hanchers.github.io
+          publish_branch: website
+          publish_dir: ./docs
+
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
-          echo 编译构建博客成功,
-          echo compile and build blog success.
+          echo 构建部署博客成功！
+          echo deploy blog success！
