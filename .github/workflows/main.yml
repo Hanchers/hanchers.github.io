@@ -39,10 +39,12 @@ jobs:
       - name: build content
         run: hugo -D --minify -v
 
+      # see https://github.com/peaceiris/actions-gh-pages
       - name: deploy to website
         uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
         with:
-          external_repository: Hanchers/hanchers.github.io
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: website
           publish_dir: ./docs
 
