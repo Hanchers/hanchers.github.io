@@ -1,5 +1,0 @@
-baseURL = 'https://blog.hancher.top/'
-languageCode = 'en-us'
-title = 'My New Hugo Site'
-theme = 'hugo-clarity'
-publishdir = "docs"
