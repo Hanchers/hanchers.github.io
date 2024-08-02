@@ -1,0 +1,852 @@
+<!DOCTYPE html><html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /><title>存储XSS问题与修复 &mdash; 寒澈笔记</title><link rel="stylesheet" href="https://www.hancher.top/assets/vendor/primer-css/css/primer.css"><link rel="stylesheet" href="https://www.hancher.top/assets/css/components/collection.css"><link rel="stylesheet" href="https://www.hancher.top/assets/css/components/repo-card.css"><link rel="stylesheet" href="https://www.hancher.top/assets/css/sections/repo-list.css"><link rel="stylesheet" href="https://www.hancher.top/assets/css/components/boxed-group.css"><link rel="stylesheet" href="https://www.hancher.top/assets/css/globals/common.css"><link rel="stylesheet" href="https://www.hancher.top/assets/css/globals/responsive.css"><link rel="stylesheet" href="https://www.hancher.top/assets/css/posts/index.css"><link rel="stylesheet" href="https://www.hancher.top/assets/vendor/octicons/octicons/octicons.css"><link rel="stylesheet" href="https://www.hancher.top/assets/css/theme/github.css"><link rel="canonical" href="https://www.hancher.top/2023/06/21/reactive_xss/"><link rel="alternate" type="application/atom+xml" title="寒澈笔记" href="https://www.hancher.top"><link rel="shortcut icon" href="https://www.hancher.top/favicon.ico"><meta property="og:title" content="存储XSS问题与修复"><meta name="keywords" content="安全, nginx"><meta name="og:keywords" content="安全, nginx"><meta name="description" content="安全漏洞描述恶意攻击者往Web页面里插入恶意Script代码，当用户浏览该页时，嵌入其中Web里面的Script代码会被执行，进而窃取到管理员用户权限等。"><meta name="og:description" content="安全漏洞描述恶意攻击者往Web页面里插入恶意Script代码，当用户浏览该页时，嵌入其中Web里面的Script代码会被执行，进而窃取到管理员用户权限等。"><meta property="og:url" content="https://www.hancher.top/2023/06/21/reactive_xss/"><meta property="og:site_name" content="寒澈笔记"><meta property="og:type" content="article"><meta property="og:locale" content="zh_CN" /><meta property="article:published_time" content="2023-06-21"> <script src="https://www.hancher.top/assets/vendor/jquery/dist/jquery.min.js"></script> <script src="https://www.hancher.top/assets/js/jquery-ui.js"></script> <script src="https://www.hancher.top/assets/js/main.js"></script> <script async src="https://www.googletagmanager.com/gtag/js?id=G-4VZMWRNQQE"></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-4VZMWRNQQE'); </script> <script> var _hmt = _hmt || []; (function() { var hm = document.createElement("script"); hm.src = "https://hm.baidu.com/hm.js?255889a39686581da013e7c8a40eef7c"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hm, s); })(); </script></head><body class="" data-mz=""><header class="site-header"><div class="container"><h1><a href="https://www.hancher.top/" title="寒澈笔记"><span class="octicon octicon-mark-github"></span> 寒澈笔记</a></h1><button class="collapsed mobile-visible" type="button" onclick="toggleMenu();"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button><nav class="site-header-nav" role="navigation"> <a href="https://www.hancher.top/" class=" site-header-nav-item" target="" title="首页">首页</a> <a href="https://www.hancher.top/categories/" class=" site-header-nav-item" target="" title="分类">分类</a> <a href="https://www.hancher.top/archives/" class=" site-header-nav-item" target="" title="归档">归档</a> <a href="https://www.hancher.top/wiki/" class=" site-header-nav-item" target="" title="收藏">收藏</a> <a href="https://www.hancher.top/about/" class=" site-header-nav-item" target="" title="关于">关于</a></nav></div></header><section class="collection-head small geopattern" data-pattern-id="存储XSS问题与修复"><div class="container"><div class="columns"><div class="column three-fourths"><div class="collection-title"><h1 class="collection-header">存储XSS问题与修复</h1><div class="collection-info"> <span class="meta-info"> <span class="octicon octicon-calendar"></span> 2023/06/21 </span> <span class="meta-info"> <span class="octicon octicon-file-directory"></span> <a href="https://www.hancher.top/categories/#安全" title="安全">安全</a> </span> <span class="meta-info"> <span class="octicon octicon-clock"></span> 共 18759 字，约 54 分钟 </span></div></div></div><div class="column one-fourth mobile-hidden"><div class="collection-title"></div></div></div></div></section><section class="container content"><div class="columns"><div class="column three-fourths" ><article class="article-content markdown-body"><h2 id="安全漏洞描述">安全漏洞描述</h2><p>恶意攻击者往Web页面里插入恶意Script代码，当用户浏览该页时，嵌入其中Web里面的Script代码会被执行，进而窃取到管理员用户权限等。</p><h2 id="风险等级高">风险等级：高</h2><h2 id="解决办法">解决办法</h2><ol><li>对网页端输入的特殊字符过滤 建议过滤的关键字为： [1]’单引号<br /> [2]”双引号<br /> [3]/斜杠<br /> [4]反斜杠<br /> [5])括号<br /> [6];分号<br /> [7][中括号<br /> [8]&lt;尖括号<br /> [9]&gt;尖括号<br /> 比如把&lt;编码为&lt;</li><li>在cookie中加入httponly属性可以在一定程度上保护用户的cookie，减少出现XSS时损失。</li></ol><p>一段简易的字符过滤程序</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function htmlEncode(str){
+    var s = "";
+    if (str.length == 0) return "";
+    s = str.replace(/&amp;/g, "&amp;");
+    s = s.replace(//g, "&gt;");
+    s = s.replace(/ /g, " ");
+    s = s.replace(/\'/g, "'");
+    s = s.replace(/\"/g, """);
+    return s;
+}
+</code></pre></div></div><ol><li>在服务端增加filter过滤 <br /> 通过自定义filter的方式拦截过滤请求</li></ol><div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">XssFilter</span> <span class="kd">implements</span> <span class="nc">Filter</span>
+<span class="o">{</span>
+    <span class="cm">/**
+     * 排除链接
+     */</span>
+    <span class="kd">public</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">excludes</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">(</span><span class="nc">FilterConfig</span> <span class="n">filterConfig</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">ServletException</span>
+    <span class="o">{</span>
+        <span class="nc">String</span> <span class="n">tempExcludes</span> <span class="o">=</span> <span class="n">filterConfig</span><span class="o">.</span><span class="na">getInitParameter</span><span class="o">(</span><span class="s">"excludes"</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="nc">StringUtils</span><span class="o">.</span><span class="na">isNotEmpty</span><span class="o">(</span><span class="n">tempExcludes</span><span class="o">))</span>
+        <span class="o">{</span>
+            <span class="nc">String</span><span class="o">[]</span> <span class="n">url</span> <span class="o">=</span> <span class="n">tempExcludes</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">","</span><span class="o">);</span>
+            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">url</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">url</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+            <span class="o">{</span>
+                <span class="n">excludes</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">url</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">doFilter</span><span class="o">(</span><span class="nc">ServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="nc">ServletResponse</span> <span class="n">response</span><span class="o">,</span> <span class="nc">FilterChain</span> <span class="n">chain</span><span class="o">)</span>
+            <span class="kd">throws</span> <span class="nc">IOException</span><span class="o">,</span> <span class="nc">ServletException</span>
+    <span class="o">{</span>
+        <span class="nc">HttpServletRequest</span> <span class="n">req</span> <span class="o">=</span> <span class="o">(</span><span class="nc">HttpServletRequest</span><span class="o">)</span> <span class="n">request</span><span class="o">;</span>
+        <span class="nc">HttpServletResponse</span> <span class="n">resp</span> <span class="o">=</span> <span class="o">(</span><span class="nc">HttpServletResponse</span><span class="o">)</span> <span class="n">response</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">handleExcludeURL</span><span class="o">(</span><span class="n">req</span><span class="o">,</span> <span class="n">resp</span><span class="o">))</span>
+        <span class="o">{</span>
+            <span class="n">chain</span><span class="o">.</span><span class="na">doFilter</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="n">response</span><span class="o">);</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="nc">XssHttpServletRequestWrapper</span> <span class="n">xssRequest</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">XssHttpServletRequestWrapper</span><span class="o">((</span><span class="nc">HttpServletRequest</span><span class="o">)</span> <span class="n">request</span><span class="o">);</span>
+        <span class="n">chain</span><span class="o">.</span><span class="na">doFilter</span><span class="o">(</span><span class="n">xssRequest</span><span class="o">,</span> <span class="n">response</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">handleExcludeURL</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="nc">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="nc">String</span> <span class="n">url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="na">getServletPath</span><span class="o">();</span>
+        <span class="nc">String</span> <span class="n">method</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="na">getMethod</span><span class="o">();</span>
+        <span class="c1">// GET DELETE 不过滤</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">method</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="nc">HttpMethod</span><span class="o">.</span><span class="na">GET</span><span class="o">.</span><span class="na">matches</span><span class="o">(</span><span class="n">method</span><span class="o">)</span> <span class="o">||</span> <span class="nc">HttpMethod</span><span class="o">.</span><span class="na">DELETE</span><span class="o">.</span><span class="na">matches</span><span class="o">(</span><span class="n">method</span><span class="o">))</span>
+        <span class="o">{</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="nc">StringUtils</span><span class="o">.</span><span class="na">matches</span><span class="o">(</span><span class="n">url</span><span class="o">,</span> <span class="n">excludes</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div><p>在wrapper里过滤参数</p><div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">XssHttpServletRequestWrapper</span> <span class="kd">extends</span> <span class="nc">HttpServletRequestWrapper</span>
+<span class="o">{</span>
+    <span class="cm">/**
+     * @param request
+     */</span>
+    <span class="kd">public</span> <span class="nf">XssHttpServletRequestWrapper</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">request</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">String</span><span class="o">[]</span> <span class="nf">getParameterValues</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="nc">String</span><span class="o">[]</span> <span class="n">values</span> <span class="o">=</span> <span class="kd">super</span><span class="o">.</span><span class="na">getParameterValues</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">values</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+        <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">length</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+            <span class="nc">String</span><span class="o">[]</span> <span class="n">escapesValues</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">String</span><span class="o">[</span><span class="n">length</span><span class="o">];</span>
+            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+            <span class="o">{</span>
+                <span class="c1">// 防xss攻击和过滤前后空格</span>
+                <span class="n">escapesValues</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="nc">EscapeUtil</span><span class="o">.</span><span class="na">clean</span><span class="o">(</span><span class="n">values</span><span class="o">[</span><span class="n">i</span><span class="o">]).</span><span class="na">trim</span><span class="o">();</span>
+            <span class="o">}</span>
+            <span class="k">return</span> <span class="n">escapesValues</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">getParameterValues</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">ServletInputStream</span> <span class="nf">getInputStream</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">IOException</span>
+    <span class="o">{</span>
+        <span class="c1">// 非json类型，直接返回</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">isJsonRequest</span><span class="o">())</span>
+        <span class="o">{</span>
+            <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">();</span>
+        <span class="o">}</span>
+
+        <span class="c1">// 为空，直接返回</span>
+        <span class="nc">String</span> <span class="n">json</span> <span class="o">=</span> <span class="nc">IOUtils</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="kd">super</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">(),</span> <span class="s">"utf-8"</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="nc">StringUtils</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="n">json</span><span class="o">))</span>
+        <span class="o">{</span>
+            <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">();</span>
+        <span class="o">}</span>
+
+        <span class="c1">// xss过滤</span>
+        <span class="n">json</span> <span class="o">=</span> <span class="nc">EscapeUtil</span><span class="o">.</span><span class="na">clean</span><span class="o">(</span><span class="n">json</span><span class="o">).</span><span class="na">trim</span><span class="o">();</span>
+        <span class="kt">byte</span><span class="o">[]</span> <span class="n">jsonBytes</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="na">getBytes</span><span class="o">(</span><span class="s">"utf-8"</span><span class="o">);</span>
+        <span class="kd">final</span> <span class="nc">ByteArrayInputStream</span> <span class="n">bis</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ByteArrayInputStream</span><span class="o">(</span><span class="n">jsonBytes</span><span class="o">);</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">ServletInputStream</span><span class="o">()</span>
+        <span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isFinished</span><span class="o">()</span>
+            <span class="o">{</span>
+                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="o">}</span>
+
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isReady</span><span class="o">()</span>
+            <span class="o">{</span>
+                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="o">}</span>
+
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">int</span> <span class="nf">available</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">IOException</span>
+            <span class="o">{</span>
+                <span class="k">return</span> <span class="n">jsonBytes</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+            <span class="o">}</span>
+
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setReadListener</span><span class="o">(</span><span class="nc">ReadListener</span> <span class="n">readListener</span><span class="o">)</span>
+            <span class="o">{</span>
+            <span class="o">}</span>
+
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">int</span> <span class="nf">read</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">IOException</span>
+            <span class="o">{</span>
+                <span class="k">return</span> <span class="n">bis</span><span class="o">.</span><span class="na">read</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">};</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+     * 是否是Json请求
+     * 
+     * @param request
+     */</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isJsonRequest</span><span class="o">()</span>
+    <span class="o">{</span>
+        <span class="nc">String</span> <span class="n">header</span> <span class="o">=</span> <span class="kd">super</span><span class="o">.</span><span class="na">getHeader</span><span class="o">(</span><span class="nc">HttpHeaders</span><span class="o">.</span><span class="na">CONTENT_TYPE</span><span class="o">);</span>
+        <span class="k">return</span> <span class="nc">StringUtils</span><span class="o">.</span><span class="na">startsWithIgnoreCase</span><span class="o">(</span><span class="n">header</span><span class="o">,</span> <span class="nc">MediaType</span><span class="o">.</span><span class="na">APPLICATION_JSON_VALUE</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div><p>xssUtil</p><div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">EscapeUtil</span>
+<span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">String</span> <span class="no">RE_HTML_MARK</span> <span class="o">=</span> <span class="s">"(&lt;[^&lt;]*?&gt;)|(&lt;[\\s]*?/[^&lt;]*?&gt;)|(&lt;[^&lt;]*?/[\\s]*?&gt;)"</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">char</span><span class="o">[][]</span> <span class="no">TEXT</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="o">[</span><span class="mi">64</span><span class="o">][];</span>
+
+    <span class="kd">static</span>
+    <span class="o">{</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">64</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+        <span class="o">{</span>
+            <span class="no">TEXT</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="o">[]</span> <span class="o">{</span> <span class="o">(</span><span class="kt">char</span><span class="o">)</span> <span class="n">i</span> <span class="o">};</span>
+        <span class="o">}</span>
+
+        <span class="c1">// special HTML characters</span>
+        <span class="no">TEXT</span><span class="o">[</span><span class="sc">'\''</span><span class="o">]</span> <span class="o">=</span> <span class="s">"&amp;#039;"</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">();</span> <span class="c1">// 单引号</span>
+        <span class="no">TEXT</span><span class="o">[</span><span class="sc">'"'</span><span class="o">]</span> <span class="o">=</span> <span class="s">"&amp;#34;"</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">();</span> <span class="c1">// 双引号</span>
+        <span class="no">TEXT</span><span class="o">[</span><span class="sc">'&amp;'</span><span class="o">]</span> <span class="o">=</span> <span class="s">"&amp;#38;"</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">();</span> <span class="c1">// &amp;符</span>
+        <span class="no">TEXT</span><span class="o">[</span><span class="sc">'&lt;'</span><span class="o">]</span> <span class="o">=</span> <span class="s">"&amp;#60;"</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">();</span> <span class="c1">// 小于号</span>
+        <span class="no">TEXT</span><span class="o">[</span><span class="sc">'&gt;'</span><span class="o">]</span> <span class="o">=</span> <span class="s">"&amp;#62;"</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">();</span> <span class="c1">// 大于号</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+     * 转义文本中的HTML字符为安全的字符
+     * 
+     * @param text 被转义的文本
+     * @return 转义后的文本
+     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="nc">String</span> <span class="nf">escape</span><span class="o">(</span><span class="nc">String</span> <span class="n">text</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="k">return</span> <span class="nf">encode</span><span class="o">(</span><span class="n">text</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+     * 还原被转义的HTML特殊字符
+     * 
+     * @param content 包含转义符的HTML内容
+     * @return 转换后的字符串
+     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="nc">String</span> <span class="nf">unescape</span><span class="o">(</span><span class="nc">String</span> <span class="n">content</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="k">return</span> <span class="nf">decode</span><span class="o">(</span><span class="n">content</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+     * 清除所有HTML标签，但是不删除标签内的内容
+     * 
+     * @param content 文本
+     * @return 清除标签后的文本
+     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="nc">String</span> <span class="nf">clean</span><span class="o">(</span><span class="nc">String</span> <span class="n">content</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">HTMLFilter</span><span class="o">().</span><span class="na">filter</span><span class="o">(</span><span class="n">content</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+     * Escape编码
+     * 
+     * @param text 被编码的文本
+     * @return 编码后的字符
+     */</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="nc">String</span> <span class="nf">encode</span><span class="o">(</span><span class="nc">String</span> <span class="n">text</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="nc">StringUtils</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="n">text</span><span class="o">))</span>
+        <span class="o">{</span>
+            <span class="k">return</span> <span class="nc">StringUtils</span><span class="o">.</span><span class="na">EMPTY</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">final</span> <span class="nc">StringBuilder</span> <span class="n">tmp</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringBuilder</span><span class="o">(</span><span class="n">text</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">*</span> <span class="mi">6</span><span class="o">);</span>
+        <span class="kt">char</span> <span class="n">c</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">text</span><span class="o">.</span><span class="na">length</span><span class="o">();</span> <span class="n">i</span><span class="o">++)</span>
+        <span class="o">{</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">c</span> <span class="o">&lt;</span> <span class="mi">256</span><span class="o">)</span>
+            <span class="o">{</span>
+                <span class="n">tmp</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">"%"</span><span class="o">);</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">c</span> <span class="o">&lt;</span> <span class="mi">16</span><span class="o">)</span>
+                <span class="o">{</span>
+                    <span class="n">tmp</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">"0"</span><span class="o">);</span>
+                <span class="o">}</span>
+                <span class="n">tmp</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="nc">Integer</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">c</span><span class="o">,</span> <span class="mi">16</span><span class="o">));</span>
+            <span class="o">}</span>
+            <span class="k">else</span>
+            <span class="o">{</span>
+                <span class="n">tmp</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">"%u"</span><span class="o">);</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">c</span> <span class="o">&lt;=</span> <span class="mh">0xfff</span><span class="o">)</span>
+                <span class="o">{</span>
+                    <span class="c1">// issue#I49JU8@Gitee</span>
+                    <span class="n">tmp</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">"0"</span><span class="o">);</span>
+                <span class="o">}</span>
+                <span class="n">tmp</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="nc">Integer</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">c</span><span class="o">,</span> <span class="mi">16</span><span class="o">));</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">tmp</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+     * Escape解码
+     * 
+     * @param content 被转义的内容
+     * @return 解码后的字符串
+     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="nc">String</span> <span class="nf">decode</span><span class="o">(</span><span class="nc">String</span> <span class="n">content</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="nc">StringUtils</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="n">content</span><span class="o">))</span>
+        <span class="o">{</span>
+            <span class="k">return</span> <span class="n">content</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="nc">StringBuilder</span> <span class="n">tmp</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringBuilder</span><span class="o">(</span><span class="n">content</span><span class="o">.</span><span class="na">length</span><span class="o">());</span>
+        <span class="kt">int</span> <span class="n">lastPos</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">char</span> <span class="n">ch</span><span class="o">;</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">lastPos</span> <span class="o">&lt;</span> <span class="n">content</span><span class="o">.</span><span class="na">length</span><span class="o">())</span>
+        <span class="o">{</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="na">indexOf</span><span class="o">(</span><span class="s">"%"</span><span class="o">,</span> <span class="n">lastPos</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">pos</span> <span class="o">==</span> <span class="n">lastPos</span><span class="o">)</span>
+            <span class="o">{</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">content</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span> <span class="o">==</span> <span class="sc">'u'</span><span class="o">)</span>
+                <span class="o">{</span>
+                    <span class="n">ch</span> <span class="o">=</span> <span class="o">(</span><span class="kt">char</span><span class="o">)</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">content</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">pos</span> <span class="o">+</span> <span class="mi">2</span><span class="o">,</span> <span class="n">pos</span> <span class="o">+</span> <span class="mi">6</span><span class="o">),</span> <span class="mi">16</span><span class="o">);</span>
+                    <span class="n">tmp</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">ch</span><span class="o">);</span>
+                    <span class="n">lastPos</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">+</span> <span class="mi">6</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="k">else</span>
+                <span class="o">{</span>
+                    <span class="n">ch</span> <span class="o">=</span> <span class="o">(</span><span class="kt">char</span><span class="o">)</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">content</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">pos</span> <span class="o">+</span> <span class="mi">3</span><span class="o">),</span> <span class="mi">16</span><span class="o">);</span>
+                    <span class="n">tmp</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">ch</span><span class="o">);</span>
+                    <span class="n">lastPos</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">+</span> <span class="mi">3</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="k">else</span>
+            <span class="o">{</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">pos</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span>
+                <span class="o">{</span>
+                    <span class="n">tmp</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">content</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">lastPos</span><span class="o">));</span>
+                    <span class="n">lastPos</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>
+                <span class="o">}</span>
+                <span class="k">else</span>
+                <span class="o">{</span>
+                    <span class="n">tmp</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">content</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">lastPos</span><span class="o">,</span> <span class="n">pos</span><span class="o">));</span>
+                    <span class="n">lastPos</span> <span class="o">=</span> <span class="n">pos</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">tmp</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+
+<span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">HTMLFilter</span>
+<span class="o">{</span>
+   <span class="cm">/**
+    * regex flag union representing /si modifiers in php
+    **/</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="no">REGEX_FLAGS_SI</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">CASE_INSENSITIVE</span> <span class="o">|</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">DOTALL</span><span class="o">;</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Pattern</span> <span class="no">P_COMMENTS</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"&lt;!--(.*?)--&gt;"</span><span class="o">,</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">DOTALL</span><span class="o">);</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Pattern</span> <span class="no">P_COMMENT</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"^!--(.*)--$"</span><span class="o">,</span> <span class="no">REGEX_FLAGS_SI</span><span class="o">);</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Pattern</span> <span class="no">P_TAGS</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"&lt;(.*?)&gt;"</span><span class="o">,</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">DOTALL</span><span class="o">);</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Pattern</span> <span class="no">P_END_TAG</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"^/([a-z0-9]+)"</span><span class="o">,</span> <span class="no">REGEX_FLAGS_SI</span><span class="o">);</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Pattern</span> <span class="no">P_START_TAG</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"^([a-z0-9]+)(.*?)(/?)$"</span><span class="o">,</span> <span class="no">REGEX_FLAGS_SI</span><span class="o">);</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Pattern</span> <span class="no">P_QUOTED_ATTRIBUTES</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"([a-z0-9]+)=([\"'])(.*?)\\2"</span><span class="o">,</span> <span class="no">REGEX_FLAGS_SI</span><span class="o">);</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Pattern</span> <span class="no">P_UNQUOTED_ATTRIBUTES</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"([a-z0-9]+)(=)([^\"\\s']+)"</span><span class="o">,</span> <span class="no">REGEX_FLAGS_SI</span><span class="o">);</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Pattern</span> <span class="no">P_PROTOCOL</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"^([^:]+):"</span><span class="o">,</span> <span class="no">REGEX_FLAGS_SI</span><span class="o">);</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Pattern</span> <span class="no">P_ENTITY</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"&amp;#(\\d+);?"</span><span class="o">);</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Pattern</span> <span class="no">P_ENTITY_UNICODE</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"&amp;#x([0-9a-f]+);?"</span><span class="o">);</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Pattern</span> <span class="no">P_ENCODE</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"%([0-9a-f]{2});?"</span><span class="o">);</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Pattern</span> <span class="no">P_VALID_ENTITIES</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"&amp;([^&amp;;]*)(?=(;|&amp;|$))"</span><span class="o">);</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Pattern</span> <span class="no">P_VALID_QUOTES</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"(&gt;|^)([^&lt;]+?)(&lt;|$)"</span><span class="o">,</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">DOTALL</span><span class="o">);</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Pattern</span> <span class="no">P_END_ARROW</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"^&gt;"</span><span class="o">);</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Pattern</span> <span class="no">P_BODY_TO_END</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"&lt;([^&gt;]*?)(?=&lt;|$)"</span><span class="o">);</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Pattern</span> <span class="no">P_XML_CONTENT</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"(^|&gt;)([^&lt;]*?)(?=&gt;)"</span><span class="o">);</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Pattern</span> <span class="no">P_STRAY_LEFT_ARROW</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"&lt;([^&gt;]*?)(?=&lt;|$)"</span><span class="o">);</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Pattern</span> <span class="no">P_STRAY_RIGHT_ARROW</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"(^|&gt;)([^&lt;]*?)(?=&gt;)"</span><span class="o">);</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Pattern</span> <span class="no">P_AMP</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"&amp;"</span><span class="o">);</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Pattern</span> <span class="no">P_QUOTE</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"\""</span><span class="o">);</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Pattern</span> <span class="no">P_LEFT_ARROW</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"&lt;"</span><span class="o">);</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Pattern</span> <span class="no">P_RIGHT_ARROW</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"&gt;"</span><span class="o">);</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Pattern</span> <span class="no">P_BOTH_ARROWS</span> <span class="o">=</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"&lt;&gt;"</span><span class="o">);</span>
+
+   <span class="c1">// @xxx could grow large... maybe use sesat's ReferenceMap</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">ConcurrentMap</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Pattern</span><span class="o">&gt;</span> <span class="no">P_REMOVE_PAIR_BLANKS</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ConcurrentHashMap</span><span class="o">&lt;&gt;();</span>
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">ConcurrentMap</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Pattern</span><span class="o">&gt;</span> <span class="no">P_REMOVE_SELF_BLANKS</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ConcurrentHashMap</span><span class="o">&lt;&gt;();</span>
+
+   <span class="cm">/**
+    * set of allowed html elements, along with allowed attributes for each element
+    **/</span>
+   <span class="kd">private</span> <span class="kd">final</span> <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;&gt;</span> <span class="n">vAllowed</span><span class="o">;</span>
+   <span class="cm">/**
+    * counts of open tags for each (allowable) html element
+    **/</span>
+   <span class="kd">private</span> <span class="kd">final</span> <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">vTagCounts</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashMap</span><span class="o">&lt;&gt;();</span>
+
+   <span class="cm">/**
+    * html elements which must always be self-closing (e.g. "&lt;img /&gt;")
+    **/</span>
+   <span class="kd">private</span> <span class="kd">final</span> <span class="nc">String</span><span class="o">[]</span> <span class="n">vSelfClosingTags</span><span class="o">;</span>
+   <span class="cm">/**
+    * html elements which must always have separate opening and closing tags (e.g. "&lt;b&gt;&lt;/b&gt;")
+    **/</span>
+   <span class="kd">private</span> <span class="kd">final</span> <span class="nc">String</span><span class="o">[]</span> <span class="n">vNeedClosingTags</span><span class="o">;</span>
+   <span class="cm">/**
+    * set of disallowed html elements
+    **/</span>
+   <span class="kd">private</span> <span class="kd">final</span> <span class="nc">String</span><span class="o">[]</span> <span class="n">vDisallowed</span><span class="o">;</span>
+   <span class="cm">/**
+    * attributes which should be checked for valid protocols
+    **/</span>
+   <span class="kd">private</span> <span class="kd">final</span> <span class="nc">String</span><span class="o">[]</span> <span class="n">vProtocolAtts</span><span class="o">;</span>
+   <span class="cm">/**
+    * allowed protocols
+    **/</span>
+   <span class="kd">private</span> <span class="kd">final</span> <span class="nc">String</span><span class="o">[]</span> <span class="n">vAllowedProtocols</span><span class="o">;</span>
+   <span class="cm">/**
+    * tags which should be removed if they contain no content (e.g. "&lt;b&gt;&lt;/b&gt;" or "&lt;b /&gt;")
+    **/</span>
+   <span class="kd">private</span> <span class="kd">final</span> <span class="nc">String</span><span class="o">[]</span> <span class="n">vRemoveBlanks</span><span class="o">;</span>
+   <span class="cm">/**
+    * entities allowed within html markup
+    **/</span>
+   <span class="kd">private</span> <span class="kd">final</span> <span class="nc">String</span><span class="o">[]</span> <span class="n">vAllowedEntities</span><span class="o">;</span>
+   <span class="cm">/**
+    * flag determining whether comments are allowed in input String.
+    */</span>
+   <span class="kd">private</span> <span class="kd">final</span> <span class="kt">boolean</span> <span class="n">stripComment</span><span class="o">;</span>
+   <span class="kd">private</span> <span class="kd">final</span> <span class="kt">boolean</span> <span class="n">encodeQuotes</span><span class="o">;</span>
+   <span class="cm">/**
+    * flag determining whether to try to make tags when presented with "unbalanced" angle brackets (e.g. "&lt;b text &lt;/b&gt;"
+    * becomes "&lt;b&gt; text &lt;/b&gt;"). If set to false, unbalanced angle brackets will be html escaped.
+    */</span>
+   <span class="kd">private</span> <span class="kd">final</span> <span class="kt">boolean</span> <span class="n">alwaysMakeTags</span><span class="o">;</span>
+
+   <span class="cm">/**
+    * Default constructor.
+    */</span>
+   <span class="kd">public</span> <span class="nf">HTMLFilter</span><span class="o">()</span>
+   <span class="o">{</span>
+      <span class="n">vAllowed</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashMap</span><span class="o">&lt;&gt;();</span>
+
+      <span class="kd">final</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">a_atts</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+      <span class="n">a_atts</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"href"</span><span class="o">);</span>
+      <span class="n">a_atts</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"target"</span><span class="o">);</span>
+      <span class="n">vAllowed</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"a"</span><span class="o">,</span> <span class="n">a_atts</span><span class="o">);</span>
+
+      <span class="kd">final</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">img_atts</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+      <span class="n">img_atts</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"src"</span><span class="o">);</span>
+      <span class="n">img_atts</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"width"</span><span class="o">);</span>
+      <span class="n">img_atts</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"height"</span><span class="o">);</span>
+      <span class="n">img_atts</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"alt"</span><span class="o">);</span>
+      <span class="n">vAllowed</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"img"</span><span class="o">,</span> <span class="n">img_atts</span><span class="o">);</span>
+
+      <span class="kd">final</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">no_atts</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+      <span class="n">vAllowed</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"b"</span><span class="o">,</span> <span class="n">no_atts</span><span class="o">);</span>
+      <span class="n">vAllowed</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"strong"</span><span class="o">,</span> <span class="n">no_atts</span><span class="o">);</span>
+      <span class="n">vAllowed</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"i"</span><span class="o">,</span> <span class="n">no_atts</span><span class="o">);</span>
+      <span class="n">vAllowed</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"em"</span><span class="o">,</span> <span class="n">no_atts</span><span class="o">);</span>
+
+      <span class="n">vSelfClosingTags</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">String</span><span class="o">[]</span> <span class="o">{</span> <span class="s">"img"</span> <span class="o">};</span>
+      <span class="n">vNeedClosingTags</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">String</span><span class="o">[]</span> <span class="o">{</span> <span class="s">"a"</span><span class="o">,</span> <span class="s">"b"</span><span class="o">,</span> <span class="s">"strong"</span><span class="o">,</span> <span class="s">"i"</span><span class="o">,</span> <span class="s">"em"</span> <span class="o">};</span>
+      <span class="n">vDisallowed</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">String</span><span class="o">[]</span> <span class="o">{};</span>
+      <span class="n">vAllowedProtocols</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">String</span><span class="o">[]</span> <span class="o">{</span> <span class="s">"http"</span><span class="o">,</span> <span class="s">"mailto"</span><span class="o">,</span> <span class="s">"https"</span> <span class="o">};</span> <span class="c1">// no ftp.</span>
+      <span class="n">vProtocolAtts</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">String</span><span class="o">[]</span> <span class="o">{</span> <span class="s">"src"</span><span class="o">,</span> <span class="s">"href"</span> <span class="o">};</span>
+      <span class="n">vRemoveBlanks</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">String</span><span class="o">[]</span> <span class="o">{</span> <span class="s">"a"</span><span class="o">,</span> <span class="s">"b"</span><span class="o">,</span> <span class="s">"strong"</span><span class="o">,</span> <span class="s">"i"</span><span class="o">,</span> <span class="s">"em"</span> <span class="o">};</span>
+      <span class="n">vAllowedEntities</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">String</span><span class="o">[]</span> <span class="o">{</span> <span class="s">"amp"</span><span class="o">,</span> <span class="s">"gt"</span><span class="o">,</span> <span class="s">"lt"</span><span class="o">,</span> <span class="s">"quot"</span> <span class="o">};</span>
+      <span class="n">stripComment</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+      <span class="n">encodeQuotes</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+      <span class="n">alwaysMakeTags</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+   <span class="o">}</span>
+
+   <span class="cm">/**
+    * Map-parameter configurable constructor.
+    *
+    * @param conf map containing configuration. keys match field names.
+    */</span>
+   <span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"unchecked"</span><span class="o">)</span>
+   <span class="kd">public</span> <span class="nf">HTMLFilter</span><span class="o">(</span><span class="kd">final</span> <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Object</span><span class="o">&gt;</span> <span class="n">conf</span><span class="o">)</span>
+   <span class="o">{</span>
+
+      <span class="k">assert</span> <span class="n">conf</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="s">"vAllowed"</span><span class="o">)</span> <span class="o">:</span> <span class="s">"configuration requires vAllowed"</span><span class="o">;</span>
+      <span class="k">assert</span> <span class="n">conf</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="s">"vSelfClosingTags"</span><span class="o">)</span> <span class="o">:</span> <span class="s">"configuration requires vSelfClosingTags"</span><span class="o">;</span>
+      <span class="k">assert</span> <span class="n">conf</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="s">"vNeedClosingTags"</span><span class="o">)</span> <span class="o">:</span> <span class="s">"configuration requires vNeedClosingTags"</span><span class="o">;</span>
+      <span class="k">assert</span> <span class="n">conf</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="s">"vDisallowed"</span><span class="o">)</span> <span class="o">:</span> <span class="s">"configuration requires vDisallowed"</span><span class="o">;</span>
+      <span class="k">assert</span> <span class="n">conf</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="s">"vAllowedProtocols"</span><span class="o">)</span> <span class="o">:</span> <span class="s">"configuration requires vAllowedProtocols"</span><span class="o">;</span>
+      <span class="k">assert</span> <span class="n">conf</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="s">"vProtocolAtts"</span><span class="o">)</span> <span class="o">:</span> <span class="s">"configuration requires vProtocolAtts"</span><span class="o">;</span>
+      <span class="k">assert</span> <span class="n">conf</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="s">"vRemoveBlanks"</span><span class="o">)</span> <span class="o">:</span> <span class="s">"configuration requires vRemoveBlanks"</span><span class="o">;</span>
+      <span class="k">assert</span> <span class="n">conf</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="s">"vAllowedEntities"</span><span class="o">)</span> <span class="o">:</span> <span class="s">"configuration requires vAllowedEntities"</span><span class="o">;</span>
+
+      <span class="n">vAllowed</span> <span class="o">=</span> <span class="nc">Collections</span><span class="o">.</span><span class="na">unmodifiableMap</span><span class="o">((</span><span class="nc">HashMap</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;&gt;)</span> <span class="n">conf</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"vAllowed"</span><span class="o">));</span>
+      <span class="n">vSelfClosingTags</span> <span class="o">=</span> <span class="o">(</span><span class="nc">String</span><span class="o">[])</span> <span class="n">conf</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"vSelfClosingTags"</span><span class="o">);</span>
+      <span class="n">vNeedClosingTags</span> <span class="o">=</span> <span class="o">(</span><span class="nc">String</span><span class="o">[])</span> <span class="n">conf</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"vNeedClosingTags"</span><span class="o">);</span>
+      <span class="n">vDisallowed</span> <span class="o">=</span> <span class="o">(</span><span class="nc">String</span><span class="o">[])</span> <span class="n">conf</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"vDisallowed"</span><span class="o">);</span>
+      <span class="n">vAllowedProtocols</span> <span class="o">=</span> <span class="o">(</span><span class="nc">String</span><span class="o">[])</span> <span class="n">conf</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"vAllowedProtocols"</span><span class="o">);</span>
+      <span class="n">vProtocolAtts</span> <span class="o">=</span> <span class="o">(</span><span class="nc">String</span><span class="o">[])</span> <span class="n">conf</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"vProtocolAtts"</span><span class="o">);</span>
+      <span class="n">vRemoveBlanks</span> <span class="o">=</span> <span class="o">(</span><span class="nc">String</span><span class="o">[])</span> <span class="n">conf</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"vRemoveBlanks"</span><span class="o">);</span>
+      <span class="n">vAllowedEntities</span> <span class="o">=</span> <span class="o">(</span><span class="nc">String</span><span class="o">[])</span> <span class="n">conf</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"vAllowedEntities"</span><span class="o">);</span>
+      <span class="n">stripComment</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="s">"stripComment"</span><span class="o">)</span> <span class="o">?</span> <span class="o">(</span><span class="nc">Boolean</span><span class="o">)</span> <span class="n">conf</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"stripComment"</span><span class="o">)</span> <span class="o">:</span> <span class="kc">true</span><span class="o">;</span>
+      <span class="n">encodeQuotes</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="s">"encodeQuotes"</span><span class="o">)</span> <span class="o">?</span> <span class="o">(</span><span class="nc">Boolean</span><span class="o">)</span> <span class="n">conf</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"encodeQuotes"</span><span class="o">)</span> <span class="o">:</span> <span class="kc">true</span><span class="o">;</span>
+      <span class="n">alwaysMakeTags</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="s">"alwaysMakeTags"</span><span class="o">)</span> <span class="o">?</span> <span class="o">(</span><span class="nc">Boolean</span><span class="o">)</span> <span class="n">conf</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"alwaysMakeTags"</span><span class="o">)</span> <span class="o">:</span> <span class="kc">true</span><span class="o">;</span>
+   <span class="o">}</span>
+
+   <span class="kd">private</span> <span class="kt">void</span> <span class="nf">reset</span><span class="o">()</span>
+   <span class="o">{</span>
+      <span class="n">vTagCounts</span><span class="o">.</span><span class="na">clear</span><span class="o">();</span>
+   <span class="o">}</span>
+
+   <span class="c1">// ---------------------------------------------------------------</span>
+   <span class="c1">// my versions of some PHP library functions</span>
+   <span class="kd">public</span> <span class="kd">static</span> <span class="nc">String</span> <span class="nf">chr</span><span class="o">(</span><span class="kd">final</span> <span class="kt">int</span> <span class="n">decimal</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="k">return</span> <span class="nc">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">((</span><span class="kt">char</span><span class="o">)</span> <span class="n">decimal</span><span class="o">);</span>
+   <span class="o">}</span>
+
+   <span class="kd">public</span> <span class="kd">static</span> <span class="nc">String</span> <span class="nf">htmlSpecialChars</span><span class="o">(</span><span class="kd">final</span> <span class="nc">String</span> <span class="n">s</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="nc">String</span> <span class="n">result</span> <span class="o">=</span> <span class="n">s</span><span class="o">;</span>
+      <span class="n">result</span> <span class="o">=</span> <span class="n">regexReplace</span><span class="o">(</span><span class="no">P_AMP</span><span class="o">,</span> <span class="s">"&amp;amp;"</span><span class="o">,</span> <span class="n">result</span><span class="o">);</span>
+      <span class="n">result</span> <span class="o">=</span> <span class="n">regexReplace</span><span class="o">(</span><span class="no">P_QUOTE</span><span class="o">,</span> <span class="s">"&amp;quot;"</span><span class="o">,</span> <span class="n">result</span><span class="o">);</span>
+      <span class="n">result</span> <span class="o">=</span> <span class="n">regexReplace</span><span class="o">(</span><span class="no">P_LEFT_ARROW</span><span class="o">,</span> <span class="s">"&amp;lt;"</span><span class="o">,</span> <span class="n">result</span><span class="o">);</span>
+      <span class="n">result</span> <span class="o">=</span> <span class="n">regexReplace</span><span class="o">(</span><span class="no">P_RIGHT_ARROW</span><span class="o">,</span> <span class="s">"&amp;gt;"</span><span class="o">,</span> <span class="n">result</span><span class="o">);</span>
+      <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+   <span class="o">}</span>
+
+   <span class="c1">// ---------------------------------------------------------------</span>
+
+   <span class="cm">/**
+    * given a user submitted input String, filter out any invalid or restricted html.
+    *
+    * @param input text (i.e. submitted by a user) than may contain html
+    * @return "clean" version of input, with only valid, whitelisted html elements allowed
+    */</span>
+   <span class="kd">public</span> <span class="nc">String</span> <span class="nf">filter</span><span class="o">(</span><span class="kd">final</span> <span class="nc">String</span> <span class="n">input</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="n">reset</span><span class="o">();</span>
+      <span class="nc">String</span> <span class="n">s</span> <span class="o">=</span> <span class="n">input</span><span class="o">;</span>
+
+      <span class="n">s</span> <span class="o">=</span> <span class="n">escapeComments</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+
+      <span class="n">s</span> <span class="o">=</span> <span class="n">balanceHTML</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+
+      <span class="n">s</span> <span class="o">=</span> <span class="n">checkTags</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+
+      <span class="n">s</span> <span class="o">=</span> <span class="n">processRemoveBlanks</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+
+      <span class="c1">// s = validateEntities(s);</span>
+
+      <span class="k">return</span> <span class="n">s</span><span class="o">;</span>
+   <span class="o">}</span>
+
+   <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isAlwaysMakeTags</span><span class="o">()</span>
+   <span class="o">{</span>
+      <span class="k">return</span> <span class="n">alwaysMakeTags</span><span class="o">;</span>
+   <span class="o">}</span>
+
+   <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isStripComments</span><span class="o">()</span>
+   <span class="o">{</span>
+      <span class="k">return</span> <span class="n">stripComment</span><span class="o">;</span>
+   <span class="o">}</span>
+
+   <span class="kd">private</span> <span class="nc">String</span> <span class="nf">escapeComments</span><span class="o">(</span><span class="kd">final</span> <span class="nc">String</span> <span class="n">s</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="kd">final</span> <span class="nc">Matcher</span> <span class="n">m</span> <span class="o">=</span> <span class="no">P_COMMENTS</span><span class="o">.</span><span class="na">matcher</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+      <span class="kd">final</span> <span class="nc">StringBuffer</span> <span class="n">buf</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringBuffer</span><span class="o">();</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="na">find</span><span class="o">())</span>
+      <span class="o">{</span>
+         <span class="kd">final</span> <span class="nc">String</span> <span class="n">match</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span> <span class="c1">// (.*?)</span>
+         <span class="n">m</span><span class="o">.</span><span class="na">appendReplacement</span><span class="o">(</span><span class="n">buf</span><span class="o">,</span> <span class="nc">Matcher</span><span class="o">.</span><span class="na">quoteReplacement</span><span class="o">(</span><span class="s">"&lt;!--"</span> <span class="o">+</span> <span class="n">htmlSpecialChars</span><span class="o">(</span><span class="n">match</span><span class="o">)</span> <span class="o">+</span> <span class="s">"--&gt;"</span><span class="o">));</span>
+      <span class="o">}</span>
+      <span class="n">m</span><span class="o">.</span><span class="na">appendTail</span><span class="o">(</span><span class="n">buf</span><span class="o">);</span>
+
+      <span class="k">return</span> <span class="n">buf</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+   <span class="o">}</span>
+
+   <span class="kd">private</span> <span class="nc">String</span> <span class="nf">balanceHTML</span><span class="o">(</span><span class="nc">String</span> <span class="n">s</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">alwaysMakeTags</span><span class="o">)</span>
+      <span class="o">{</span>
+         <span class="c1">//</span>
+         <span class="c1">// try and form html</span>
+         <span class="c1">//</span>
+         <span class="n">s</span> <span class="o">=</span> <span class="n">regexReplace</span><span class="o">(</span><span class="no">P_END_ARROW</span><span class="o">,</span> <span class="s">""</span><span class="o">,</span> <span class="n">s</span><span class="o">);</span>
+         <span class="c1">// 不追加结束标签</span>
+         <span class="n">s</span> <span class="o">=</span> <span class="n">regexReplace</span><span class="o">(</span><span class="no">P_BODY_TO_END</span><span class="o">,</span> <span class="s">"&lt;$1&gt;"</span><span class="o">,</span> <span class="n">s</span><span class="o">);</span>
+         <span class="n">s</span> <span class="o">=</span> <span class="n">regexReplace</span><span class="o">(</span><span class="no">P_XML_CONTENT</span><span class="o">,</span> <span class="s">"$1&lt;$2"</span><span class="o">,</span> <span class="n">s</span><span class="o">);</span>
+
+      <span class="o">}</span>
+      <span class="k">else</span>
+      <span class="o">{</span>
+         <span class="c1">//</span>
+         <span class="c1">// escape stray brackets</span>
+         <span class="c1">//</span>
+         <span class="n">s</span> <span class="o">=</span> <span class="n">regexReplace</span><span class="o">(</span><span class="no">P_STRAY_LEFT_ARROW</span><span class="o">,</span> <span class="s">"&amp;lt;$1"</span><span class="o">,</span> <span class="n">s</span><span class="o">);</span>
+         <span class="n">s</span> <span class="o">=</span> <span class="n">regexReplace</span><span class="o">(</span><span class="no">P_STRAY_RIGHT_ARROW</span><span class="o">,</span> <span class="s">"$1$2&amp;gt;&lt;"</span><span class="o">,</span> <span class="n">s</span><span class="o">);</span>
+
+         <span class="c1">//</span>
+         <span class="c1">// the last regexp causes '&lt;&gt;' entities to appear</span>
+         <span class="c1">// (we need to do a lookahead assertion so that the last bracket can</span>
+         <span class="c1">// be used in the next pass of the regexp)</span>
+         <span class="c1">//</span>
+         <span class="n">s</span> <span class="o">=</span> <span class="n">regexReplace</span><span class="o">(</span><span class="no">P_BOTH_ARROWS</span><span class="o">,</span> <span class="s">""</span><span class="o">,</span> <span class="n">s</span><span class="o">);</span>
+      <span class="o">}</span>
+
+      <span class="k">return</span> <span class="n">s</span><span class="o">;</span>
+   <span class="o">}</span>
+
+   <span class="kd">private</span> <span class="nc">String</span> <span class="nf">checkTags</span><span class="o">(</span><span class="nc">String</span> <span class="n">s</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="nc">Matcher</span> <span class="n">m</span> <span class="o">=</span> <span class="no">P_TAGS</span><span class="o">.</span><span class="na">matcher</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+
+      <span class="kd">final</span> <span class="nc">StringBuffer</span> <span class="n">buf</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringBuffer</span><span class="o">();</span>
+      <span class="k">while</span> <span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="na">find</span><span class="o">())</span>
+      <span class="o">{</span>
+         <span class="nc">String</span> <span class="n">replaceStr</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+         <span class="n">replaceStr</span> <span class="o">=</span> <span class="n">processTag</span><span class="o">(</span><span class="n">replaceStr</span><span class="o">);</span>
+         <span class="n">m</span><span class="o">.</span><span class="na">appendReplacement</span><span class="o">(</span><span class="n">buf</span><span class="o">,</span> <span class="nc">Matcher</span><span class="o">.</span><span class="na">quoteReplacement</span><span class="o">(</span><span class="n">replaceStr</span><span class="o">));</span>
+      <span class="o">}</span>
+      <span class="n">m</span><span class="o">.</span><span class="na">appendTail</span><span class="o">(</span><span class="n">buf</span><span class="o">);</span>
+
+      <span class="c1">// these get tallied in processTag</span>
+      <span class="c1">// (remember to reset before subsequent calls to filter method)</span>
+      <span class="kd">final</span> <span class="nc">StringBuilder</span> <span class="n">sBuilder</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringBuilder</span><span class="o">(</span><span class="n">buf</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+      <span class="k">for</span> <span class="o">(</span><span class="nc">String</span> <span class="n">key</span> <span class="o">:</span> <span class="n">vTagCounts</span><span class="o">.</span><span class="na">keySet</span><span class="o">())</span>
+      <span class="o">{</span>
+         <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">ii</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">ii</span> <span class="o">&lt;</span> <span class="n">vTagCounts</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span> <span class="n">ii</span><span class="o">++)</span>
+         <span class="o">{</span>
+            <span class="n">sBuilder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">"&lt;/"</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="n">key</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="s">"&gt;"</span><span class="o">);</span>
+         <span class="o">}</span>
+      <span class="o">}</span>
+      <span class="n">s</span> <span class="o">=</span> <span class="n">sBuilder</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+
+      <span class="k">return</span> <span class="n">s</span><span class="o">;</span>
+   <span class="o">}</span>
+
+   <span class="kd">private</span> <span class="nc">String</span> <span class="nf">processRemoveBlanks</span><span class="o">(</span><span class="kd">final</span> <span class="nc">String</span> <span class="n">s</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="nc">String</span> <span class="n">result</span> <span class="o">=</span> <span class="n">s</span><span class="o">;</span>
+      <span class="k">for</span> <span class="o">(</span><span class="nc">String</span> <span class="n">tag</span> <span class="o">:</span> <span class="n">vRemoveBlanks</span><span class="o">)</span>
+      <span class="o">{</span>
+         <span class="k">if</span> <span class="o">(!</span><span class="no">P_REMOVE_PAIR_BLANKS</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">tag</span><span class="o">))</span>
+         <span class="o">{</span>
+            <span class="no">P_REMOVE_PAIR_BLANKS</span><span class="o">.</span><span class="na">putIfAbsent</span><span class="o">(</span><span class="n">tag</span><span class="o">,</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"&lt;"</span> <span class="o">+</span> <span class="n">tag</span> <span class="o">+</span> <span class="s">"(\\s[^&gt;]*)?&gt;&lt;/"</span> <span class="o">+</span> <span class="n">tag</span> <span class="o">+</span> <span class="s">"&gt;"</span><span class="o">));</span>
+         <span class="o">}</span>
+         <span class="n">result</span> <span class="o">=</span> <span class="n">regexReplace</span><span class="o">(</span><span class="no">P_REMOVE_PAIR_BLANKS</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">tag</span><span class="o">),</span> <span class="s">""</span><span class="o">,</span> <span class="n">result</span><span class="o">);</span>
+         <span class="k">if</span> <span class="o">(!</span><span class="no">P_REMOVE_SELF_BLANKS</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">tag</span><span class="o">))</span>
+         <span class="o">{</span>
+            <span class="no">P_REMOVE_SELF_BLANKS</span><span class="o">.</span><span class="na">putIfAbsent</span><span class="o">(</span><span class="n">tag</span><span class="o">,</span> <span class="nc">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="s">"&lt;"</span> <span class="o">+</span> <span class="n">tag</span> <span class="o">+</span> <span class="s">"(\\s[^&gt;]*)?/&gt;"</span><span class="o">));</span>
+         <span class="o">}</span>
+         <span class="n">result</span> <span class="o">=</span> <span class="n">regexReplace</span><span class="o">(</span><span class="no">P_REMOVE_SELF_BLANKS</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">tag</span><span class="o">),</span> <span class="s">""</span><span class="o">,</span> <span class="n">result</span><span class="o">);</span>
+      <span class="o">}</span>
+
+      <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+   <span class="o">}</span>
+
+   <span class="kd">private</span> <span class="kd">static</span> <span class="nc">String</span> <span class="nf">regexReplace</span><span class="o">(</span><span class="kd">final</span> <span class="nc">Pattern</span> <span class="n">regex_pattern</span><span class="o">,</span> <span class="kd">final</span> <span class="nc">String</span> <span class="n">replacement</span><span class="o">,</span> <span class="kd">final</span> <span class="nc">String</span> <span class="n">s</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="nc">Matcher</span> <span class="n">m</span> <span class="o">=</span> <span class="n">regex_pattern</span><span class="o">.</span><span class="na">matcher</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+      <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="na">replaceAll</span><span class="o">(</span><span class="n">replacement</span><span class="o">);</span>
+   <span class="o">}</span>
+
+   <span class="kd">private</span> <span class="nc">String</span> <span class="nf">processTag</span><span class="o">(</span><span class="kd">final</span> <span class="nc">String</span> <span class="n">s</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="c1">// ending tags</span>
+      <span class="nc">Matcher</span> <span class="n">m</span> <span class="o">=</span> <span class="no">P_END_TAG</span><span class="o">.</span><span class="na">matcher</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="na">find</span><span class="o">())</span>
+      <span class="o">{</span>
+         <span class="kd">final</span> <span class="nc">String</span> <span class="n">name</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="mi">1</span><span class="o">).</span><span class="na">toLowerCase</span><span class="o">();</span>
+         <span class="k">if</span> <span class="o">(</span><span class="n">allowed</span><span class="o">(</span><span class="n">name</span><span class="o">))</span>
+         <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(!</span><span class="n">inArray</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">vSelfClosingTags</span><span class="o">))</span>
+            <span class="o">{</span>
+               <span class="k">if</span> <span class="o">(</span><span class="n">vTagCounts</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">name</span><span class="o">))</span>
+               <span class="o">{</span>
+                  <span class="n">vTagCounts</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">vTagCounts</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">name</span><span class="o">)</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+                  <span class="k">return</span> <span class="s">"&lt;/"</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s">"&gt;"</span><span class="o">;</span>
+               <span class="o">}</span>
+            <span class="o">}</span>
+         <span class="o">}</span>
+      <span class="o">}</span>
+
+      <span class="c1">// starting tags</span>
+      <span class="n">m</span> <span class="o">=</span> <span class="no">P_START_TAG</span><span class="o">.</span><span class="na">matcher</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="na">find</span><span class="o">())</span>
+      <span class="o">{</span>
+         <span class="kd">final</span> <span class="nc">String</span> <span class="n">name</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="mi">1</span><span class="o">).</span><span class="na">toLowerCase</span><span class="o">();</span>
+         <span class="kd">final</span> <span class="nc">String</span> <span class="n">body</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+         <span class="nc">String</span> <span class="n">ending</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>
+
+         <span class="c1">// debug( "in a starting tag, name='" + name + "'; body='" + body + "'; ending='" + ending + "'" );</span>
+         <span class="k">if</span> <span class="o">(</span><span class="n">allowed</span><span class="o">(</span><span class="n">name</span><span class="o">))</span>
+         <span class="o">{</span>
+            <span class="kd">final</span> <span class="nc">StringBuilder</span> <span class="n">params</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringBuilder</span><span class="o">();</span>
+
+            <span class="kd">final</span> <span class="nc">Matcher</span> <span class="n">m2</span> <span class="o">=</span> <span class="no">P_QUOTED_ATTRIBUTES</span><span class="o">.</span><span class="na">matcher</span><span class="o">(</span><span class="n">body</span><span class="o">);</span>
+            <span class="kd">final</span> <span class="nc">Matcher</span> <span class="n">m3</span> <span class="o">=</span> <span class="no">P_UNQUOTED_ATTRIBUTES</span><span class="o">.</span><span class="na">matcher</span><span class="o">(</span><span class="n">body</span><span class="o">);</span>
+            <span class="kd">final</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">paramNames</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+            <span class="kd">final</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">paramValues</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+            <span class="k">while</span> <span class="o">(</span><span class="n">m2</span><span class="o">.</span><span class="na">find</span><span class="o">())</span>
+            <span class="o">{</span>
+               <span class="n">paramNames</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">m2</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="mi">1</span><span class="o">));</span> <span class="c1">// ([a-z0-9]+)</span>
+               <span class="n">paramValues</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">m2</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="mi">3</span><span class="o">));</span> <span class="c1">// (.*?)</span>
+            <span class="o">}</span>
+            <span class="k">while</span> <span class="o">(</span><span class="n">m3</span><span class="o">.</span><span class="na">find</span><span class="o">())</span>
+            <span class="o">{</span>
+               <span class="n">paramNames</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">m3</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="mi">1</span><span class="o">));</span> <span class="c1">// ([a-z0-9]+)</span>
+               <span class="n">paramValues</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">m3</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="mi">3</span><span class="o">));</span> <span class="c1">// ([^\"\\s']+)</span>
+            <span class="o">}</span>
+
+            <span class="nc">String</span> <span class="n">paramName</span><span class="o">,</span> <span class="n">paramValue</span><span class="o">;</span>
+            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">ii</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">ii</span> <span class="o">&lt;</span> <span class="n">paramNames</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">ii</span><span class="o">++)</span>
+            <span class="o">{</span>
+               <span class="n">paramName</span> <span class="o">=</span> <span class="n">paramNames</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">ii</span><span class="o">).</span><span class="na">toLowerCase</span><span class="o">();</span>
+               <span class="n">paramValue</span> <span class="o">=</span> <span class="n">paramValues</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">ii</span><span class="o">);</span>
+
+               <span class="c1">// debug( "paramName='" + paramName + "'" );</span>
+               <span class="c1">// debug( "paramValue='" + paramValue + "'" );</span>
+               <span class="c1">// debug( "allowed? " + vAllowed.get( name ).contains( paramName ) );</span>
+
+               <span class="k">if</span> <span class="o">(</span><span class="n">allowedAttribute</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">paramName</span><span class="o">))</span>
+               <span class="o">{</span>
+                  <span class="k">if</span> <span class="o">(</span><span class="n">inArray</span><span class="o">(</span><span class="n">paramName</span><span class="o">,</span> <span class="n">vProtocolAtts</span><span class="o">))</span>
+                  <span class="o">{</span>
+                     <span class="n">paramValue</span> <span class="o">=</span> <span class="n">processParamProtocol</span><span class="o">(</span><span class="n">paramValue</span><span class="o">);</span>
+                  <span class="o">}</span>
+                  <span class="n">params</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="sc">' '</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="n">paramName</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="s">"=\\\""</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="n">paramValue</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="s">"\\\""</span><span class="o">);</span>
+               <span class="o">}</span>
+            <span class="o">}</span>
+
+            <span class="k">if</span> <span class="o">(</span><span class="n">inArray</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">vSelfClosingTags</span><span class="o">))</span>
+            <span class="o">{</span>
+               <span class="n">ending</span> <span class="o">=</span> <span class="s">" /"</span><span class="o">;</span>
+            <span class="o">}</span>
+
+            <span class="k">if</span> <span class="o">(</span><span class="n">inArray</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">vNeedClosingTags</span><span class="o">))</span>
+            <span class="o">{</span>
+               <span class="n">ending</span> <span class="o">=</span> <span class="s">""</span><span class="o">;</span>
+            <span class="o">}</span>
+
+            <span class="k">if</span> <span class="o">(</span><span class="n">ending</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">ending</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="o">)</span>
+            <span class="o">{</span>
+               <span class="k">if</span> <span class="o">(</span><span class="n">vTagCounts</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">name</span><span class="o">))</span>
+               <span class="o">{</span>
+                  <span class="n">vTagCounts</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">vTagCounts</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">name</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+               <span class="o">}</span>
+               <span class="k">else</span>
+               <span class="o">{</span>
+                  <span class="n">vTagCounts</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
+               <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="k">else</span>
+            <span class="o">{</span>
+               <span class="n">ending</span> <span class="o">=</span> <span class="s">" /"</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">return</span> <span class="s">"&lt;"</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="n">params</span> <span class="o">+</span> <span class="n">ending</span> <span class="o">+</span> <span class="s">"&gt;"</span><span class="o">;</span>
+         <span class="o">}</span>
+         <span class="k">else</span>
+         <span class="o">{</span>
+            <span class="k">return</span> <span class="s">""</span><span class="o">;</span>
+         <span class="o">}</span>
+      <span class="o">}</span>
+
+      <span class="c1">// comments</span>
+      <span class="n">m</span> <span class="o">=</span> <span class="no">P_COMMENT</span><span class="o">.</span><span class="na">matcher</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+      <span class="k">if</span> <span class="o">(!</span><span class="n">stripComment</span> <span class="o">&amp;&amp;</span> <span class="n">m</span><span class="o">.</span><span class="na">find</span><span class="o">())</span>
+      <span class="o">{</span>
+         <span class="k">return</span> <span class="s">"&lt;"</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="na">group</span><span class="o">()</span> <span class="o">+</span> <span class="s">"&gt;"</span><span class="o">;</span>
+      <span class="o">}</span>
+
+      <span class="k">return</span> <span class="s">""</span><span class="o">;</span>
+   <span class="o">}</span>
+
+   <span class="kd">private</span> <span class="nc">String</span> <span class="nf">processParamProtocol</span><span class="o">(</span><span class="nc">String</span> <span class="n">s</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="n">s</span> <span class="o">=</span> <span class="n">decodeEntities</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+      <span class="kd">final</span> <span class="nc">Matcher</span> <span class="n">m</span> <span class="o">=</span> <span class="no">P_PROTOCOL</span><span class="o">.</span><span class="na">matcher</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="na">find</span><span class="o">())</span>
+      <span class="o">{</span>
+         <span class="kd">final</span> <span class="nc">String</span> <span class="n">protocol</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+         <span class="k">if</span> <span class="o">(!</span><span class="n">inArray</span><span class="o">(</span><span class="n">protocol</span><span class="o">,</span> <span class="n">vAllowedProtocols</span><span class="o">))</span>
+         <span class="o">{</span>
+            <span class="c1">// bad protocol, turn into local anchor link instead</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="s">"#"</span> <span class="o">+</span> <span class="n">s</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">protocol</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">"#//"</span><span class="o">))</span>
+            <span class="o">{</span>
+               <span class="n">s</span> <span class="o">=</span> <span class="s">"#"</span> <span class="o">+</span> <span class="n">s</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>
+            <span class="o">}</span>
+         <span class="o">}</span>
+      <span class="o">}</span>
+
+      <span class="k">return</span> <span class="n">s</span><span class="o">;</span>
+   <span class="o">}</span>
+
+   <span class="kd">private</span> <span class="nc">String</span> <span class="nf">decodeEntities</span><span class="o">(</span><span class="nc">String</span> <span class="n">s</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="nc">StringBuffer</span> <span class="n">buf</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringBuffer</span><span class="o">();</span>
+
+      <span class="nc">Matcher</span> <span class="n">m</span> <span class="o">=</span> <span class="no">P_ENTITY</span><span class="o">.</span><span class="na">matcher</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+      <span class="k">while</span> <span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="na">find</span><span class="o">())</span>
+      <span class="o">{</span>
+         <span class="kd">final</span> <span class="nc">String</span> <span class="n">match</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+         <span class="kd">final</span> <span class="kt">int</span> <span class="n">decimal</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">decode</span><span class="o">(</span><span class="n">match</span><span class="o">).</span><span class="na">intValue</span><span class="o">();</span>
+         <span class="n">m</span><span class="o">.</span><span class="na">appendReplacement</span><span class="o">(</span><span class="n">buf</span><span class="o">,</span> <span class="nc">Matcher</span><span class="o">.</span><span class="na">quoteReplacement</span><span class="o">(</span><span class="n">chr</span><span class="o">(</span><span class="n">decimal</span><span class="o">)));</span>
+      <span class="o">}</span>
+      <span class="n">m</span><span class="o">.</span><span class="na">appendTail</span><span class="o">(</span><span class="n">buf</span><span class="o">);</span>
+      <span class="n">s</span> <span class="o">=</span> <span class="n">buf</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+
+      <span class="n">buf</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringBuffer</span><span class="o">();</span>
+      <span class="n">m</span> <span class="o">=</span> <span class="no">P_ENTITY_UNICODE</span><span class="o">.</span><span class="na">matcher</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+      <span class="k">while</span> <span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="na">find</span><span class="o">())</span>
+      <span class="o">{</span>
+         <span class="kd">final</span> <span class="nc">String</span> <span class="n">match</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+         <span class="kd">final</span> <span class="kt">int</span> <span class="n">decimal</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">match</span><span class="o">,</span> <span class="mi">16</span><span class="o">).</span><span class="na">intValue</span><span class="o">();</span>
+         <span class="n">m</span><span class="o">.</span><span class="na">appendReplacement</span><span class="o">(</span><span class="n">buf</span><span class="o">,</span> <span class="nc">Matcher</span><span class="o">.</span><span class="na">quoteReplacement</span><span class="o">(</span><span class="n">chr</span><span class="o">(</span><span class="n">decimal</span><span class="o">)));</span>
+      <span class="o">}</span>
+      <span class="n">m</span><span class="o">.</span><span class="na">appendTail</span><span class="o">(</span><span class="n">buf</span><span class="o">);</span>
+      <span class="n">s</span> <span class="o">=</span> <span class="n">buf</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+
+      <span class="n">buf</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringBuffer</span><span class="o">();</span>
+      <span class="n">m</span> <span class="o">=</span> <span class="no">P_ENCODE</span><span class="o">.</span><span class="na">matcher</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+      <span class="k">while</span> <span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="na">find</span><span class="o">())</span>
+      <span class="o">{</span>
+         <span class="kd">final</span> <span class="nc">String</span> <span class="n">match</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+         <span class="kd">final</span> <span class="kt">int</span> <span class="n">decimal</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">match</span><span class="o">,</span> <span class="mi">16</span><span class="o">).</span><span class="na">intValue</span><span class="o">();</span>
+         <span class="n">m</span><span class="o">.</span><span class="na">appendReplacement</span><span class="o">(</span><span class="n">buf</span><span class="o">,</span> <span class="nc">Matcher</span><span class="o">.</span><span class="na">quoteReplacement</span><span class="o">(</span><span class="n">chr</span><span class="o">(</span><span class="n">decimal</span><span class="o">)));</span>
+      <span class="o">}</span>
+      <span class="n">m</span><span class="o">.</span><span class="na">appendTail</span><span class="o">(</span><span class="n">buf</span><span class="o">);</span>
+      <span class="n">s</span> <span class="o">=</span> <span class="n">buf</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+
+      <span class="n">s</span> <span class="o">=</span> <span class="n">validateEntities</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+      <span class="k">return</span> <span class="n">s</span><span class="o">;</span>
+   <span class="o">}</span>
+
+   <span class="kd">private</span> <span class="nc">String</span> <span class="nf">validateEntities</span><span class="o">(</span><span class="kd">final</span> <span class="nc">String</span> <span class="n">s</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="nc">StringBuffer</span> <span class="n">buf</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringBuffer</span><span class="o">();</span>
+
+      <span class="c1">// validate entities throughout the string</span>
+      <span class="nc">Matcher</span> <span class="n">m</span> <span class="o">=</span> <span class="no">P_VALID_ENTITIES</span><span class="o">.</span><span class="na">matcher</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+      <span class="k">while</span> <span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="na">find</span><span class="o">())</span>
+      <span class="o">{</span>
+         <span class="kd">final</span> <span class="nc">String</span> <span class="n">one</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span> <span class="c1">// ([^&amp;;]*)</span>
+         <span class="kd">final</span> <span class="nc">String</span> <span class="n">two</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span> <span class="c1">// (?=(;|&amp;|$))</span>
+         <span class="n">m</span><span class="o">.</span><span class="na">appendReplacement</span><span class="o">(</span><span class="n">buf</span><span class="o">,</span> <span class="nc">Matcher</span><span class="o">.</span><span class="na">quoteReplacement</span><span class="o">(</span><span class="n">checkEntity</span><span class="o">(</span><span class="n">one</span><span class="o">,</span> <span class="n">two</span><span class="o">)));</span>
+      <span class="o">}</span>
+      <span class="n">m</span><span class="o">.</span><span class="na">appendTail</span><span class="o">(</span><span class="n">buf</span><span class="o">);</span>
+
+      <span class="k">return</span> <span class="nf">encodeQuotes</span><span class="o">(</span><span class="n">buf</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+   <span class="o">}</span>
+
+   <span class="kd">private</span> <span class="nc">String</span> <span class="nf">encodeQuotes</span><span class="o">(</span><span class="kd">final</span> <span class="nc">String</span> <span class="n">s</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">encodeQuotes</span><span class="o">)</span>
+      <span class="o">{</span>
+         <span class="nc">StringBuffer</span> <span class="n">buf</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringBuffer</span><span class="o">();</span>
+         <span class="nc">Matcher</span> <span class="n">m</span> <span class="o">=</span> <span class="no">P_VALID_QUOTES</span><span class="o">.</span><span class="na">matcher</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+         <span class="k">while</span> <span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="na">find</span><span class="o">())</span>
+         <span class="o">{</span>
+            <span class="kd">final</span> <span class="nc">String</span> <span class="n">one</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span> <span class="c1">// (&gt;|^)</span>
+            <span class="kd">final</span> <span class="nc">String</span> <span class="n">two</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span> <span class="c1">// ([^&lt;]+?)</span>
+            <span class="kd">final</span> <span class="nc">String</span> <span class="n">three</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span> <span class="c1">// (&lt;|$)</span>
+            <span class="c1">// 不替换双引号为&amp;quot;，防止json格式无效 regexReplace(P_QUOTE, "&amp;quot;", two)</span>
+            <span class="n">m</span><span class="o">.</span><span class="na">appendReplacement</span><span class="o">(</span><span class="n">buf</span><span class="o">,</span> <span class="nc">Matcher</span><span class="o">.</span><span class="na">quoteReplacement</span><span class="o">(</span><span class="n">one</span> <span class="o">+</span> <span class="n">two</span> <span class="o">+</span> <span class="n">three</span><span class="o">));</span>
+         <span class="o">}</span>
+         <span class="n">m</span><span class="o">.</span><span class="na">appendTail</span><span class="o">(</span><span class="n">buf</span><span class="o">);</span>
+         <span class="k">return</span> <span class="n">buf</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+      <span class="o">}</span>
+      <span class="k">else</span>
+      <span class="o">{</span>
+         <span class="k">return</span> <span class="n">s</span><span class="o">;</span>
+      <span class="o">}</span>
+   <span class="o">}</span>
+
+   <span class="kd">private</span> <span class="nc">String</span> <span class="nf">checkEntity</span><span class="o">(</span><span class="kd">final</span> <span class="nc">String</span> <span class="n">preamble</span><span class="o">,</span> <span class="kd">final</span> <span class="nc">String</span> <span class="n">term</span><span class="o">)</span>
+   <span class="o">{</span>
+
+      <span class="k">return</span> <span class="s">";"</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">term</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="n">isValidEntity</span><span class="o">(</span><span class="n">preamble</span><span class="o">)</span> <span class="o">?</span> <span class="sc">'&amp;'</span> <span class="o">+</span> <span class="n">preamble</span> <span class="o">:</span> <span class="s">"&amp;amp;"</span> <span class="o">+</span> <span class="n">preamble</span><span class="o">;</span>
+   <span class="o">}</span>
+
+   <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">isValidEntity</span><span class="o">(</span><span class="kd">final</span> <span class="nc">String</span> <span class="n">entity</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="k">return</span> <span class="nf">inArray</span><span class="o">(</span><span class="n">entity</span><span class="o">,</span> <span class="n">vAllowedEntities</span><span class="o">);</span>
+   <span class="o">}</span>
+
+   <span class="kd">private</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">inArray</span><span class="o">(</span><span class="kd">final</span> <span class="nc">String</span> <span class="n">s</span><span class="o">,</span> <span class="kd">final</span> <span class="nc">String</span><span class="o">[]</span> <span class="n">array</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="k">for</span> <span class="o">(</span><span class="nc">String</span> <span class="n">item</span> <span class="o">:</span> <span class="n">array</span><span class="o">)</span>
+      <span class="o">{</span>
+         <span class="k">if</span> <span class="o">(</span><span class="n">item</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">item</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">s</span><span class="o">))</span>
+         <span class="o">{</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+         <span class="o">}</span>
+      <span class="o">}</span>
+      <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+   <span class="o">}</span>
+
+   <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">allowed</span><span class="o">(</span><span class="kd">final</span> <span class="nc">String</span> <span class="n">name</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="k">return</span> <span class="o">(</span><span class="n">vAllowed</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()</span> <span class="o">||</span> <span class="n">vAllowed</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">name</span><span class="o">))</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">inArray</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">vDisallowed</span><span class="o">);</span>
+   <span class="o">}</span>
+
+   <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">allowedAttribute</span><span class="o">(</span><span class="kd">final</span> <span class="nc">String</span> <span class="n">name</span><span class="o">,</span> <span class="kd">final</span> <span class="nc">String</span> <span class="n">paramName</span><span class="o">)</span>
+   <span class="o">{</span>
+      <span class="k">return</span> <span class="nf">allowed</span><span class="o">(</span><span class="n">name</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="n">vAllowed</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()</span> <span class="o">||</span> <span class="n">vAllowed</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">name</span><span class="o">).</span><span class="na">contains</span><span class="o">(</span><span class="n">paramName</span><span class="o">));</span>
+   <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div><p>前后端组合使用，可解决xss问题</p><h2 id="安全无小事">安全无小事！！！</h2><p><a href="https://security.tencent.com/index.php/blog/msg/53">存储型XSS漏洞解决方案</a></p><div style="margin-top:2em;padding:0 1.5em;border:1px solid #d3d3d3;background-color:#deebf7"><h3>文档信息</h3><ul><li>本文作者：<a href="https://www.hancher.top" target="_blank">寒澈</a></li><li>本文链接：<a href="https://www.hancher.top/2023/06/21/reactive_xss/" target="_blank">https://www.hancher.top/2023/06/21/reactive_xss/</a></li><li>版权声明：自由转载-非商用-非衍生-保持署名（<a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" target="_blank">创意共享3.0许可证</a>）</li></ul></div></article><div class="share"></div><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6938023200141592" crossorigin="anonymous"></script><div class="comment"> <script src="https://beaudar.lipk.org/client.js" repo="Hanchers/hanchers.github.io" issue-term="title" label="gitment" theme="github-light" comment-order="desc" input-position="top" branch="main" crossorigin="anonymous" async> </script></div></div><div class="column one-fourth"><h3>Search</h3><div id="site_search"> <input style="width:96%" type="text" id="search_box" placeholder="Search"></div><ul id="search_results" style="font-size:14px;list-style-type:none;padding-top:10px;padding-left:10px;"></ul><script src="https://www.hancher.top/assets/js/simple-jekyll-search.min.js"></script> <script type="text/javascript"> SimpleJekyllSearch({ searchInput: document.getElementById('search_box'), resultsContainer: document.getElementById('search_results'), json: 'https://www.hancher.top/assets/search_data.json?v=1722592208', searchResultTemplate: '<li><a href="{url}" title="{title}">{title}</a></li>', noResultsText: 'No results found', limit: 10, fuzzy: false, exclude: ['Welcome'] }) </script><h3 class="post-directory-title mobile-hidden">Table of Contents</h3><div id="post-directory-module" class="mobile-hidden"><section class="post-directory"><dl></dl></section></div><script src="https://www.hancher.top/assets/js/jquery.toc.js"></script> <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6938023200141592" crossorigin="anonymous"></script></div></div></section><footer class="container"> <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6938023200141592" crossorigin="anonymous"> </script><div class="site-footer" role="contentinfo"><div class="copyright left mobile-block"> © 2022 <span title="寒澈">寒澈</span> <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a></div><ul class="site-footer-links right mobile-hidden"><li> <a href="javascript:window.scrollTo(0,0)" >TOP</a></li></ul><a href="https://github.com/Hanchers/hanchers.github.io" target="_blank" aria-label="view source code"> <span class="mega-octicon octicon-mark-github" title="GitHub"></span> </a><ul class="site-footer-links mobile-hidden"><li> <a href="https://www.hancher.top/" title="首页" target="">首页</a></li><li> <a href="https://www.hancher.top/categories/" title="分类" target="">分类</a></li><li> <a href="https://www.hancher.top/archives/" title="归档" target="">归档</a></li><li> <a href="https://www.hancher.top/wiki/" title="收藏" target="">收藏</a></li><li> <a href="https://www.hancher.top/about/" title="关于" target="">关于</a></li><li><a href="https://www.hancher.top"><span class="octicon octicon-rss" style="color:orange;"></span></a></li></ul><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div class="mobile-hidden" style="margin-top:8px"> <span id="busuanzi_container_site_pv" style="display:none"> 本站访问量<span id="busuanzi_value_site_pv"></span>次 </span> <span id="busuanzi_container_site_uv" style="display:none"> / 本站访客数<span id="busuanzi_value_site_uv"></span>人 </span> <span id="busuanzi_container_page_pv" style="display:none"> / 本页访问量<span id="busuanzi_value_page_pv"></span>次 / 统计始于2023-03-26 </span></div></div></footer><div class="tools-wrapper"> <a class="gotop" href="#" title="回到顶部"><span class="octicon octicon-arrow-up"></span></a></div><script src="https://www.hancher.top/assets/js/geopattern.js"></script> <script> jQuery(document).ready(function($) { $('.geopattern').each(function(){ $(this).geopattern($(this).data('pattern-id')); }); /* hljs.initHighlightingOnLoad(); */ }); </script></body></html>
