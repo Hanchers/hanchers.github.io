@@ -1,0 +1,886 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.2">Jekyll</generator><link href="https://www.hancher.top/pages/Hanchers/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.hancher.top/pages/Hanchers/" rel="alternate" type="text/html" /><updated>2025-01-03T15:33:58+08:00</updated><id>https://www.hancher.top/pages/Hanchers/feed.xml</id><title type="html">寒澈笔记</title><subtitle></subtitle><author><name>寒澈</name></author><entry><title type="html">2025年博客更新计划</title><link href="https://www.hancher.top/pages/Hanchers/2025/01/03/plan_in_2025/" rel="alternate" type="text/html" title="2025年博客更新计划" /><published>2025-01-03T00:00:00+08:00</published><updated>2025-01-03T00:00:00+08:00</updated><id>https://www.hancher.top/pages/Hanchers/2025/01/03/plan_in_2025</id><content type="html" xml:base="https://www.hancher.top/pages/Hanchers/2025/01/03/plan_in_2025/">&lt;h1 id=&quot;2025年博客更新计划&quot;&gt;2025年博客更新计划&lt;/h1&gt;
+&lt;p&gt;2024年已经过去，2025年已经到来。&lt;/p&gt;
+
+&lt;p&gt;在过去的一年了，因为经历了很多重大的事情，比如换工作、比如结婚、再比如公众号等原因，导致这个博客更新的频率比较慢。&lt;/p&gt;
+
+&lt;p&gt;现在，2025年了，新的开始，我也打算重新恢复博客的更新计划，并制定一些规划，既是我这一年努力的方向，也方便在2025年末的时候回来复盘。&lt;/p&gt;
+
+&lt;h1 id=&quot;更新计划&quot;&gt;更新计划&lt;/h1&gt;
+
+&lt;h2 id=&quot;网站部分&quot;&gt;网站部分&lt;/h2&gt;
+
+&lt;ul class=&quot;task-list&quot;&gt;
+  &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; /&gt;现在的主题感觉有点丑，而且在文档归档方面有点不足，看到一个新的&lt;a href=&quot;https://github.com/fluid-dev/hexo-theme-fluid?tab=readme-ov-file&quot;&gt;主题&lt;/a&gt;很喜欢，计划改造一下，可能会伤筋动骨&lt;/li&gt;
+  &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; /&gt;彻底解决国内访问本网站的问题，目前发现的&lt;a href=&quot;https://github.com/xingpingcn/enhanced-FaaS-in-China&quot;&gt;参考文章&lt;/a&gt;,有空研究一下&lt;/li&gt;
+  &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; /&gt;研究一下，如何让博客拥有&lt;strong&gt;更新时间&lt;/strong&gt;的功能,记录我对博客内容的修改&lt;/li&gt;
+  &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; /&gt;为了加快网站的访问速度，考虑引入图床功能&lt;/li&gt;
+  &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; /&gt;将上述改造整理成文档，并分享到博客&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;内容部分&quot;&gt;内容部分&lt;/h2&gt;
+&lt;ul class=&quot;task-list&quot;&gt;
+  &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; /&gt;博客的定位从纯技术博客，变更为一个技术+生活类型模块，增加一些非技术类的内容&lt;/li&gt;
+  &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; /&gt;我的部分改造升级，打通我的所有的内容生态体系，提升我的个人品牌&lt;/li&gt;
+  &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; /&gt;计划开发一套个人的小程序，并记录小程序上线的全过程&lt;/li&gt;
+  &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; /&gt;增加一些收集的资源分享功能，开源分享的精神总要有人来继承&lt;/li&gt;
+  &lt;li class=&quot;task-list-item&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;task-list-item-checkbox&quot; disabled=&quot;disabled&quot; /&gt;技术方面，除了日常问题的总结外，继续向上游理论部分探索&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;生命不息折腾不止&quot;&gt;生命不息，折腾不止&lt;/h1&gt;
+&lt;p&gt;发现我就是一个喜欢折腾的人&lt;/p&gt;</content><author><name>寒澈</name></author><category term="网站" /><summary type="html">2025年博客更新计划 2024年已经过去，2025年已经到来。</summary></entry><entry><title type="html">西部数据提供免费版Paragon实现与mac电脑的读写</title><link href="https://www.hancher.top/pages/Hanchers/2024/12/30/ntfs_for_mac_free/" rel="alternate" type="text/html" title="西部数据提供免费版Paragon实现与mac电脑的读写" /><published>2024-12-30T00:00:00+08:00</published><updated>2024-12-30T00:00:00+08:00</updated><id>https://www.hancher.top/pages/Hanchers/2024/12/30/ntfs_for_mac_free</id><content type="html" xml:base="https://www.hancher.top/pages/Hanchers/2024/12/30/ntfs_for_mac_free/">&lt;h1 id=&quot;现象&quot;&gt;现象&lt;/h1&gt;
+&lt;p&gt;俗套的现象：买了一个西部数据的移动硬盘，然后又买了一个mac电脑，将硬盘插入到电脑后发现硬盘里的数据可以读，但是无法将电脑里的文件写入。&lt;/p&gt;
+
+&lt;p&gt;其实本质上的原因就是 wb的硬盘是ntfs格式的, mac电脑不支持ntfs格式的读写.&lt;/p&gt;
+
+&lt;p&gt;本人电脑：macbook pro m1版&lt;/p&gt;
+
+&lt;p&gt;系统版本：macos 14&lt;/p&gt;
+
+&lt;h1 id=&quot;解决&quot;&gt;解决&lt;/h1&gt;
+&lt;p&gt;如果为了保持和windows系统的兼容性，wb的硬盘必须使用ntfs格式，那么通过安装ntfs转换软件也能实现。mac应用商店里有很多这种软件，但是要收费。&lt;/p&gt;
+
+&lt;p&gt;应用商店之外常用的软件就是 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;uxera&lt;/code&gt;和&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Paragon&lt;/code&gt;，也要收费。&lt;/p&gt;
+
+&lt;p&gt;后来找了好久，在西部数据的官方帖子上找到一个免费实现的法子，原来西部数据官方也提供了一套mac版读写数据的驱动。&lt;/p&gt;
+
+&lt;p&gt;以下是官方帖子的链接：
+&lt;a href=&quot;https://support-eu.wd.com/app/answers/detailweb/a_id/34871/~/external-drive%3A-paragon-ntfs-driver-for-mac&quot;&gt;Steps to Install Paragon NTFS Driver for macOS for WD and SanDisk Professional&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;大概安装步骤如下&quot;&gt;大概安装步骤如下：&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;下载驱动&lt;br /&gt;
+&lt;a href=&quot;https://downloads.wdc.com/wdapp/Paragon_NTFS_Driver_for_Mac.zip&quot;&gt;Paragon_NTFS_Driver_for_Mac&lt;/a&gt;&lt;br /&gt;
+解压后双击软件开始安装。&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;选择:安装ntfs for mac&lt;br /&gt;
+&lt;img src=&quot;/images/others/ntfs_for_mac_1.png&quot; alt=&quot;s1&quot; /&gt;&lt;br /&gt;
+然后接着按照步骤一直下一步就可以了&lt;br /&gt;
+&lt;img src=&quot;/images/others/ntfs_for_mac_2.png&quot; alt=&quot;s2&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/others/ntfs_for_mac_3.png&quot; alt=&quot;s3&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/others/ntfs_for_mac_4.png&quot; alt=&quot;s4&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/others/ntfs_for_mac_5.png&quot; alt=&quot;s5&quot; /&gt;&lt;br /&gt;
+&lt;img src=&quot;/images/others/ntfs_for_mac_6.png&quot; alt=&quot;s6&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;在最后一步，会要求在系统配置里代开可信任权限，关机重启。 &lt;br /&gt;
+需要注意的是，这里不仅仅是要求在mac的系统安全设置里打开第三方软件信任项，还要在系统的安全模型里开启对第三方软件的信任项。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;如果以前没有修改过安全模型下的配置，大概率会提示需要在“恢复”环境中修改安全性设置。&lt;/p&gt;
+
+&lt;p&gt;这个需要在电脑关机后，长按触控ID或电源按钮就能进入安全配置环境，选择设置配置，然后在上面的菜单选择里找到安全配置相关菜单，勾选信任第三方软件修改系统内核就可以了（因为是安全模式，没有截图，按照这个步骤找就可以了）。&lt;/p&gt;
+
+&lt;p&gt;如果对电脑安全有洁癖的用户，这一步操作要慎重，也可以转投付费阵营。&lt;/p&gt;
+
+&lt;h1 id=&quot;补充&quot;&gt;补充&lt;/h1&gt;
+&lt;p&gt;因为网络的原因，上面的驱动可能是下载失败，这里提供一个备用地址：
+&lt;a href=&quot;https://url41.ctfile.com/f/62647441-1442742761-6dcabd?p=45td&quot;&gt;Paragon_NTFS_Driver_for_Mac.zip 17.0.246&lt;/a&gt;  (访问密码: 45td)&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://support-en.wd.com/app/answers/detailweb/a_id/29957&quot;&gt;驱动版本列表&lt;/a&gt;&lt;/p&gt;</content><author><name>寒澈</name></author><category term="生活" /><summary type="html">现象 俗套的现象：买了一个西部数据的移动硬盘，然后又买了一个mac电脑，将硬盘插入到电脑后发现硬盘里的数据可以读，但是无法将电脑里的文件写入。</summary></entry><entry><title type="html">linux安装ClamAV杀毒软件然后扫毒</title><link href="https://www.hancher.top/pages/Hanchers/2024/12/25/clamav_and_scan/" rel="alternate" type="text/html" title="linux安装ClamAV杀毒软件然后扫毒" /><published>2024-12-25T00:00:00+08:00</published><updated>2024-12-25T00:00:00+08:00</updated><id>https://www.hancher.top/pages/Hanchers/2024/12/25/clamav_and_scan</id><content type="html" xml:base="https://www.hancher.top/pages/Hanchers/2024/12/25/clamav_and_scan/">&lt;h2 id=&quot;背景&quot;&gt;背景&lt;/h2&gt;
+&lt;p&gt;最近在一个项目上要求在linux服务器上安装杀毒软件，然后开启系统扫描，然后删除病毒。&lt;/p&gt;
+
+&lt;p&gt;然后找了找了一些资料，比较常用的有&lt;strong&gt;ClamAV&lt;/strong&gt; 和 &lt;strong&gt;Comodo&lt;/strong&gt;, 因为ClamAV开源，且使用比较广泛，最终选择了ClamAV。&lt;/p&gt;
+
+&lt;p&gt;我们的服务器是centos7.9, 下面就是在CentOS上安装ClamAV的过程，比较简单。&lt;/p&gt;
+
+&lt;h2 id=&quot;centos-上安装clamav&quot;&gt;CentOS 上安装ClamAV&lt;/h2&gt;
+&lt;p&gt;以下是在 CentOS 上安装 &lt;strong&gt;ClamAV&lt;/strong&gt; 步骤：&lt;/p&gt;
+
+&lt;h3 id=&quot;步骤-1安装-epel-仓库&quot;&gt;&lt;strong&gt;步骤 1：安装 EPEL 仓库&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;ClamAV 通常通过 &lt;strong&gt;EPEL&lt;/strong&gt;（Extra Packages for Enterprise Linux）仓库提供，因此首先需要确保 EPEL 仓库已安装。&lt;/p&gt;
+
+&lt;p&gt;如果失败可以考虑使用阿里云的源 &lt;a href=&quot;https://www.cnblogs.com/qingqingyuntian/articles/18414842&quot;&gt;yum 仓库更换阿里云&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;yum &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;epel-release &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;步骤-2安装-clamav&quot;&gt;&lt;strong&gt;步骤 2：安装 ClamAV&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;安装 EPEL 仓库后，你可以通过以下命令安装 ClamAV：&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;yum &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;clamav clamav-update clamd &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;clamav&lt;/code&gt; 包含命令行工具（如 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;clamscan&lt;/code&gt;）。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;clamav-update&lt;/code&gt; 是更新病毒库所需的工具（即 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;freshclam&lt;/code&gt;）。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;clamd&lt;/code&gt; 是clam的系统服务。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;验证安装是否成功：&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;clamscan &lt;span class=&quot;nt&quot;&gt;--version&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;步骤-3更新病毒库&quot;&gt;&lt;strong&gt;步骤 3：更新病毒库&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;安装完成后，首先需要更新 ClamAV 的病毒库，以确保它能识别最新的恶意软件。运行以下命令：&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;freshclam
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;freshclam&lt;/code&gt; 会从 ClamAV 的服务器下载并更新病毒库，如果超时，等一会再多试几次，我试了3次成功了。&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ClamAV update process started at Wed Dec 25 16:33:20 2024
+WARNING: Your ClamAV installation is OUTDATED!
+WARNING: Local version: 0.103.11 Recommended version: 0.103.12
+DON&apos;T PANIC! Read https://docs.clamav.net/manual/Installing.html
+daily database available for download (remote version: 27497)
+Time:   14.0s, ETA:    0.0s [========================&amp;gt;]   61.48MiB/61.48MiB
+Testing database: &apos;/var/lib/clamav/tmp.8095e9d84b/clamav-0e8a55acea5c8848d6871677901e577d.tmp-daily.cvd&apos; ...
+Database test passed.
+daily.cvd updated (version: 27497, sigs: 2071426, f-level: 90, builder: raynman)
+main database available for download (remote version: 62)
+Time:   50.6s, ETA:    0.0s [========================&amp;gt;]  162.58MiB/162.58MiBBB
+Testing database: &apos;/var/lib/clamav/tmp.8095e9d84b/clamav-ac7f382ef620ff4ad4d10aaed27f9dce.tmp-main.cvd&apos; ...
+Database test passed.
+main.cvd updated (version: 62, sigs: 6647427, f-level: 90, builder: sigmgr)
+bytecode database available for download (remote version: 335)
+Time:    1.5s, ETA:    0.0s [========================&amp;gt;]  282.94KiB/282.94KiB
+Testing database: &apos;/var/lib/clamav/tmp.8095e9d84b/clamav-bbc727f2e5a1bc6a0e835c65fb9cf566.tmp-bytecode.cvd&apos; ...
+Database test passed.
+bytecode.cvd updated (version: 335, sigs: 86, f-level: 90, builder: raynman)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;步骤-4启动-clamav-守护进程可选&quot;&gt;&lt;strong&gt;步骤 4：启动 ClamAV 守护进程（可选）&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;如果你希望使用 ClamAV 的守护进程（&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;clamd&lt;/code&gt;），你需要启动它。守护进程会提高扫描效率，特别是对于较大的文件。&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;启用clam默认配置
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cp&lt;/span&gt; /etc/clamd.d/scan.conf /etc/clamd.d/scan.conf.bak
+&lt;span class=&quot;nb&quot;&gt;sed&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;s/^Example/#Example/&quot;&lt;/span&gt; /etc/clamd.d/scan.conf
+vim /etc/clamd.d/scan.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;放开如下的注释&lt;/p&gt;
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# LocalSocket /run/clamd.scan/clamd.sock&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;重命名clam服务的@文件
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;mv&lt;/span&gt; /usr/lib/systemd/system/clamd&lt;span class=&quot;se&quot;&gt;\@&lt;/span&gt;.service /usr/lib/systemd/system/clamd.service
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;修改服务配置
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[Unit]
+Description = clamd scanner daemon
+After = syslog.target nss-lookup.target network.target
+[Service]
+Type = forking
+ExecStart = /usr/sbin/clamd -c /etc/clamd.d/scan.conf
+# Reload the database
+ExecReload=/bin/kill -USR2 $MAINPID
+Restart = on-failure
+TimeoutStartSec=420
+[Install]
+WantedBy = multi-user.target
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;启动 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;clamd&lt;/code&gt; 服务：
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl daemon-reload
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl start clamd.service
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;设置 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;clamd&lt;/code&gt; 在系统启动时自动启动：
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;clamd.service
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;步骤-5运行-clamav-执行病毒扫描&quot;&gt;&lt;strong&gt;步骤 5：运行 ClamAV 执行病毒扫描&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;你可以使用 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;clamscan&lt;/code&gt; 执行病毒扫描。以下是一些常见的用法：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;扫描单个文件&lt;/strong&gt;：
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;clamscan /path/to/file
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;扫描整个目录&lt;/strong&gt;：
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;clamscan &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; /path/to/directory
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;扫描并删除感染文件&lt;/strong&gt;：
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;clamscan &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--remove&lt;/span&gt; /path/to/directory
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;扫描并显示详细信息&lt;/strong&gt;：
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;clamscan &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; /path/to/directory
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;将结果输出到文件&lt;/strong&gt;：
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;clamscan &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; /path/to/directory &lt;span class=&quot;nt&quot;&gt;--log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;clamav_scan_results.txt
+&lt;span class=&quot;c&quot;&gt;# or&lt;/span&gt;
+clamscan &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; /path/to/directory &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; clamav_scan_results.txt
+&lt;span class=&quot;c&quot;&gt;# 后台运行&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;nohup &lt;/span&gt;clamscan &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; /path/to/directory &lt;span class=&quot;nt&quot;&gt;--log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;clamav_scan_results.txt &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;结果：&lt;/p&gt;
+    &lt;div class=&quot;language-text highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;----------- SCAN SUMMARY -----------
+Known viruses: 8702931
+Engine version: 0.103.11
+Scanned directories: 44573
+Scanned files: 66053
+Infected files: 0
+Total errors: 21600
+Data scanned: 4565.67 MB
+Data read: 27114.51 MB (ratio 0.17:1)
+Time: 1178.142 sec (19 m 38 s)
+Start Date: 2024:12:25 17:12:38
+End Date:   2024:12:25 17:32:17
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;步骤-6配置-clamav-可选&quot;&gt;&lt;strong&gt;步骤 6：配置 ClamAV (可选)&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;如果需要，你可以配置 ClamAV 来调整其行为。ClamAV 的配置文件位于：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;clamd&lt;/code&gt; 配置文件&lt;/strong&gt;：&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/clamd.d/scan.conf&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;freshclam&lt;/code&gt; 配置文件&lt;/strong&gt;：&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/freshclam.conf&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;你可以编辑这些配置文件，调整日志文件路径、扫描选项等。例如，编辑 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;clamd&lt;/code&gt; 配置文件来启用详细日志：&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;vi /etc/clamd.d/scan.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;修改以下内容：&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;LogFile /var/log/clamd.log
+LogTime &lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;步骤-7定期更新病毒库&quot;&gt;&lt;strong&gt;步骤 7：定期更新病毒库&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;为了确保 ClamAV 能及时识别最新的威胁，你需要定期更新病毒库。你可以通过设置 &lt;strong&gt;cron 任务&lt;/strong&gt; 来自动更新病毒库。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;编辑 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;crontab&lt;/code&gt; 文件：
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;crontab &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;添加以下行来每天更新病毒库（此例为每天凌晨 2 点）：
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;0 2 &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; /usr/bin/freshclam &lt;span class=&quot;nt&quot;&gt;--quiet&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;总结&quot;&gt;&lt;strong&gt;总结&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;安装 EPEL 仓库并通过 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;yum&lt;/code&gt; 安装 ClamAV。&lt;/li&gt;
+  &lt;li&gt;使用 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;freshclam&lt;/code&gt; 更新病毒库。&lt;/li&gt;
+  &lt;li&gt;启动并配置 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;clamd&lt;/code&gt; 守护进程（可选）。&lt;/li&gt;
+  &lt;li&gt;使用 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;clamscan&lt;/code&gt; 执行病毒扫描。&lt;/li&gt;
+  &lt;li&gt;配置定时任务自动更新病毒库。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;通过这些步骤，你可以在 CentOS 上成功安装和配置 ClamAV，帮助你扫描和清理系统中的病毒和恶意软件。&lt;/p&gt;
+
+&lt;h3 id=&quot;参考&quot;&gt;参考&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://docs.clamav.net/manual/Usage/Scanning.html&quot;&gt;clamav 官方文档&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.cnblogs.com/qingqingyuntian/articles/18414842&quot;&gt;yum 仓库更换阿里云&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://gist.github.com/fernandoaleman/50b134b987297f97c803c91b591e5c52&quot;&gt;centos7 配置ClamAV&lt;/a&gt;&lt;/p&gt;</content><author><name>寒澈</name></author><category term="安全" /><summary type="html">背景 最近在一个项目上要求在linux服务器上安装杀毒软件，然后开启系统扫描，然后删除病毒。</summary></entry><entry><title type="html">mysql出现了waiting for global read lock 全局事务等待问题排查</title><link href="https://www.hancher.top/pages/Hanchers/2024/08/01/mysql_waiting_for_global_read_lock/" rel="alternate" type="text/html" title="mysql出现了waiting for global read lock 全局事务等待问题排查" /><published>2024-08-01T00:00:00+08:00</published><updated>2024-08-01T00:00:00+08:00</updated><id>https://www.hancher.top/pages/Hanchers/2024/08/01/mysql_waiting_for_global_read_lock</id><content type="html" xml:base="https://www.hancher.top/pages/Hanchers/2024/08/01/mysql_waiting_for_global_read_lock/">&lt;h1 id=&quot;问题发现&quot;&gt;问题发现&lt;/h1&gt;
+&lt;p&gt;在一个普通的日子里，寒澈在操作他负责的一个内部系统的时候，突然发现一个修改状态的操作不能操作了。 查看服务器日志，发现数据库连接超时了：
+&lt;img src=&quot;/images/tech/db/mysql-read-timeout.jpg&quot; alt=&quot;mysql连接超时&quot; /&gt;
+第一反应是数据库挂了，导致数据库连不上了。&lt;/p&gt;
+
+&lt;p&gt;可是，神奇的是，接下来发现数据库的查询功能还能用，但是所有的状态修改类的写操作都不能用了。 这下知道遇到麻烦了，肯定是mysql数据库的产生锁了，把所有的写操作阻塞了。&lt;/p&gt;
+
+&lt;p&gt;按照现在的这个情况，mysql读没有问题，写被阻塞，出问题的锁肯定是读锁（共享锁），而且还是全局性质的，因为所有的写都被影响了。&lt;/p&gt;
+
+&lt;h1 id=&quot;问题定位&quot;&gt;问题定位&lt;/h1&gt;
+
+&lt;p&gt;按照上面的思路去数据库里执行一下&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW ENGINE INNODB STATUS&lt;/code&gt;, 查看一下数据库的状态。 结果如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-log&quot;&gt;*** WE ROLL BACK TRANSACTION (2)
+------------
+TRANSACTIONS
+------------
+Trx id counter 48415098
+Purge done for trx&apos;s n:o &amp;lt; 48412278 undo n:o &amp;lt; 0 state: running but idle
+History list length 0
+LIST OF TRANSACTIONS FOR EACH SESSION:
+---TRANSACTION 421386947297640, not started
+0 lock struct(s), heap size 1128, 0 row lock(s)
+---TRANSACTION 421386947296832, not started
+0 lock struct(s), heap size 1128, 0 row lock(s)
+---TRANSACTION 421386947296024, not started
+0 lock struct(s), heap size 1128, 0 row lock(s)
+---TRANSACTION 421386947295216, not started
+0 lock struct(s), heap size 1128, 0 row lock(s)
+---TRANSACTION 421386947294408, not started
+0 lock struct(s), heap size 1128, 0 row lock(s)
+---TRANSACTION 421386947293600, not started
+0 lock struct(s), heap size 1128, 0 row lock(s)
+---TRANSACTION 421386947291984, not started
+0 lock struct(s), heap size 1128, 0 row lock(s)
+---TRANSACTION 421386947288752, not started
+0 lock struct(s), heap size 1128, 0 row lock(s)
+---TRANSACTION 421386947287944, not started
+0 lock struct(s), heap size 1128, 0 row lock(s)
+---TRANSACTION 421386947287136, not started
+0 lock struct(s), heap size 1128, 0 row lock(s)
+---TRANSACTION 421386947283904, not started
+0 lock struct(s), heap size 1128, 0 row lock(s)
+---TRANSACTION 421386947280672, not started
+0 lock struct(s), heap size 1128, 0 row lock(s)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;发现了大量的如上的事务在积压，没有执行。 与预期一致，就是某个锁导致事务阻塞了。&lt;/p&gt;
+
+&lt;p&gt;注意这里不会是死锁问题，因为死锁是锁冲突，mysql会自动解决的，不会导致事务长时间阻塞。&lt;/p&gt;
+
+&lt;p&gt;查询一下mysql的执行进程，看看情况：&lt;/p&gt;
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;查询一个耗时最久的&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;进程&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;select&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;information_schema&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PROCESSLIST&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;order&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;by&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;desc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;发现了如下场景
+&lt;img src=&quot;/images/tech/db/mysql_waiting_for_global_read_lock.jpg&quot; alt=&quot;waiting for global read lock&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;由此我们知道：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;确实发生了一个全局性的读锁&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;waiting for global read lock&lt;/code&gt;导致了后续写操作的进行。 后面的事务都在等待这个读锁的释放。&lt;/li&gt;
+  &lt;li&gt;情况比我们想象的严重，这个读锁不仅影响了我们自己的实例，还把整个mysql下所有的库实例都影响了。&lt;/li&gt;
+  &lt;li&gt;问题的原因也发现了，就是有一个binlog dump后没有结束导致的。也就是那个耗时最久的进程。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h1 id=&quot;问题解决&quot;&gt;问题解决&lt;/h1&gt;
+
+&lt;p&gt;既然发现了这个锁产生的原因，直接把这个进程kill掉就可以了&lt;/p&gt;
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;kill&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3518815&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;binlog的进程杀掉后，后面阻塞的任务果然都没了。&lt;/p&gt;
+
+&lt;p&gt;记录一下排查问题过程中常用的sql&lt;/p&gt;
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;查询当前元数据锁及关联的线程和事务&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;select&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;performance_schema&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;metadata_locks&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;join&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;performance_schema&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;threads&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;on&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;THREAD_ID&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;OWNER_THREAD_ID&lt;/span&gt; 
+&lt;span class=&quot;k&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;join&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;performance_schema&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;events_transactions_current&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;et&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;on&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;et&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;THREAD_ID&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;THREAD_ID&lt;/span&gt; 
+&lt;span class=&quot;k&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;join&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;information_schema&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;INNODB_TRX&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;trx&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;on&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PROCESSLIST_ID&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;trx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;trx_mysql_thread_id&lt;/span&gt;  
+
+&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;当前系统内的事务&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;select&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;information_schema&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;innodb_trx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;查询一个耗时最久的&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;进程&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;select&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;information_schema&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PROCESSLIST&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;order&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;by&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;desc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;查询&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;innodb&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;状态&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;SHOW&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ENGINE&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;INNODB&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;STATUS&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;问题避免&quot;&gt;问题避免&lt;/h1&gt;
+
+&lt;p&gt;发现问题，解决问题，避免问题才是我们排查问题最终要的目的。&lt;/p&gt;
+
+&lt;p&gt;我们这个问题是flink cdc 数据的时候导致的，后续的解决办法很简单：
+第一： 以后flink 不要cdc主库了，避免对业务产生影响。
+第二：flink cdc 一定要做好异常拦截处理，我们这就是因为异常导致fink退出了，无法释放锁
+第三：如果可以的话，尽量使用flink的无锁cdc版本&lt;/p&gt;
+
+&lt;h3 id=&quot;关于这个global-read-lock是怎么产生的&quot;&gt;关于这个&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;global read lock&lt;/code&gt;是怎么产生的&lt;/h3&gt;
+&lt;p&gt;当mysql在dump整个数据库的时候，会对数据库执行一个&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;FLUSH TABLES WITH READ LOCK&lt;/code&gt;命令来加锁，这个命令会停止对所有表的写操作，‌并允许读操作继续。
+等备份完成，会使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;UNLOCK TABLES&lt;/code&gt;来解锁，&lt;/p&gt;
+
+&lt;h1 id=&quot;参考&quot;&gt;参考&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&quot;https://dev.mysql.com/doc/refman/8.4/en/flush.html&quot;&gt;mysql 加 global read lock 机制&lt;/a&gt;&lt;/p&gt;</content><author><name>寒澈</name></author><category term="数据库" /><summary type="html">问题发现 在一个普通的日子里，寒澈在操作他负责的一个内部系统的时候，突然发现一个修改状态的操作不能操作了。 查看服务器日志，发现数据库连接超时了： 第一反应是数据库挂了，导致数据库连不上了。</summary></entry><entry><title type="html">如果让百度爬虫爬我的github博客</title><link href="https://www.hancher.top/pages/Hanchers/2024/05/22/how_baidu_spide_github_site/" rel="alternate" type="text/html" title="如果让百度爬虫爬我的github博客" /><published>2024-05-22T00:00:00+08:00</published><updated>2024-05-22T00:00:00+08:00</updated><id>https://www.hancher.top/pages/Hanchers/2024/05/22/how_baidu_spide_github_site</id><content type="html" xml:base="https://www.hancher.top/pages/Hanchers/2024/05/22/how_baidu_spide_github_site/">&lt;p&gt;我们辛辛苦苦的通过github pages建好我们的博客之后。接下来可能会想要更多的人来访问我们的博客，
+然后一顿操作后发现，github 把百度的爬虫屏蔽了，所以我们的网站也就不能被百度搜索了，我们的博客也就没法被百度搜索到了。&lt;/p&gt;
+
+&lt;p&gt;这怎么行呢？ 我们的博客主要群体还是国内的程序员的，少了百度这个来源，访问量一下子少了一大半。&lt;/p&gt;
+
+&lt;p&gt;作为一名程序员，我们怎么能被这个事情难倒呢？&lt;/p&gt;
+
+&lt;p&gt;让我们来分析一下，github 把百度的爬虫屏蔽了，这导致了我们的博客不能被百度收录。既然百度不能爬github了，我们可以让百度去别的地方爬我们的博客呀。&lt;/p&gt;
+
+&lt;p&gt;思路一开天地宽，我们可以通过CDN的机制来把我们的博客搬到CDN上，然后让百度访问CDN就可以了呀。&lt;/p&gt;
+
+&lt;p&gt;可惜，试过七牛云等一些国内的CDN，发现同步网站还要备案，这个我要是有，也就不用这么麻烦的想办法同步内容到百度了，这一步是走不通了。&lt;/p&gt;
+
+&lt;p&gt;最后，我发现了&lt;a href=&quot;https://vercel.com/&quot;&gt;vercel&lt;/a&gt;这个网站，可以镜像我们的github 博客，而又没有屏蔽百度的爬虫，完美的解决了我的问题。&lt;/p&gt;
+
+&lt;h1 id=&quot;准备&quot;&gt;准备&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;github博客站建好&lt;/li&gt;
+  &lt;li&gt;一个域名，我们需要域名来做博客的跳转。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;操作&quot;&gt;操作&lt;/h1&gt;
+
+&lt;h2 id=&quot;关联vercel&quot;&gt;关联vercel&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;注册登录&lt;a href=&quot;https://vercel.com/&quot;&gt;vercel&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;新建一个项目（add new project）, 关联到自己github上的 博客仓库
+&lt;img src=&quot;/images/site/vercel-import-github-project.jpg&quot; alt=&quot;vercel关联github&quot; /&gt;&lt;/li&gt;
+  &lt;li&gt;添加指向vercel项目的二级域名，比如我的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;blog.hancher.top&lt;/code&gt;
+&lt;img src=&quot;/images/site/vercel-domain.jpg&quot; alt=&quot;vercel配置域名&quot; /&gt;&lt;/li&gt;
+  &lt;li&gt;此时，我们在Vercel里的项目已经构建好了，下次 GitHub 项目的任何更新都会触发 Vercel 项目更新
+&lt;img src=&quot;/images/site/vercel-project-view.jpg&quot; alt=&quot;vercel效果&quot; /&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;配置域名解析&quot;&gt;配置域名解析&lt;/h2&gt;
+
+&lt;p&gt;去域名的解析后台，添加域名的CNAME解析，记录值&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cname-china.vercel-dns.com&lt;/code&gt; 此时，通过&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;blog.hancher.top&lt;/code&gt;就可以访问vercel CDN上的静态网站了。&lt;/p&gt;
+
+&lt;p&gt;当然，也可以将记录值改为Vercel的自己项目的vercel.app 域名。将线路解析类型改为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;百度&lt;/code&gt; 亦可。&lt;/p&gt;
+
+&lt;h2 id=&quot;关联百度解析&quot;&gt;关联百度解析&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;去&lt;a href=&quot;https://ziyuan.baidu.com/&quot;&gt;百度站点管理&lt;/a&gt; 里注册账号，创建&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;blog.hancher.top&lt;/code&gt;域名的网站，即可以抓取我们的博客站点了。&lt;/li&gt;
+  &lt;li&gt;将百度给的一个签名放到网站的根目录下
+&lt;img src=&quot;/images/site/baidu-ziyuan-config.jpg&quot; alt=&quot;百度站点&quot; /&gt;&lt;/li&gt;
+  &lt;li&gt;通过&lt;strong&gt;抓取诊断&lt;/strong&gt; 来验证我们的博客是否可以正常抓取
+&lt;img src=&quot;/images/site/baidu-ziyuan-fetch-test.jpg&quot; alt=&quot;抓取诊断&quot; /&gt;&lt;/li&gt;
+  &lt;li&gt;耐心等待几天，在百度搜索框里搜索 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;site:blog.hancher.top&lt;/code&gt;来验证我们的配置是否生效，此时大概率就能搜到自己的博客文章了。
+&lt;img src=&quot;/images/site/baidu-site-search.jpg&quot; alt=&quot;验证博客&quot; /&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;2024年更新&quot;&gt;2024年更新&lt;/h2&gt;
+&lt;p&gt;因为Vercel被墙（dns污染方式）, 该方法暂时失效。等待后续解决。&lt;/p&gt;
+
+&lt;h1 id=&quot;参考&quot;&gt;参考&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.zhihu.com/question/30898326&quot;&gt;知乎-如何解决百度爬虫无法爬取搭建在Github上的个人博客的问题&lt;/a&gt;
+&lt;a href=&quot;https://blog.csdn.net/weixin_40026797/article/details/126919662&quot;&gt;建站过程中的踩坑记录：自定义域名、百度收录与备案&lt;/a&gt;&lt;/p&gt;</content><author><name>寒澈</name></author><category term="网站" /><summary type="html">我们辛辛苦苦的通过github pages建好我们的博客之后。接下来可能会想要更多的人来访问我们的博客， 然后一顿操作后发现，github 把百度的爬虫屏蔽了，所以我们的网站也就不能被百度搜索了，我们的博客也就没法被百度搜索到了。</summary></entry><entry><title type="html">AntPathMatcher VS PathPattern</title><link href="https://www.hancher.top/pages/Hanchers/2024/05/21/spring-path-matcher/" rel="alternate" type="text/html" title="AntPathMatcher VS PathPattern" /><published>2024-05-21T00:00:00+08:00</published><updated>2024-05-21T00:00:00+08:00</updated><id>https://www.hancher.top/pages/Hanchers/2024/05/21/spring-path-matcher</id><content type="html" xml:base="https://www.hancher.top/pages/Hanchers/2024/05/21/spring-path-matcher/">&lt;p&gt;spring路径匹配，在spring5以后，有了AntPathMatcher 和 PathPattern 两种方式。&lt;/p&gt;
+
+&lt;p&gt;PathPattern是在spring 5 以后新增的。本文就介绍 AntPathMatcher 和 PathPattern 的异同，以及这两者的使用场景和方式。&lt;/p&gt;
+
+&lt;h1 id=&quot;创建实例&quot;&gt;创建实例&lt;/h1&gt;
+&lt;p&gt;AntPathMatcher在1.x版本就存在了，在spring5以前，一直作为spring的路径匹配器存在。&lt;/p&gt;
+
+&lt;p&gt;AntPathMatcher在spring中是作为工具类存在的，所以直接&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;new&lt;/code&gt;对象即可。&lt;/p&gt;
+
+&lt;p&gt;PathPattern出现在spring5.x版本中, 旨在用于替换掉较为“古老”的AntPathMatcher。&lt;/p&gt;
+
+&lt;p&gt;PathPattern是spring一个内部类，不能通过public的方式来创建。不过spring 官方提供了一个&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;parser&lt;/code&gt;开提供PathPattern的默认实例。&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 构建AntPathMatcher 实例
+AntPathMatcher antPathMatcher = new AntPathMatcher();
+// 构建PathPattern 实例
+PathPatternParser patternParser = PathPatternParser.defaultInstance;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;匹配规则&quot;&gt;匹配规则&lt;/h1&gt;
+&lt;p&gt;AntPathMatcher 官方文档：&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;映射使用以下规则匹配 URL： 
+? 匹配一个字符
+* 匹配零个或多个字符
+** 匹配路径中的零 个 或多个目录
+{spring:[a-z]+} 将正则表达 [a-z]+ 式匹配为名为“spring”的路径变量
+        
+例子
+com/t?st.jsp — 匹配 com/test.jsp ，但也 com/tast.jsp 匹配或 com/txst.jsp
+com/*.jsp— 匹配目录中com的所有.jsp文件
+com/**/test.jsp— 匹配路径下com的所有test.jsp文件
+org/springframework/**/*.jsp— 匹配路径下org/springframework的所有.jsp文件
+org/**/servlet/bla.jsp — 匹配 org/springframework/servlet/bla.jsp ，但也 org/springframework/testing/servlet/bla.jsp 和 org/servlet/bla.jsp
+com/{filename:\\w+}.jsp将匹配com/test.jsp该值testfilename并将其分配给变量
+注意： 模式和路径必须都是绝对的，或者必须都是相对的，才能使两者匹配。因此，建议此实现的用户清理模式，以便在使用模式的上下文中为“/”作为前缀。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;PathPattern 官方文档&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;PathPattern 使用以下规则匹配 URL 路径： 
+? 匹配一个字符
+* 匹配路径段中的零个或多个字符
+** 匹配零个或多个 路径段 ，直到路径结束
+{spring} 匹配 路径段 并将其捕获为名为“spring”的变量
+{spring:[a-z]+} 将正则表达 [a-z]+ 式匹配为名为“spring”的路径变量
+{*spring} 匹配零个或多个 路径段 ，直到路径的末尾，并将其捕获为名为“spring”的变量
+注意： 与 org.springframework.util.AntPathMatcher相反， ** 仅在模式的末尾受支持。例如 /pages/{**} ，是有效的，但不是 /pages/{**}/details 。这同样适用于捕获变体 {*spring}。目的是在比较模式的特异性时消除歧义。
+
+例子
+/pages/t?st.html — 匹配 /pages/test.html ， /pages/tXst.html 但不是 /pages/toast.html
+/resources/*.png— 匹配目录中resources的所有.png文件
+/resources/** — 匹配路径下 /resources/ 的所有文件，包括 /resources/image.png 和 /resources/css/spring.css
+/resources/{*path} — 匹配 和 下的所有文件 /resources/， /resources并在名为 “path” 的变量中捕获它们的相对路径; /resources/image.png 将与 “path” 匹配 → “/image.png”，并将 /resources/css/spring.css 与 “path” 匹配 → “/css/spring.css”
+/resources/{filename:\\w+}.dat将匹配/resources/spring.dat该值&quot;spring&quot;filename并将其分配给变量
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;可见，AntPathMatcher 和 PathPattern 的匹配规则是差不多的，都支持&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;?&lt;/code&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;*&lt;/code&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;**&lt;/code&gt; 已经部分正则匹配。&lt;/p&gt;
+
+&lt;p&gt;但PathPattern增加了路径匹配并提取结果的能力，同时为了消除歧义，不再支持路径中间的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;**&lt;/code&gt;匹配，其他一样。&lt;/p&gt;
+
+&lt;p&gt;demo:&lt;/p&gt;
+
+&lt;p&gt;*匹配&lt;/p&gt;
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;TestPathMatch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nc&quot;&gt;AntPathMatcher&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;antPathMatcher&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;AntPathMatcher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;nc&quot;&gt;PathPatternParser&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;patternParser&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;PathPatternParser&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;defaultInstance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;nc&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;aaa_1.csv&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;aaa_2.csv&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;aaa_3.csv&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;aaa_1.xlsx&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;aaa&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;aaa.pdf&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pattern1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;a*.csv&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;by antPathMatcher..&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pattern %s match %s is %s %n&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pattern1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;antPathMatcher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;match&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pattern1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;by patternParser..&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pattern %s match %s is %s %n&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pattern1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;patternParser&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;parse&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pattern1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;matches&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;PathContainer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;parsePath&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)));&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// 结果&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// by antPathMatcher..&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// pattern a*.csv match aaa_1.csv is true&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// pattern a*.csv match aaa_2.csv is true&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// pattern a*.csv match aaa_3.csv is true&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// pattern a*.csv match aaa_1.xlsx is false&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// pattern a*.csv match aaa is false&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// pattern a*.csv match aaa.pdf is false&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// by patternParser..&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// pattern a*.csv match aaa_1.csv is true&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// pattern a*.csv match aaa_2.csv is true&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// pattern a*.csv match aaa_3.csv is true&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// pattern a*.csv match aaa_1.xlsx is false&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// pattern a*.csv match aaa is false&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// pattern a*.csv match aaa.pdf is false &lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;PathPattern 路径提取&lt;/p&gt;
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;TestPathMatch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nc&quot;&gt;AntPathMatcher&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;antPathMatcher&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;AntPathMatcher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;nc&quot;&gt;PathPatternParser&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;patternParser&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;PathPatternParser&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;defaultInstance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pattern&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;/api/hancher/{*spring}&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;nc&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/api/hancher/a/b/c&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;/api/hancher/a&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;/api/hancher/a/&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;/api/hancher/a/b/c.csv&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/api/test/a/b/c&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pattern %s match %s is %s %n&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pattern&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;patternParser&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;parse&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pattern&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;matches&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;PathContainer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;parsePath&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)));&lt;/span&gt;
+            &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pattern %s match %s result %s %n&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pattern&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;patternParser&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;parse&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pattern&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;matchAndExtract&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;PathContainer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;parsePath&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)));&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// 结果&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//pattern /api/hancher/{*spring} match /api/hancher/a/b/c is true &lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//pattern /api/hancher/{*spring} match /api/hancher/a/b/c result PathMatchInfo[uriVariables={spring=/a/b/c}, matrixVariables={}] &lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//pattern /api/hancher/{*spring} match /api/hancher/a is true &lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//pattern /api/hancher/{*spring} match /api/hancher/a result PathMatchInfo[uriVariables={spring=/a}, matrixVariables={}] &lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//pattern /api/hancher/{*spring} match /api/hancher/a/ is true &lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//pattern /api/hancher/{*spring} match /api/hancher/a/ result PathMatchInfo[uriVariables={spring=/a/}, matrixVariables={}] &lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//pattern /api/hancher/{*spring} match /api/hancher/a/b/c.csv is true &lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//pattern /api/hancher/{*spring} match /api/hancher/a/b/c.csv result PathMatchInfo[uriVariables={spring=/a/b/c.csv}, matrixVariables={}] &lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//pattern /api/hancher/{*spring} match /api/test/a/b/c is false &lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//pattern /api/hancher/{*spring} match /api/test/a/b/c result null &lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;性能&quot;&gt;性能&lt;/h1&gt;
+&lt;p&gt;官方说PathPattern 比 AntPathMatcher 更快一些，所以咱们验证一下：&lt;/p&gt;
+
+&lt;p&gt;测试代码&lt;/p&gt;
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;TestPathMatch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nc&quot;&gt;AntPathMatcher&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;antPathMatcher&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;AntPathMatcher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;nc&quot;&gt;PathPatternParser&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;patternParser&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;PathPatternParser&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;defaultInstance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;currentTimeMillis&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pattern&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;/api/hanc?er/**&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100000&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;path&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;/api/hancher/&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;/&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;/a.txt&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;antPathMatcher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;match&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pattern&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//            System.out.println(patternParser.parse(pattern).matches(PathContainer.parsePath(path)));&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;currentTimeMillis&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;分别跑了5次。 &lt;br /&gt;
+AntPathMatcher 平均耗时：392ms&lt;br /&gt;
+PathPattern 平均耗时：323.4ms &lt;br /&gt;
+官方所言不虚！&lt;/p&gt;
+
+&lt;h1 id=&quot;选择&quot;&gt;选择&lt;/h1&gt;
+&lt;ol&gt;
+  &lt;li&gt;在满足需求的情况下，尽量选PathPattern，更快&lt;/li&gt;
+  &lt;li&gt;如果需要通过&lt;em&gt;*匹配中间路径，或者通过&lt;/em&gt;匹配文件扩展名这种场景，用AntPathMatcher， 因为PathPattern不支持。&lt;/li&gt;
+&lt;/ol&gt;</content><author><name>寒澈</name></author><category term="spring" /><summary type="html">spring路径匹配，在spring5以后，有了AntPathMatcher 和 PathPattern 两种方式。</summary></entry><entry><title type="html">springdoc-openapi的集成与常见问题</title><link href="https://www.hancher.top/pages/Hanchers/2023/11/29/springdoc-openapi/" rel="alternate" type="text/html" title="springdoc-openapi的集成与常见问题" /><published>2023-11-29T00:00:00+08:00</published><updated>2023-11-29T00:00:00+08:00</updated><id>https://www.hancher.top/pages/Hanchers/2023/11/29/springdoc-openapi</id><content type="html" xml:base="https://www.hancher.top/pages/Hanchers/2023/11/29/springdoc-openapi/">&lt;p&gt;在项目中经常使用swagger来作为项目接口的自动化api文档，尤其是springboot项目，一般都是通过&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;springfox-boot-starter&lt;/code&gt;来集成swagger的使用。
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;springfox-boot-starter&lt;/code&gt; 在2.x时代用着很方便，但是随着项目的发展，尤其是spring项目的不断推出新版本，
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;springfox-boot-starter&lt;/code&gt;在3.0版本就已经明显存在兼容性问题了，而且已经3年多没维护了，所以寻找替代品是一种虽然不紧迫但很必须的事项了。
+而springdoc-openapi就是springfox-boot-starter的替代品，且获得了swagger的官方支持，算是springfox在springboot高版本的天热替代品。
+&lt;img src=&quot;/images/tech/spring/springfox-stop-update.jpg&quot; alt=&quot;springfox已经3年未更新了&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;本文就介绍springdoc-openapi的集成与常见问题。&lt;/p&gt;
+
+&lt;h1 id=&quot;项目依赖&quot;&gt;项目依赖&lt;/h1&gt;
+&lt;p&gt;如果你的项目是springboot2.x版本，请使用springdoc-openapi的1.x版本。 
+如果你的项目是springboot3.x版本，请使用springdoc-openapi的2.x版本。&lt;/p&gt;
+
+&lt;p&gt;本文案例的环境是：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;java 17&lt;/li&gt;
+  &lt;li&gt;springboot 2.7.18&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;开始&quot;&gt;开始&lt;/h1&gt;
+&lt;p&gt;使用idea创建一个新的maven springboot项目，添加如下依赖&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;dependency&amp;gt;
+    &amp;lt;groupId&amp;gt;org.springdoc&amp;lt;/groupId&amp;gt;
+    &amp;lt;artifactId&amp;gt;springdoc-openapi-ui&amp;lt;/artifactId&amp;gt;
+    &amp;lt;version&amp;gt;1.7.0&amp;lt;/version&amp;gt;
+&amp;lt;/dependency&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;创建一个Controller&lt;/p&gt;
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;@RestController&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@RequestMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/hello&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nd&quot;&gt;@Tag&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;openapi demo&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;HelloWorldController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;nd&quot;&gt;@GetMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/world&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@Operation&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;summary&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;helloWorld接口&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;description&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;接口描述信息&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@Parameter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;description&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;名称&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;required&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ParameterIn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;QUERY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;helloWorld&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Hello &quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Optional&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;orElse&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;world&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;cm&quot;&gt;/**
+     * 隐藏的api，不再swagger 显示
+     */&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@GetMapping&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/hidden&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;hiddenApi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Hello &quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Optional&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;orElse&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;world&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;然后就可以直接启动了，不用任何配置，就可以看到swagger的界面了。
+swagger默认地址： http://localhost:8080/swagger-ui/index.html#/
+&lt;img src=&quot;/images/tech/spring/springdoc-swagger-default.jpg&quot; alt=&quot;springdoc版的swagger的默认页面&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;通过配置文件修改相关配置&quot;&gt;通过配置文件修改相关配置&lt;/h2&gt;
+
+&lt;p&gt;如果你不想使用默认的配置，可以通过配置文件修改相关配置。比如我通过下面配置对swagger的界面进行了微调。&lt;/p&gt;
+&lt;div class=&quot;language-properties highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# application.properties
+&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;springdoc.swagger-ui.disable-swagger-default-url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;true&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 布局 StandaloneLayout，BaseLayout
+&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;springdoc.swagger-ui.layout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;BaseLayout&lt;/span&gt;
+&lt;span class=&quot;py&quot;&gt;springdoc.swagger-ui.path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/v3/swagger-ui.html&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# swagger-ui 默认关联的api接口配置, 要与api-docs.path 一致。 不配置默认取api-docs.path配置
+&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;springdoc.swagger-ui.url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/v3/test/api-docs&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# api json 接口配置, 可以自定义其他json接口
+&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;springdoc.api-docs.path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/v3/test/api-docs&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;因为修改了swagger页面的访问地址，所以我们的访问地址变成了：&lt;br /&gt;
+http://localhost:8080/v3/swagger-ui/index.html#/
+效果如图：
+&lt;img src=&quot;/images/tech/spring/springdoc-swagger-properties.jpg&quot; alt=&quot;springdoc版的swagger的properties配置版&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;通过自定义配置类修改相关配置&quot;&gt;通过自定义配置类修改相关配置&lt;/h2&gt;
+&lt;p&gt;如果我们想要更自有的配置，可以通过自定义配置类来修改相关配置。&lt;/p&gt;
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;@Configuration&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;SwaggerConfig&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;cm&quot;&gt;/**
+     * 添加摘要信息
+     */&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@Bean&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;OpenAPI&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;openAPI&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;OpenAPI&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Info&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;hancher demo open api&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+                        &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;helloWorld接口文档&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+                        &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;v3.0.0&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+                        &lt;span class=&quot;c1&quot;&gt;// 联系人&lt;/span&gt;
+                        &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;contact&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Contact&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;寒澈&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://www.hancher.top/&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;c1&quot;&gt;// 其他文档信息&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;externalDocs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ExternalDocumentation&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+                        &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;寒澈笔记&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+                        &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;https://www.hancher.top/&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+
+    &lt;span class=&quot;cm&quot;&gt;/**
+     * 模式三： 自定义api分组
+     *
+     */&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//    @Bean&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;GroupedOpenApi&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;publicApi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;GroupedOpenApi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;builder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;packagesToScan&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;com.hancher.demo.springbootopenapi.controller&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 扫描包&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;displayName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;寒澈openapi&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;addOpenApiMethodFilter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;method&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;isAnnotationPresent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Operation&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;还是默认访问地址：http://localhost:8080/swagger-ui/index.html#/
+&lt;img src=&quot;/images/tech/spring/springdoc-swagger-openApi.jpg&quot; alt=&quot;springdoc版的swagger的openapi配置版&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;迁移成本&quot;&gt;迁移成本&lt;/h1&gt;
+&lt;p&gt;除了将老版本的注解替换成新的注解之外，没有任何其他改的。
+&lt;img src=&quot;/images/tech/spring/springdoc-from-springfox.jpg&quot; alt=&quot;springfox迁移到springdoc的注解变动&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;集成中遇到的问题&quot;&gt;集成中遇到的问题&lt;/h1&gt;
+&lt;p&gt;我在集成过程中遇到的最大的问题就是明明集成好了，但是swagger的访问页面还是swagger的默认petStore的页面，而不是我配置的controller的页面。这个问题让我排查了好久。
+&lt;img src=&quot;/images/tech/spring/springdoc-petstore-page.jpg&quot; alt=&quot;springdoc总是显示默认petstore接口&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;首先，我们我们要先了解的是，swagger-ui是一套api展示页面，他的数据是从&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;v3/api-docs&lt;/code&gt;接口获取的json数据。&lt;br /&gt;
+所以排查问题，我们首先要看页面有没有调用这个接口（有可能我们在配置文件了将这个接口改了），再次看看这个接口有没有返回正常的json结果。
+&lt;img src=&quot;/images/tech/spring/springdoc-v3-apidocs.jpg&quot; alt=&quot;springdoc的数据接口&quot; /&gt;
+如果这这个接口返回了正常的数据，且是我们的配置的接口数据，那么问题很可能是我们的一些安全配置将swagger的相关接口给屏蔽了。&lt;br /&gt;
+比如&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;WebSecurityConfigurerAdapter&lt;/code&gt;, 我就是在这个环节上出的问题&lt;/p&gt;
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;@EnableGlobalMethodSecurity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prePostEnabled&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;securedEnabled&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;SecurityConfig&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;WebSecurityConfigurerAdapter&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;protected&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;configure&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;HttpSecurity&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;httpSecurity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Exception&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;项目demo&quot;&gt;项目demo&lt;/h1&gt;
+&lt;p&gt;集成了application，java bean config 两种方式的demo
+&lt;a href=&quot;https://github.com/Hanchers/spring-boot-demo/tree/master/springdoc-openapi&quot;&gt;springdoc-demo&lt;/a&gt;&lt;/p&gt;</content><author><name>寒澈</name></author><category term="spring" /><summary type="html">在项目中经常使用swagger来作为项目接口的自动化api文档，尤其是springboot项目，一般都是通过springfox-boot-starter来集成swagger的使用。 springfox-boot-starter 在2.x时代用着很方便，但是随着项目的发展，尤其是spring项目的不断推出新版本， springfox-boot-starter在3.0版本就已经明显存在兼容性问题了，而且已经3年多没维护了，所以寻找替代品是一种虽然不紧迫但很必须的事项了。 而springdoc-openapi就是springfox-boot-starter的替代品，且获得了swagger的官方支持，算是springfox在springboot高版本的天热替代品。</summary></entry><entry><title type="html">linux定时任务crontab不执行的问题排查过程</title><link href="https://www.hancher.top/pages/Hanchers/2023/10/13/crontab_not_work/" rel="alternate" type="text/html" title="linux定时任务crontab不执行的问题排查过程" /><published>2023-10-13T00:00:00+08:00</published><updated>2023-10-13T00:00:00+08:00</updated><id>https://www.hancher.top/pages/Hanchers/2023/10/13/crontab_not_work</id><content type="html" xml:base="https://www.hancher.top/pages/Hanchers/2023/10/13/crontab_not_work/">&lt;h3 id=&quot;背景&quot;&gt;背景&lt;/h3&gt;
+&lt;p&gt;最近在搞一个比较复杂的crontab 定时任务， 核心思路就是通过crontab触发一个bash脚本，调用docker内的一个指令，来实现docker积压日志的删除清理操作。&lt;/p&gt;
+
+&lt;p&gt;然后问题就来了：我通过命令行调用脚本，能够正常执行，但是通过crontab，脚本就死活调用不成功。&lt;/p&gt;
+
+&lt;p&gt;以下就是记录的排查crontab调用不成功的过程：&lt;/p&gt;
+
+&lt;h3 id=&quot;案发现场&quot;&gt;案发现场&lt;/h3&gt;
+&lt;p&gt;crontab上配置定时任务,把该有的环境变量都配置上，脚本的开头也加上了&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;source /etc/profile&lt;/code&gt; 为了方便排查，调度改为2分钟一次&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-crontab&quot;&gt;*/2 * * * *  /usr/bin/docker exec -it container-name bash  -c &apos;sh /var/log/del_overdue_log.sh&apos; 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;不出意外的话，定时任务调度失败了。&lt;/p&gt;
+
+&lt;p&gt;通过&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tail -f /var/log/cron&lt;/code&gt;  去cron调度日志里查看调用情况：&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Oct 13 10:58:01 : CROND[27764]: &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;root&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; CMD &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;/usr/bin/docker &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-it&lt;/span&gt; container-name bash  &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;sh /var/log/del_overdue_log.sh&apos;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Oct 13 10:58:01 : &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;root&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; MAIL &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;mailed 54 bytes of output but got status 0x004b#012&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;日志表示，我们的cron任务调度了，但是没有成功。 失败原因本来想通过mail发给当前root用户的，但发送失败了，原因是获得了一个失败状态吗。&lt;/p&gt;
+
+&lt;p&gt;如何解决这个mail发送失败的问题呢?&lt;/p&gt;
+
+&lt;h4 id=&quot;启用postfix-接收系统邮件&quot;&gt;启用postfix 接收系统邮件&lt;/h4&gt;
+
+&lt;p&gt;去&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/postfix/main.cf&lt;/code&gt; 配置文件,搜索inet_interfaces，改成如下配置&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;inet_interfaces &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; all
+&lt;span class=&quot;c&quot;&gt;# inet_interfaces = localhost&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;重启postfix&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;systemctl restart postfix
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;此时，我们就可以收到cron调度失败的系统通知邮件了。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tail -f /var/spool/mail/root &lt;/code&gt; 查看邮件信息：&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;From root@host.localdomain  Fri Oct 13 12:56:01 2023
+Return-Path: &amp;lt;root@host.localdomain&amp;gt;
+X-Original-To: root
+Delivered-To: root@host.localdomain
+Received: by host.localdomain (Postfix, from userid 0)
+	id D94301329A7; Fri, 13 Oct 2023 12:56:01 +0800 (CST)
+From: &quot;(Cron Daemon)&quot; &amp;lt;root@host.localdomain&amp;gt;
+To: root@host.localdomain
+Subject: Cron &amp;lt;root@host&amp;gt; /usr/bin/docker exec -it container-name bash  -c &apos;sh /var/log/del_overdue_log.sh&apos;
+Content-Type: text/plain; charset=UTF-8
+Auto-Submitted: auto-generated
+Precedence: bulk
+X-Cron-Env: &amp;lt;XDG_SESSION_ID=2387&amp;gt;
+X-Cron-Env: &amp;lt;XDG_RUNTIME_DIR=/run/user/0&amp;gt;
+X-Cron-Env: &amp;lt;LANG=en_US.UTF-8&amp;gt;
+X-Cron-Env: &amp;lt;SHELL=/bin/sh&amp;gt;
+X-Cron-Env: &amp;lt;HOME=/root&amp;gt;
+X-Cron-Env: &amp;lt;PATH=/usr/bin:/bin&amp;gt;
+X-Cron-Env: &amp;lt;LOGNAME=root&amp;gt;
+X-Cron-Env: &amp;lt;USER=root&amp;gt;
+Message-Id: &amp;lt;20231013045601.D94301329A7@host.localdomain&amp;gt;
+Date: Fri, 13 Oct 2023 12:56:01 +0800 (CST)
+
+the input device is not a TTY
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;会发现，失败的原因是我们的脚本调度器不是TTY(终端)，所以失败了。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;注意，问题定位后记得把postfix配置恢复原状&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&quot;问题定位&quot;&gt;问题定位&lt;/h4&gt;
+&lt;p&gt;找到日志了，任务调度失败的原因也找到了，分析一下我们的任务指令，发现我们在脚本调度命令里存在选项&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt; docker exec -it&lt;/code&gt; 配置。&lt;/p&gt;
+
+&lt;p&gt;问题就在这个&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-it&lt;/code&gt; 上面了，这要求我们开启一个交互式终端来控制docker指令，而crontab调度器明显不是一个终端，所以失败了。&lt;/p&gt;
+
+&lt;h3 id=&quot;问题解决&quot;&gt;问题解决&lt;/h3&gt;
+&lt;p&gt;把命令行里的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-it&lt;/code&gt;去掉，改为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-d&lt;/code&gt;后端调用就可以了。以下是最终版配置&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-crontab&quot;&gt;* 1 * * *  /usr/bin/docker exec -d container-name bash  -c &apos;sh /var/log/del_overdue_log.sh&apos; &amp;gt;/dev/null 2&amp;gt;$1 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;最终指令改了两点:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;将&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-it&lt;/code&gt;改为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-d&lt;/code&gt;， 解决crontab调度失败的问题。&lt;/li&gt;
+  &lt;li&gt;在crontab命令上增加 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;gt;/dev/null 2&amp;gt;$1&lt;/code&gt; 配置，这是为了取消任务调度的系统日志产生，防止系统日志爆炸，也可以不加。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;结论&quot;&gt;结论&lt;/h3&gt;
+&lt;p&gt;授之以渔不如授之以渔， 出现问题不可怕，只要我们掌握了一些解决问题的方法论， 任何问题都能迎刃而解。&lt;/p&gt;
+
+&lt;h3 id=&quot;参考&quot;&gt;参考&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.geeksforgeeks.org/crontab-in-linux-with-examples/&quot;&gt;‘crontab’ in Linux with Examples&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://zhangge.net/5093.html&quot;&gt;crontab不执行排查&lt;/a&gt;&lt;/p&gt;</content><author><name>寒澈</name></author><category term="编程人生" /><summary type="html">背景 最近在搞一个比较复杂的crontab 定时任务， 核心思路就是通过crontab触发一个bash脚本，调用docker内的一个指令，来实现docker积压日志的删除清理操作。</summary></entry><entry><title type="html">java应用连接docker内的oracle时报ORA-01882错误</title><link href="https://www.hancher.top/pages/Hanchers/2023/08/18/java_oracle_docker_timezone_not_find/" rel="alternate" type="text/html" title="java应用连接docker内的oracle时报ORA-01882错误" /><published>2023-08-18T00:00:00+08:00</published><updated>2023-08-18T00:00:00+08:00</updated><id>https://www.hancher.top/pages/Hanchers/2023/08/18/java_oracle_docker_timezone_not_find</id><content type="html" xml:base="https://www.hancher.top/pages/Hanchers/2023/08/18/java_oracle_docker_timezone_not_find/">&lt;h2 id=&quot;问题描述&quot;&gt;问题描述&lt;/h2&gt;
+&lt;p&gt;数据库升级，用docker容器安装oracle11g数据库，应用连接的时候报ORA-01882错误&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;java.sql.SQLException: ORA-00604: error occurred at recursive SQL level 1
+ORA-01882: timezone region not found
+
+        at oracle.jdbc.driver.T4CTTIoer11.processError(T4CTTIoer11.java:509)
+        at oracle.jdbc.driver.T4CTTIoer11.processError(T4CTTIoer11.java:456)
+        at oracle.jdbc.driver.T4CTTIoer11.processError(T4CTTIoer11.java:451)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;环境：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;jdk ： openjdk8&lt;/li&gt;
+  &lt;li&gt;oracle: 11g&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;解决&quot;&gt;解决&lt;/h2&gt;
+&lt;p&gt;问题本质上是java应用程序启动时, 找不到本地系统的时区环境变量导致。 我们只有把时区环境变量配置上就可以了。&lt;/p&gt;
+
+&lt;p&gt;解决办法有二：&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;java应用程序启动时增加环境变量配置
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;-Duser&lt;/span&gt;.timezone&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;xxx（xxx为oracle时区ID）
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;直接修改服务器的系统环境变量（更彻底）
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# 时间更新为东八区时间&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;cp&lt;/span&gt; /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+&lt;span class=&quot;c&quot;&gt;# 配置时区为东八区。 Java可以通过Timezone获取时区的，修改完重启服务即可。&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;Asia/Shanghai&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;/etc/timezone
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;如果是docker的话，将宿主机改为上述配置后，docker容器启动(run)增加挂载配置就可以了&lt;/p&gt;
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-v /etc/localtime:/etc/localtime
+-v /etc/timezone:/etc/timezone
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</content><author><name>寒澈</name></author><category term="编程人生" /><summary type="html">问题描述 数据库升级，用docker容器安装oracle11g数据库，应用连接的时候报ORA-01882错误 ``` java.sql.SQLException: ORA-00604: error occurred at recursive SQL level 1 ORA-01882: timezone region not found</summary></entry><entry><title type="html">git优雅迁库的方式</title><link href="https://www.hancher.top/pages/Hanchers/2023/07/31/git_mirror/" rel="alternate" type="text/html" title="git优雅迁库的方式" /><published>2023-07-31T00:00:00+08:00</published><updated>2023-07-31T00:00:00+08:00</updated><id>https://www.hancher.top/pages/Hanchers/2023/07/31/git_mirror</id><content type="html" xml:base="https://www.hancher.top/pages/Hanchers/2023/07/31/git_mirror/">&lt;p&gt;在我们开发项目的时候，经常会遇到将一个git仓库迁移到一个新的git仓库的情况。 这个时候很多人会把原始的仓库最新代码复制到新库目录下，然后force push即可。&lt;/p&gt;
+
+&lt;p&gt;但是这样会产生一个问题，就是新库会把我们的历史提交记录等信息全部丢失了，当做一个全新的仓库来处理，这样给我们后续的问题追踪回溯带来了一些问题。&lt;/p&gt;
+
+&lt;p&gt;下面我们介绍一下git优雅迁库的三种方式。&lt;/p&gt;
+
+&lt;h3 id=&quot;裸库方式推荐&quot;&gt;裸库方式(推荐)&lt;/h3&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 使用--bare克隆裸仓库
+git clone &lt;span class=&quot;nt&quot;&gt;--bare&lt;/span&gt; git@url1
+// 推送到新库
+git push  git@url2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;镜像库方式&quot;&gt;镜像库方式&lt;/h3&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 使用--mirror克隆裸仓库
+git clone &lt;span class=&quot;nt&quot;&gt;--mirror&lt;/span&gt; git@url1
+// 推送到新库
+git push  git@url2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;镜像库是裸库的一种简写,等同于：&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git clone &lt;span class=&quot;nt&quot;&gt;--bare&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$URL&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;basename&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$URL&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; git remote add &lt;span class=&quot;nt&quot;&gt;--mirror&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;fetch origin &lt;span class=&quot;nv&quot;&gt;$URL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;由此可知，裸库方式clone下的是git仓库的基本信息。镜像库不仅把基本信息clone下来了，还拉去了最新的分支代码。&lt;/p&gt;
+
+&lt;h3 id=&quot;新增remote方式&quot;&gt;新增remote方式&lt;/h3&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git remote add origin2 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;repo-url]
+git push origin2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;参考&quot;&gt;参考&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://stackoverflow.com/questions/3959924/whats-the-difference-between-git-clone-mirror-and-git-clone-bare&quot;&gt;git clone –mirror 和 –bare的区别&lt;/a&gt;&lt;/p&gt;</content><author><name>寒澈</name></author><category term="git" /><summary type="html">在我们开发项目的时候，经常会遇到将一个git仓库迁移到一个新的git仓库的情况。 这个时候很多人会把原始的仓库最新代码复制到新库目录下，然后force push即可。</summary></entry></feed>

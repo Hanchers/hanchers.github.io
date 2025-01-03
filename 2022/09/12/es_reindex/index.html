@@ -1,0 +1,135 @@
+<!DOCTYPE html><html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /><title>Elasticsearch重建索引 &mdash; 寒澈笔记</title><link rel="stylesheet" href="https://www.hancher.top/assets/vendor/primer-css/css/primer.css"><link rel="stylesheet" href="https://www.hancher.top/assets/css/components/collection.css"><link rel="stylesheet" href="https://www.hancher.top/assets/css/components/repo-card.css"><link rel="stylesheet" href="https://www.hancher.top/assets/css/sections/repo-list.css"><link rel="stylesheet" href="https://www.hancher.top/assets/css/components/boxed-group.css"><link rel="stylesheet" href="https://www.hancher.top/assets/css/globals/common.css"><link rel="stylesheet" href="https://www.hancher.top/assets/css/globals/responsive.css"><link rel="stylesheet" href="https://www.hancher.top/assets/css/posts/index.css"><link rel="stylesheet" href="https://www.hancher.top/assets/vendor/octicons/octicons/octicons.css"><link rel="stylesheet" href="https://www.hancher.top/assets/css/theme/github.css"><link rel="canonical" href="https://www.hancher.top/2022/09/12/es_reindex/"><link rel="alternate" type="application/atom+xml" title="寒澈笔记" href="https://www.hancher.top"><link rel="shortcut icon" href="https://www.hancher.top/favicon.ico"><meta property="og:title" content="Elasticsearch重建索引"><meta name="keywords" content="Elasticsearch,重建索引"><meta name="og:keywords" content="Elasticsearch,重建索引"><meta name="description" content="为什么要重建索引"><meta name="og:description" content="为什么要重建索引"><meta property="og:url" content="https://www.hancher.top/2022/09/12/es_reindex/"><meta property="og:site_name" content="寒澈笔记"><meta property="og:type" content="article"><meta property="og:locale" content="zh_CN" /><meta property="article:published_time" content="2022-09-12"> <script src="https://www.hancher.top/assets/vendor/jquery/dist/jquery.min.js"></script> <script src="https://www.hancher.top/assets/js/jquery-ui.js"></script> <script src="https://www.hancher.top/assets/js/main.js"></script> <script async src="https://www.googletagmanager.com/gtag/js?id=G-4VZMWRNQQE"></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-4VZMWRNQQE'); </script> <script> var _hmt = _hmt || []; (function() { var hm = document.createElement("script"); hm.src = "https://hm.baidu.com/hm.js?255889a39686581da013e7c8a40eef7c"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hm, s); })(); </script></head><body class="" data-mz=""><header class="site-header"><div class="container"><h1><a href="https://www.hancher.top/" title="寒澈笔记"><span class="octicon octicon-mark-github"></span> 寒澈笔记</a></h1><button class="collapsed mobile-visible" type="button" onclick="toggleMenu();"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button><nav class="site-header-nav" role="navigation"> <a href="https://www.hancher.top/" class=" site-header-nav-item" target="" title="首页">首页</a> <a href="https://www.hancher.top/categories/" class=" site-header-nav-item" target="" title="分类">分类</a> <a href="https://www.hancher.top/archives/" class=" site-header-nav-item" target="" title="归档">归档</a> <a href="https://www.hancher.top/wiki/" class=" site-header-nav-item" target="" title="收藏">收藏</a> <a href="https://www.hancher.top/about/" class=" site-header-nav-item" target="" title="关于">关于</a></nav></div></header><section class="collection-head small geopattern" data-pattern-id="Elasticsearch重建"><div class="container"><div class="columns"><div class="column three-fourths"><div class="collection-title"><h1 class="collection-header">Elasticsearch重建索引</h1><div class="collection-info"> <span class="meta-info"> <span class="octicon octicon-calendar"></span> 2022/09/12 </span> <span class="meta-info"> <span class="octicon octicon-file-directory"></span> <a href="https://www.hancher.top/categories/#编程技巧" title="编程技巧">编程技巧</a> </span> <span class="meta-info"> <span class="octicon octicon-file-directory"></span> <a href="https://www.hancher.top/categories/#Elasticsearch" title="Elasticsearch">Elasticsearch</a> </span> <span class="meta-info"> <span class="octicon octicon-clock"></span> 共 2157 字，约 7 分钟 </span></div></div></div><div class="column one-fourth mobile-hidden"><div class="collection-title"></div></div></div></div></section><section class="container content"><div class="columns"><div class="column three-fourths" ><article class="article-content markdown-body"><h2 id="为什么要重建索引">为什么要重建索引</h2><p>众所周知, es是一种高效的数据查询,检索引擎。 可以对海量的数据进行快速的查询。但是在使用es的时候，经常会遇到一个比较尴尬的问题，那就是es索引里的字段类型是固定的，不可修改的。而es的索引又是可以自动扩展字段的。 这个时候自动扩展出来的字段就是使用了默认的字段类型(通常是text类型)。</p><p>惊不惊喜！</p><p>查看索引字段的方法:</p><div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">GET</span><span class="w"> </span><span class="err">/my_index</span><span class="w">
+
+</span><span class="p">{</span><span class="w">
+    </span><span class="nl">"my_index"</span><span class="p">:{</span><span class="w">
+        </span><span class="nl">"mappings"</span><span class="p">:{</span><span class="w">
+            </span><span class="nl">"_doc"</span><span class="p">:{</span><span class="w">
+                </span><span class="nl">"dynamic_templates"</span><span class="p">:[</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="nl">"string_fields"</span><span class="p">:{</span><span class="w">
+                            </span><span class="nl">"match_mapping_type"</span><span class="p">:</span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+                            </span><span class="nl">"mapping"</span><span class="p">:{</span><span class="w">
+                                </span><span class="nl">"type"</span><span class="p">:</span><span class="s2">"keyword"</span><span class="w">
+                            </span><span class="p">}</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="nl">"properties"</span><span class="p">:{</span><span class="w">
+                    </span><span class="nl">"field_a"</span><span class="p">:{</span><span class="w">
+                        </span><span class="nl">"type"</span><span class="p">:</span><span class="s2">"keyword"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nl">"field_b"</span><span class="p">:{</span><span class="w">
+                        </span><span class="nl">"type"</span><span class="p">:</span><span class="s2">"date"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"format"</span><span class="p">:</span><span class="s2">"yyyy-MM-dd HH:mm:ss"</span><span class="w">
+                    </span><span class="p">},</span><span class="w">
+                    </span><span class="nl">"field_c"</span><span class="p">:{</span><span class="w">
+                        </span><span class="nl">"type"</span><span class="p">:</span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"norms"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"fields"</span><span class="p">:{</span><span class="w">
+                            </span><span class="nl">"keyword"</span><span class="p">:{</span><span class="w">
+                                </span><span class="nl">"type"</span><span class="p">:</span><span class="s2">"keyword"</span><span class="p">,</span><span class="w">
+                                </span><span class="nl">"ignore_above"</span><span class="p">:</span><span class="mi">256</span><span class="w">
+                            </span><span class="p">}</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span></code></pre></div></div><p>聪明的你肯定想到了, 如果我们忘记加字段了, 或者字段加错了要修改字段类型咋办? 这个时候场景的办法就只有一个了:</p><p>重建索引!</p><p>从数据库角度来看,也就是新增新表, 迁移数据, 删除老表.</p><h2 id="背景-与-目标">背景 与 目标</h2><p>Elasticsearch 版本 : v 6.6 目标: 在my_index 索引上新增一个integer字段. 且中间不间断服务.</p><h2 id="s1-使用别名代替实体索引">S1: 使用别名代替实体索引</h2><p>使用<a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.6/indices-aliases.html">aliases api</a> 创建一个别名my_index 指向实际的索引my_idex. 这样,我们通过my_index访问数据时, 就不会直接访问my_index索引了, 而是通过别名指向对应的索引.</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /_aliases
+{
+    "actions" : [
+        { "add" : { "index" : "my_index", "alias" : "my_index" } }
+    ]
+}
+</code></pre></div></div><h2 id="s2-创建新的索引">S2: 创建新的索引</h2><p>使用 <a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.6/indices-put-mapping.html">put mapping api</a> 打算新增一个字段 <strong>fiedl_d</strong>, 数据类型.</p><p>因为默认的string类型是keyword (假设, 意会即可), 所以如果想要新增一个整型类型, 就不能通过自动的扩展字段使用默认类型的方式. 所以必须显式的指定字段类型.</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>put my_index2
+
+{
+    "_doc":{
+        "dynamic_templates":[
+            {
+                "string_fields":{
+                    "match_mapping_type":"string",
+                    "mapping":{
+                        "type":"keyword"
+                    }
+                }
+            }
+        ],
+        "properties":{
+            "field_a":{
+                "type":"keyword"
+            },
+            "field_b":{
+                "type":"date",
+                "format":"yyyy-MM-dd HH:mm:ss"
+            },
+            "field_c":{
+                "type":"text",
+                "norms":false,
+                "fields":{
+                    "keyword":{
+                        "type":"keyword",
+                        "ignore_above":256
+                    }
+                }
+            },
+            "field_d":{
+                "type":"integer"
+            }
+        }
+    }
+}
+</code></pre></div></div><h2 id="s3-迁移数据">S3: 迁移数据</h2><p>使用 <a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.6/docs-reindex.html">Reindex api</a> 将老的my_index 数据迁移到新的my_index2上. 这一步比较耗时, 做好心理准备.</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST _reindex
+{
+  "source": {
+    "index": "my_index"
+  },
+  "dest": {
+    "index": "my_index2"
+  }
+}
+</code></pre></div></div><h2 id="s4-变更别名">S4: 变更别名</h2><p>使用<a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.6/indices-aliases.html">aliases api</a> 将别名从老的index, 指向新的index</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /_aliases
+{
+    "actions" : [
+        { "remove" : { "index" : "my_index", "alias" : "my_index" } },
+        { "add" : { "index" : "my_index2", "alias" : "my_index" } }
+    ]
+}
+</code></pre></div></div><h2 id="s5-将老索引的增量数据迁移到新索引上">S5: 将老索引的增量数据迁移到新索引上</h2><p>处理迁移期间my_index 发生的增量数据</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST _reindex
+{
+  "size": 10000,
+  "source": {
+    "index": "my_index",
+    "sort": { "date": "desc" }
+  },
+  "dest": {
+    "index": "my_index2"
+  }
+}
+</code></pre></div></div><h2 id="s6-删除老索引">S6: 删除老索引</h2><p>使用 <a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.6/indices-delete-index.html">delete api</a></p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>delete my_index
+</code></pre></div></div><h2 id="总结">总结</h2><p>至此, 整个重建索引过程完毕. 很麻烦吧. 为了不这么麻烦, 以后要给es 增加新字段时, 一定要先通过maping的方式先新增字段. 然后再在代码里处理相对应的逻辑.</p><p>over!</p><h2 id="补充说明">补充说明</h2><p>可以通过put mapping的方式, 增量补充索引的字段</p><div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">PUT</span><span class="w"> </span><span class="err">my_index</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"mappings"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"_doc"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"manager"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"age"</span><span class="p">:</span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"integer"</span><span class="w"> </span><span class="p">},</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="w">  </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"employees"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"nested"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"age"</span><span class="p">:</span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"integer"</span><span class="w"> </span><span class="p">},</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="w">  </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div><h2 id="参考">参考</h2><p><a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.6/docs.html">官方文档-api</a> <a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.6/indices.html">官方文档-api2</a></p><div style="margin-top:2em;padding:0 1.5em;border:1px solid #d3d3d3;background-color:#deebf7"><h3>文档信息</h3><ul><li>本文作者：<a href="https://www.hancher.top" target="_blank">寒澈</a></li><li>本文链接：<a href="https://www.hancher.top/2022/09/12/es_reindex/" target="_blank">https://www.hancher.top/2022/09/12/es_reindex/</a></li><li>版权声明：自由转载-非商用-非衍生-保持署名（<a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" target="_blank">创意共享3.0许可证</a>）</li></ul></div></article><div class="share"></div><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6938023200141592" crossorigin="anonymous"></script><div class="comment"> <script src="https://beaudar.lipk.org/client.js" repo="Hanchers/hanchers.github.io" issue-term="title" label="gitment" theme="github-light" comment-order="desc" input-position="top" branch="main" crossorigin="anonymous" async> </script></div></div><div class="column one-fourth"><h3>Search</h3><div id="site_search"> <input style="width:96%" type="text" id="search_box" placeholder="内容搜索"></div><ul id="search_results" style="font-size:14px;list-style-type:none;padding-top:10px;padding-left:10px;"></ul><script src="https://www.hancher.top/assets/js/simple-jekyll-search.min.js"></script> <script type="text/javascript"> SimpleJekyllSearch({ searchInput: document.getElementById('search_box'), resultsContainer: document.getElementById('search_results'), json: 'https://www.hancher.top/assets/search_data.json?v=1735889639', searchResultTemplate: '<li><a href="{url}" title="{title}">{title}</a></li>', noResultsText: 'No results found', limit: 10, fuzzy: false, exclude: ['Welcome'] }) </script><h3 class="post-directory-title mobile-hidden">Table of Contents</h3><div id="post-directory-module" class="mobile-hidden"><section class="post-directory"><dl></dl></section></div><script src="https://www.hancher.top/assets/js/jquery.toc.js"></script> <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6938023200141592" crossorigin="anonymous"></script></div></div></section><footer class="container"> <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6938023200141592" crossorigin="anonymous"> </script><div class="site-footer" role="contentinfo"><div class="copyright left mobile-block"> © 2022 <span title="寒澈">寒澈</span> <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a></div><ul class="site-footer-links right mobile-hidden"><li> <a href="javascript:window.scrollTo(0,0)" >TOP</a></li></ul><a href="https://github.com/Hanchers/hanchers.github.io" target="_blank" aria-label="view source code"> <span class="mega-octicon octicon-mark-github" title="GitHub"></span> </a><ul class="site-footer-links mobile-hidden"><li> <a href="https://www.hancher.top/" title="首页" target="">首页</a></li><li> <a href="https://www.hancher.top/categories/" title="分类" target="">分类</a></li><li> <a href="https://www.hancher.top/archives/" title="归档" target="">归档</a></li><li> <a href="https://www.hancher.top/wiki/" title="收藏" target="">收藏</a></li><li> <a href="https://www.hancher.top/about/" title="关于" target="">关于</a></li><li><a href="https://www.hancher.top"><span class="octicon octicon-rss" style="color:orange;"></span></a></li></ul><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div class="mobile-hidden" style="margin-top:8px"> <span id="busuanzi_container_site_pv" style="display:none"> 本站访问量<span id="busuanzi_value_site_pv"></span>次 </span> <span id="busuanzi_container_site_uv" style="display:none"> / 本站访客数<span id="busuanzi_value_site_uv"></span>人 </span> <span id="busuanzi_container_page_pv" style="display:none"> / 本页访问量<span id="busuanzi_value_page_pv"></span>次 / 统计始于2023-03-26 </span></div></div></footer><div class="tools-wrapper"> <a class="gotop" href="#" title="回到顶部"><span class="octicon octicon-arrow-up"></span></a></div><script src="https://www.hancher.top/assets/js/geopattern.js"></script> <script> jQuery(document).ready(function($) { $('.geopattern').each(function(){ $(this).geopattern($(this).data('pattern-id')); }); /* hljs.initHighlightingOnLoad(); */ }); </script></body></html>
