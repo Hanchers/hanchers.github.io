@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /*.js$
+Disallow: /*.css$
+Disallow: /images
+Disallow: /img
+Disallow: /tags
+Disallow: /categories
+
+Sitemap: https://www.hancher.top/sitemap.xml
