@@ -1,0 +1,961 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN,zh-HK,en,default" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/images/site/coder.jpeg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="寒澈">
+  <meta name="keywords" content="java,Python，go,vue, 大数据，AI,机器学习,Mysql,数据库,spring">
+  
+    <meta name="description" content="上一篇文章介绍了如果通过graalVM 打包java本地应用，这里我们继续介绍如何通过docker打包java的原生镜像">
+<meta property="og:type" content="article">
+<meta property="og:title" content="springboot可以把项目打包成app了，docker打包版">
+<meta property="og:url" content="https://www.hancher.top/2025/03/08/spring-spring-native-image-docker/index.html">
+<meta property="og:site_name" content="寒澈笔记">
+<meta property="og:description" content="上一篇文章介绍了如果通过graalVM 打包java本地应用，这里我们继续介绍如何通过docker打包java的原生镜像">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.hancher.top/images/docker/docker.png">
+<meta property="article:published_time" content="2025-03-08T02:00:00.000Z">
+<meta property="article:modified_time" content="2025-03-08T02:00:00.000Z">
+<meta property="article:author" content="寒澈">
+<meta property="article:tag" content="docker">
+<meta property="article:tag" content="spring">
+<meta property="article:tag" content="springboot3.x">
+<meta property="article:tag" content="native-image">
+<meta property="article:tag" content="GraalVM">
+<meta property="article:tag" content="native-application">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.hancher.top/images/docker/docker.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>springboot可以把项目打包成app了，docker打包版 - 寒澈笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/blog.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.hancher.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"255889a39686581da013e7c8a40eef7c","google":{"measurement_id":"G-4VZMWRNQQE"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"zqhOsrozoSMTfBNVSHXyTh45-gzGzoHsz","app_key":"EUXdctCzoy7rxXqCDUDv1J6a","server_url":"https://zqhosroz.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?255889a39686581da013e7c8a40eef7c";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-4VZMWRNQQE", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-4VZMWRNQQE');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>寒澈笔记</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/game/2048_game.html" target="_self">
+                <i class="iconfont icon-game"></i>
+                <span>游戏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/favorite/" target="_self">
+                <i class="iconfont icon-book"></i>
+                <span>收藏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/site/night.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="springboot可以把项目打包成app了，docker打包版"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          26 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">springboot可以把项目打包成app了，docker打包版</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>上一篇文章介绍了如果通过graalVM 打包java本地应用，这里我们继续介绍如何通过docker打包java的原生镜像。</p>
+<p>在操作之前，我们先思考一下问题：为什么要打包成docker容器呢？</p>
+<p>就是为了云原生！</p>
+<p>或者说，java的本地app打包功能的支持，一大原因就是为了适应云原生时代，所以支持容器也是必然的选择了。</p>
+<p><img src="/../../images/tech/spring/spring_native_app_docker.png" srcset="/img/loading.gif" lazyload alt="java原生app docker化后部署架构图"></p>
+<p>下面开始展现代码实现。</p>
+<h2 id="代码和依赖"><a href="#代码和依赖" class="headerlink" title="代码和依赖"></a>代码和依赖</h2><p>代码部分和本地环境配置方面，和上篇文章 <a href="https://www.hancher.top/2025/03/04/spring-spring-native-image-graalvm/">springboot可以把项目打包成app了，Graal打包版</a> 里的<code>graalvm-native-app</code>项目完全一致，就不多说了。</p>
+<p>接下来是打包部分的差异。</p>
+<p>要将项目打包成docker的原生应用镜像，需要先在操作系统上安装docker环境。</p>
+<ul>
+<li>linux: 参考<a href="https://docs.docker.com/engine/install/">官方文档</a>选择自己的发行版安装</li>
+<li>mac&#x2F;windows: 个人开发这可以安装docker desktop应用，一键安装，很简单。</li>
+</ul>
+<p>docker 安装好 和 nik包（见上文）安装完成后，我们的环境就准备好了。</p>
+<h3 id="打包"><a href="#打包" class="headerlink" title="打包"></a>打包</h3><p>要想打包成docker 原生app镜像，需要依赖一个<code>paketobuildpacks/builder-jammy-java-tiny</code>镜像。</p>
+<p>项目打包过程中也会自动下载，但是提前准备好会提升打包效率。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker pull paketobuildpacks/builder-jammy-java-tiny:latest<br></code></pre></td></tr></table></figure>
+<p>镜像pull成功后，就可以执行打包命令了，理论上，不用任何操作，一条命令即可将springboot项目打包成docker镜像</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">mvn -Pnative spring-boot:build-image<br></code></pre></td></tr></table></figure>
+<p>此命令和下面的配置效果一样：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">build</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">plugins</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span><br>			<span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>			<span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>			<span class="hljs-tag">&lt;<span class="hljs-name">executions</span>&gt;</span><br>				<span class="hljs-tag">&lt;<span class="hljs-name">execution</span>&gt;</span><br>					<span class="hljs-tag">&lt;<span class="hljs-name">goals</span>&gt;</span><br>						<span class="hljs-tag">&lt;<span class="hljs-name">goal</span>&gt;</span>build-image<span class="hljs-tag">&lt;/<span class="hljs-name">goal</span>&gt;</span><br>					<span class="hljs-tag">&lt;/<span class="hljs-name">goals</span>&gt;</span><br>				<span class="hljs-tag">&lt;/<span class="hljs-name">execution</span>&gt;</span><br>			<span class="hljs-tag">&lt;/<span class="hljs-name">executions</span>&gt;</span><br>		<span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">plugins</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">build</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>都是触发springboot构建插件里的构建docker镜像逻辑。</p>
+<p>下面是部分构建过程：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br></pre></td><td class="code"><pre><code class="hljs log">[INFO] --- spring-boot-maven-plugin:3.4.3:build-image (default-cli) @ graalvm-native-app ---<br>[INFO] Building image &#x27;docker.io/library/graalvm-native-app:0.0.1-SNAPSHOT&#x27;<br>[INFO] <br>[INFO]  &gt; Pulling builder image &#x27;docker.io/paketobuildpacks/builder-jammy-java-tiny:latest&#x27; 100%<br>[INFO]  &gt; Pulled builder image &#x27;paketobuildpacks/builder-jammy-java-tiny@sha256:c5c53c656d9151071482c79f2460aee477e25d05d83b5286549074707d1f76f1&#x27;<br>[INFO]  &gt; Pulling run image &#x27;docker.io/paketobuildpacks/run-jammy-tiny:latest&#x27; for platform &#x27;linux/arm64&#x27; 12%<br>[INFO]  &gt; Pulling run image &#x27;docker.io/paketobuildpacks/run-jammy-tiny:latest&#x27; for platform &#x27;linux/arm64&#x27; 32%<br>[INFO]  &gt; Pulling run image &#x27;docker.io/paketobuildpacks/run-jammy-tiny:latest&#x27; for platform &#x27;linux/arm64&#x27; 100%<br>[INFO]  &gt; Pulled run image &#x27;paketobuildpacks/run-jammy-tiny@sha256:0c5ac79d549c4b077a7d857631f817f8b573f5da2c109a51f320ee584d44d3f2&#x27;<br>[INFO]  &gt; Executing lifecycle version v0.20.6<br>[INFO]  &gt; Using build cache volume &#x27;pack-cache-064fa27f6606.build&#x27;<br>[INFO] <br>[INFO]  &gt; Running creator<br>[INFO]     [creator]     ===&gt; ANALYZING<br>[INFO]     [creator]     Image with name &quot;docker.io/library/graalvm-native-app:0.0.1-SNAPSHOT&quot; not found<br>[INFO]     [creator]     ===&gt; DETECTING<br>[INFO]     [creator]     target distro name/version labels not found, reading /etc/os-release file<br>[INFO]     [creator]     6 of 15 buildpacks participating<br>[INFO]     [creator]     paketo-buildpacks/ca-certificates   3.9.1<br>[INFO]     [creator]     paketo-buildpacks/bellsoft-liberica 11.0.5<br>[INFO]     [creator]     paketo-buildpacks/syft              2.8.0<br>[INFO]     [creator]     paketo-buildpacks/executable-jar    6.12.1<br>[INFO]     [creator]     paketo-buildpacks/spring-boot       5.32.1<br>[INFO]     [creator]     paketo-buildpacks/native-image      5.15.1<br>[INFO]     [creator]     ===&gt; RESTORING<br>[INFO]     [creator]     ===&gt; BUILDING<br>[INFO]     [creator]     target distro name/version labels not found, reading /etc/os-release file<br>[INFO]     [creator]     <br>[INFO]     [creator]     Paketo Buildpack for CA Certificates 3.9.1<br>[INFO]     [creator]       https://github.com/paketo-buildpacks/ca-certificates<br>[INFO]     [creator]       Build Configuration:<br>[INFO]     [creator]         $BP_EMBED_CERTS                    false  Embed certificates into the image<br>[INFO]     [creator]         $BP_ENABLE_RUNTIME_CERT_BINDING    true   Deprecated: Enable/disable certificate helper layer to add certs at runtime<br>[INFO]     [creator]         $BP_RUNTIME_CERT_BINDING_DISABLED  false  Disable certificate helper layer to add certs at runtime<br>[INFO]     [creator]       Launch Helper: Contributing to layer<br>[INFO]     [creator]         Creating /layers/paketo-buildpacks_ca-certificates/helper/exec.d/ca-certificates-helper<br>[INFO]     [creator]     <br>[INFO]     [creator]     Paketo Buildpack for BellSoft Liberica 11.0.5<br>[INFO]     [creator]       https://github.com/paketo-buildpacks/bellsoft-liberica<br>[INFO]     [creator]       Build Configuration:<br>[INFO]     [creator]         $BP_JVM_JLINK_ARGS           --no-man-pages --no-header-files --strip-debug --compress=1  configure custom link arguments (--output must be omitted)<br>[INFO]     [creator]         $BP_JVM_JLINK_ENABLED        false                                                        enables running jlink tool to generate custom JRE<br>[INFO]     [creator]         $BP_JVM_TYPE                 JRE                                                          the JVM type - JDK or JRE<br>[INFO]     [creator]         $BP_JVM_VERSION              21                                                           the Java version<br>[INFO]     [creator]       Launch Configuration:<br>[INFO]     [creator]         $BPL_DEBUG_ENABLED           false                                                        enables Java remote debugging support<br>[INFO]     [creator]         $BPL_DEBUG_PORT              8000                                                         configure the remote debugging port<br>[INFO]     [creator]         $BPL_DEBUG_SUSPEND           false                                                        configure whether to suspend execution until a debugger has attached<br>[INFO]     [creator]         $BPL_HEAP_DUMP_PATH                                                                       write heap dumps on error to this path<br>[INFO]     [creator]         $BPL_JAVA_NMT_ENABLED        true                                                         enables Java Native Memory Tracking (NMT)<br>[INFO]     [creator]         $BPL_JAVA_NMT_LEVEL          summary                                                      configure level of NMT, summary or detail<br>[INFO]     [creator]         $BPL_JFR_ARGS                                                                             configure custom Java Flight Recording (JFR) arguments<br>[INFO]     [creator]         $BPL_JFR_ENABLED             false                                                        enables Java Flight Recording (JFR)<br>[INFO]     [creator]         $BPL_JMX_ENABLED             false                                                        enables Java Management Extensions (JMX)<br>[INFO]     [creator]         $BPL_JMX_PORT                5000                                                         configure the JMX port<br>[INFO]     [creator]         $BPL_JVM_HEAD_ROOM           0                                                            the headroom in memory calculation<br>[INFO]     [creator]         $BPL_JVM_LOADED_CLASS_COUNT  35% of classes                                               the number of loaded classes in memory calculation<br>[INFO]     [creator]         $BPL_JVM_THREAD_COUNT        250                                                          the number of threads in memory calculation<br>[INFO]     [creator]         $JAVA_TOOL_OPTIONS                                                                        the JVM launch flags<br>[INFO]     [creator]         Using Java version 17 extracted from MANIFEST.MF<br>[INFO]     [creator]       BellSoft Liberica NIK 17.0.14: Contributing to layer<br>[INFO]     [creator]         Downloading from https://github.com/bell-sw/LibericaNIK/releases/download/23.0.7+1-17.0.14+10/bellsoft-liberica-vm-core-openjdk17.0.14+10-23.0.7+1-linux-aarch64.tar.gz<br>[INFO]     [creator]         Verifying checksum<br>[INFO]     [creator]         Expanding to /layers/paketo-buildpacks_bellsoft-liberica/native-image-svm<br>[INFO]     [creator]         Adding 146 container CA certificates to JVM truststore<br>[INFO]     [creator]         Writing env.build/JAVA_HOME.override<br>[INFO]     [creator]         Writing env.build/JDK_HOME.override<br>[INFO]     [creator]     <br>[INFO]     [creator]     Paketo Buildpack for Syft 2.8.0<br>[INFO]     [creator]       https://github.com/paketo-buildpacks/syft<br>[INFO]     [creator]         Downloading from https://github.com/anchore/syft/releases/download/v1.20.0/syft_1.20.0_linux_arm64.tar.gz<br>[INFO]     [creator]         Verifying checksum<br>[INFO]     [creator]         Writing env.build/SYFT_CHECK_FOR_APP_UPDATE.default<br>[INFO]     [creator]     <br>[INFO]     [creator]     Paketo Buildpack for Executable JAR 6.12.1<br>[INFO]     [creator]       https://github.com/paketo-buildpacks/executable-jar<br>[INFO]     [creator]       Class Path: Contributing to layer<br>[INFO]     [creator]         Writing env/CLASSPATH.delim<br>[INFO]     [creator]         Writing env/CLASSPATH.prepend<br>[INFO]     [creator]       Process types:<br>[INFO]     [creator]         executable-jar: java org.springframework.boot.loader.launch.JarLauncher (direct)<br>[INFO]     [creator]         task:           java org.springframework.boot.loader.launch.JarLauncher (direct)<br>[INFO]     [creator]         web:            java org.springframework.boot.loader.launch.JarLauncher (direct)<br>[INFO]     [creator]     <br>[INFO]     [creator]     Paketo Buildpack for Spring Boot 5.32.1<br>[INFO]     [creator]       https://github.com/paketo-buildpacks/spring-boot<br>[INFO]     [creator]       Build Configuration:<br>[INFO]     [creator]         $BPL_JVM_CDS_ENABLED                 false  whether to enable CDS optimizations at runtime<br>[INFO]     [creator]         $BPL_SPRING_AOT_ENABLED              false  whether to enable Spring AOT at runtime<br>[INFO]     [creator]         $BP_JVM_CDS_ENABLED                  false  whether to enable CDS &amp; perform JVM training run<br>[INFO]     [creator]         $BP_SPRING_AOT_ENABLED               false  whether to enable Spring AOT<br>[INFO]     [creator]         $BP_SPRING_CLOUD_BINDINGS_DISABLED   false  whether to contribute Spring Boot cloud bindings support<br>[INFO]     [creator]         $BP_SPRING_CLOUD_BINDINGS_VERSION    1      default version of Spring Cloud Bindings library to contribute<br>[INFO]     [creator]       Launch Configuration:<br>[INFO]     [creator]         $BPL_SPRING_CLOUD_BINDINGS_DISABLED  false  whether to auto-configure Spring Boot environment properties from bindings<br>[INFO]     [creator]         $BPL_SPRING_CLOUD_BINDINGS_ENABLED   true   Deprecated - whether to auto-configure Spring Boot environment properties from bindings<br>[INFO]     [creator]       Class Path: Contributing to layer<br>[INFO]     [creator]         Writing env.build/CLASSPATH.append<br>[INFO]     [creator]         Writing env.build/CLASSPATH.delim<br>[INFO]     [creator]       Image labels:<br>[INFO]     [creator]         org.opencontainers.image.title<br>[INFO]     [creator]         org.opencontainers.image.version<br>[INFO]     [creator]         org.springframework.boot.version<br>[INFO]     [creator]     <br>[INFO]     [creator]     Paketo Buildpack for Native Image 5.15.1<br>[INFO]     [creator]       https://github.com/paketo-buildpacks/native-image<br>[INFO]     [creator]       Build Configuration:<br>[INFO]     [creator]         $BP_BINARY_COMPRESSION_METHOD          Compression mechanism used to reduce binary size. Options: `none` (default), `upx` or `gzexe`<br>[INFO]     [creator]         $BP_NATIVE_IMAGE                       enable native image build<br>[INFO]     [creator]         $BP_NATIVE_IMAGE_BUILD_ARGUMENTS       arguments to pass to the native-image command<br>[INFO]     [creator]         $BP_NATIVE_IMAGE_BUILD_ARGUMENTS_FILE  a file with arguments to pass to the native-image command<br>[INFO]     [creator]         $BP_NATIVE_IMAGE_BUILT_ARTIFACT        the built application artifact explicitly, required if building from a JAR<br>[INFO]     [creator]       Native Image: Contributing to layer<br>[INFO]     [creator]         Executing native-image --no-fallback -H:+StaticExecutableWithDynamicLibC -H:Name=/layers/paketo-buildpacks_native-image/native-image/com.hancher.springboot3.graalvmnativeapp.GraalvmNativeAppApplication -cp /workspace:/workspace/BOOT-INF/classes:/workspace/BOOT-INF/lib/spring-boot-3.4.3.jar:/workspace/BOOT-INF/lib/spring-boot-autoconfigure-3.4.3.jar:/workspace/BOOT-INF/lib/logback-classic-1.5.16.jar:/workspace/BOOT-INF/lib/logback-core-1.5.16.jar:/workspace/BOOT-INF/lib/log4j-to-slf4j-2.24.3.jar:/workspace/BOOT-INF/lib/log4j-api-2.24.3.jar:/workspace/BOOT-INF/lib/jul-to-slf4j-2.0.16.jar:/workspace/BOOT-INF/lib/jakarta.annotation-api-2.1.1.jar:/workspace/BOOT-INF/lib/snakeyaml-2.3.jar:/workspace/BOOT-INF/lib/jackson-databind-2.18.2.jar:/workspace/BOOT-INF/lib/jackson-annotations-2.18.2.jar:/workspace/BOOT-INF/lib/jackson-core-2.18.2.jar:/workspace/BOOT-INF/lib/jackson-datatype-jdk8-2.18.2.jar:/workspace/BOOT-INF/lib/jackson-datatype-jsr310-2.18.2.jar:/workspace/BOOT-INF/lib/jackson-module-parameter-names-2.18.2.jar:/workspace/BOOT-INF/lib/tomcat-embed-core-10.1.36.jar:/workspace/BOOT-INF/lib/tomcat-embed-el-10.1.36.jar:/workspace/BOOT-INF/lib/tomcat-embed-websocket-10.1.36.jar:/workspace/BOOT-INF/lib/spring-web-6.2.3.jar:/workspace/BOOT-INF/lib/spring-beans-6.2.3.jar:/workspace/BOOT-INF/lib/micrometer-observation-1.14.4.jar:/workspace/BOOT-INF/lib/micrometer-commons-1.14.4.jar:/workspace/BOOT-INF/lib/spring-webmvc-6.2.3.jar:/workspace/BOOT-INF/lib/spring-aop-6.2.3.jar:/workspace/BOOT-INF/lib/spring-context-6.2.3.jar:/workspace/BOOT-INF/lib/spring-expression-6.2.3.jar:/workspace/BOOT-INF/lib/slf4j-api-2.0.16.jar:/workspace/BOOT-INF/lib/spring-core-6.2.3.jar:/workspace/BOOT-INF/lib/spring-jcl-6.2.3.jar:/workspace/BOOT-INF/lib/spring-boot-jarmode-tools-3.4.3.jar com.hancher.springboot3.graalvmnativeapp.GraalvmNativeAppApplication<br>[INFO]     [creator]     ================================================================================<br>[INFO]     [creator]     GraalVM Native Image: Generating &#x27;com.hancher.springboot3.graalvmnativeapp.GraalvmNativeAppApplication&#x27; (static executable)...<br>[INFO]     [creator]     ================================================================================<br>[INFO]     [creator]     For detailed information and explanations on the build output, visit:<br>[INFO]     [creator]     https://github.com/oracle/graal/blob/master/docs/reference-manual/native-image/BuildOutput.md<br>[INFO]     [creator]     --------------------------------------------------------------------------------<br>[INFO]     [creator]     Warning: Method ch.qos.logback.core.FileAppender.valueOf(String) not found.<br>[INFO]     [creator]     Warning: Method ch.qos.logback.core.Layout.valueOf(String) not found.<br>[INFO]     [creator]     Warning: Method ch.qos.logback.core.rolling.RollingPolicy.valueOf(String) not found.<br>[INFO]     [creator]     Warning: Method ch.qos.logback.core.rolling.TriggeringPolicy.valueOf(String) not found.<br>[INFO]     [creator]     Warning: Method ch.qos.logback.core.spi.ContextAware.valueOf(String) not found.<br>[INFO]     [creator]     Warning: Could not resolve class jakarta.inject.Inject for reflection configuration. Reason: java.lang.ClassNotFoundException: jakarta.inject.Inject.<br>[INFO]     [creator]     Warning: Could not resolve class jakarta.inject.Provider for reflection configuration. Reason: java.lang.ClassNotFoundException: jakarta.inject.Provider.<br>[INFO]     [creator]     Warning: Could not resolve class jakarta.inject.Qualifier for reflection configuration. Reason: java.lang.ClassNotFoundException: jakarta.inject.Qualifier.<br>[INFO]     [creator]     Warning: Could not resolve class javax.inject.Inject for reflection configuration. Reason: java.lang.ClassNotFoundException: javax.inject.Inject.<br>[INFO]     [creator]     Warning: Could not resolve class javax.inject.Qualifier for reflection configuration. Reason: java.lang.ClassNotFoundException: javax.inject.Qualifier.<br>[INFO]     [creator]     Warning: Could not resolve class javax.money.MonetaryAmount for reflection configuration. Reason: java.lang.ClassNotFoundException: javax.money.MonetaryAmount.<br>[INFO]     [creator]     Warning: Could not resolve class kotlin.Metadata for reflection configuration. Reason: java.lang.ClassNotFoundException: kotlin.Metadata.<br>[INFO]     [creator]     Warning: Could not resolve class kotlin.reflect.full.KClasses for reflection configuration. Reason: java.lang.ClassNotFoundException: kotlin.reflect.full.KClasses.<br>[INFO]     [creator]     Warning: Could not resolve class org.eclipse.core.runtime.FileLocator for reflection configuration. Reason: java.lang.ClassNotFoundException: org.eclipse.core.runtime.FileLocator.<br>[INFO]     [creator]     Warning: Could not resolve class org.reactivestreams.Publisher for reflection configuration. Reason: java.lang.ClassNotFoundException: org.reactivestreams.Publisher.<br>[INFO]     [creator]     [1/8] Initializing...                                            (5.0s @ 0.12GB)<br>[INFO]     [creator]      Java version: 17.0.14+10-LTS, vendor version: Liberica-NIK-23.0.7-1<br>[INFO]     [creator]      Graal compiler: optimization level: 2, target machine: armv8-a<br>[INFO]     [creator]      C compiler: gcc (linux, aarch64, 11.4.0)<br>[INFO]     [creator]      Garbage collector: Serial GC (max heap size: 80% of RAM)<br>[INFO]     [creator]      1 user-specific feature(s)<br>[INFO]     [creator]      - org.springframework.aot.nativex.feature.PreComputeFieldFeature<br>[INFO]     [creator]     SLF4J(W): No SLF4J providers were found.<br>[INFO]     [creator]     SLF4J(W): Defaulting to no-operation (NOP) logger implementation<br>[INFO]     [creator]     SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.<br>[INFO]     [creator]     [2/8] Performing analysis...  [*******]                         (69.2s @ 1.53GB)<br>[INFO]     [creator]       16,540 (90.76%) of 18,224 types reachable<br>[INFO]     [creator]       27,186 (67.63%) of 40,196 fields reachable<br>[INFO]     [creator]       79,799 (63.18%) of 126,298 methods reachable<br>[INFO]     [creator]        5,144 types,   355 fields, and 5,950 methods registered for reflection<br>[INFO]     [creator]           64 types,    72 fields, and    55 methods registered for JNI access<br>[INFO]     [creator]            4 native libraries: dl, pthread, rt, z<br>[INFO]     [creator]     [3/8] Building universe...                                       (6.4s @ 1.98GB)<br>[INFO]     [creator]     [4/8] Parsing methods...      [***]                              (7.4s @ 1.32GB)<br>[INFO]     [creator]     [5/8] Inlining methods...     [***]                              (2.6s @ 1.02GB)<br>[INFO]     [creator]     [6/8] Compiling methods...    [*******]                         (50.6s @ 1.30GB)<br>[INFO]     [creator]     [7/8] Layouting methods...    [***]                              (5.8s @ 1.92GB)<br>[INFO]     [creator]     [8/8] Creating image...       [***]                              (6.5s @ 2.08GB)<br>[INFO]     [creator]       36.96MB (49.04%) for code area:    51,972 compilation units<br>[INFO]     [creator]       35.49MB (47.09%) for image heap:  387,870 objects and 253 resources<br>[INFO]     [creator]        2.92MB ( 3.88%) for other data<br>[INFO]     [creator]       75.38MB in total<br>[INFO]     [creator]     --------------------------------------------------------------------------------<br>[INFO]     [creator]     Top 10 origins of code area:            Top 10 object types in image heap:<br>[INFO]     [creator]       12.67MB java.base                        8.53MB byte[] for code metadata<br>[INFO]     [creator]        4.24MB tomcat-embed-core-10.1.36.jar    3.95MB java.lang.Class<br>[INFO]     [creator]        3.38MB java.xml                         3.68MB java.lang.String<br>[INFO]     [creator]        2.00MB jackson-databind-2.18.2.jar      3.30MB byte[] for java.lang.String<br>[INFO]     [creator]        1.58MB spring-core-6.2.3.jar            3.23MB byte[] for general heap data<br>[INFO]     [creator]        1.55MB spring-boot-3.4.3.jar            2.11MB byte[] for embedded resources<br>[INFO]     [creator]        1.33MB svm.jar (Native Image)           1.39MB c.o.s.c.h.DynamicHubCompanion<br>[INFO]     [creator]      983.63kB spring-web-6.2.3.jar             1.01MB byte[] for reflection metadata<br>[INFO]     [creator]      910.71kB spring-beans-6.2.3.jar         740.64kB java.lang.String[]<br>[INFO]     [creator]      876.46kB spring-webmvc-6.2.3.jar        597.34kB c.o.s.c.h.DynamicHu~onMetadata<br>[INFO]     [creator]        7.22MB for 69 more packages             6.20MB for 3523 more object types<br>[INFO]     [creator]     --------------------------------------------------------------------------------<br>[INFO]     [creator]     Recommendations:<br>[INFO]     [creator]      HEAP: Set max heap for improved and more predictable memory usage.<br>[INFO]     [creator]      CPU:  Enable more CPU features with &#x27;-march=native&#x27; for improved performance.<br>[INFO]     [creator]     --------------------------------------------------------------------------------<br>[INFO]     [creator]        27.4s (17.7% of total time) in 132 GCs | Peak RSS: 3.50GB | CPU load: 2.69<br>[INFO]     [creator]     --------------------------------------------------------------------------------<br>[INFO]     [creator]     Produced artifacts:<br>[INFO]     [creator]      /layers/paketo-buildpacks_native-image/native-image/com.hancher.springboot3.graalvmnativeapp.GraalvmNativeAppApplication (executable)<br>[INFO]     [creator]     ================================================================================<br>[INFO]     [creator]     Finished generating &#x27;com.hancher.springboot3.graalvmnativeapp.GraalvmNativeAppApplication&#x27; in 2m 34s.<br>[INFO]     [creator]       Removing bytecode<br>[INFO]     [creator]       Process types:<br>[INFO]     [creator]         native-image: ./com.hancher.springboot3.graalvmnativeapp.GraalvmNativeAppApplication (direct)<br>[INFO]     [creator]         task:         ./com.hancher.springboot3.graalvmnativeapp.GraalvmNativeAppApplication (direct)<br>[INFO]     [creator]         web:          ./com.hancher.springboot3.graalvmnativeapp.GraalvmNativeAppApplication (direct)<br>[INFO]     [creator]     ===&gt; EXPORTING<br>[INFO]     [creator]     Adding layer &#x27;paketo-buildpacks/ca-certificates:helper&#x27;<br>[INFO]     [creator]     Adding layer &#x27;paketo-buildpacks/executable-jar:classpath&#x27;<br>[INFO]     [creator]     Adding layer &#x27;buildpacksio/lifecycle:launch.sbom&#x27;<br>[INFO]     [creator]     Added 1/1 app layer(s)<br>[INFO]     [creator]     Adding layer &#x27;buildpacksio/lifecycle:launcher&#x27;<br>[INFO]     [creator]     Adding layer &#x27;buildpacksio/lifecycle:config&#x27;<br>[INFO]     [creator]     Adding layer &#x27;buildpacksio/lifecycle:process-types&#x27;<br>[INFO]     [creator]     Adding label &#x27;io.buildpacks.lifecycle.metadata&#x27;<br>[INFO]     [creator]     Adding label &#x27;io.buildpacks.build.metadata&#x27;<br>[INFO]     [creator]     Adding label &#x27;io.buildpacks.project.metadata&#x27;<br>[INFO]     [creator]     Adding label &#x27;org.opencontainers.image.title&#x27;<br>[INFO]     [creator]     Adding label &#x27;org.opencontainers.image.version&#x27;<br>[INFO]     [creator]     Adding label &#x27;org.springframework.boot.version&#x27;<br>[INFO]     [creator]     Setting default process type &#x27;web&#x27;<br>[INFO]     [creator]     Saving docker.io/library/graalvm-native-app:0.0.1-SNAPSHOT...<br>[INFO]     [creator]     *** Images (ede8e2b9d153):<br>[INFO]     [creator]           docker.io/library/graalvm-native-app:0.0.1-SNAPSHOT<br>[INFO]     [creator]     Adding cache layer &#x27;paketo-buildpacks/bellsoft-liberica:native-image-svm&#x27;<br>[INFO]     [creator]     Adding cache layer &#x27;paketo-buildpacks/syft:syft&#x27;<br>[INFO]     [creator]     Adding cache layer &#x27;paketo-buildpacks/native-image:native-image&#x27;<br>[INFO]     [creator]     Adding cache layer &#x27;buildpacksio/lifecycle:cache.sbom&#x27;<br>[INFO] <br>[INFO] Successfully built image &#x27;docker.io/library/graalvm-native-app:0.0.1-SNAPSHOT&#x27;<br>[INFO] <br>[INFO] ------------------------------------------------------------------------<br>[INFO] BUILD SUCCESS<br>[INFO] ------------------------------------------------------------------------<br>[INFO] Total time:  06:41 min<br>[INFO] Finished at: 2025-03-08T00:22:42+08:00<br>[INFO] ------------------------------------------------------------------------<br><br></code></pre></td></tr></table></figure>
+<p>同打包java本地应用一样，打包docker 镜像也会比较慢，慢慢等待。</p>
+<p>这里的打包慢，也是为了以后的app在启动和运行时速度快。</p>
+<p>打包成功后，我们就可以在docker镜像里看到我们自己的应用镜像了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker images<br></code></pre></td></tr></table></figure>
+
+<p>运行docker </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run --<span class="hljs-built_in">rm</span> -p 8080:8080 docker.io/library/graalvm-native-app:0.0.1-SNAPSHOT<br></code></pre></td></tr></table></figure>
+<ul>
+<li>–rm 容器结束后会自动删除</li>
+</ul>
+<p>容器在0.08秒就启动起来了，是不是很快。</p>
+<p>验证：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ curl localhost:8080/hancher<br><br>Hello hancher<br></code></pre></td></tr></table></figure>
+
+<h2 id="build-image-VS-build-image-no-fork"><a href="#build-image-VS-build-image-no-fork" class="headerlink" title="build-image VS build-image-no-fork"></a>build-image VS build-image-no-fork</h2><p>springboot 在打包docker镜像的时候，有<code>build-image</code> 和 <code>build-image-no-fork</code>两种模式，有什么区别呢？</p>
+<h3 id="build-image"><a href="#build-image" class="headerlink" title="build-image"></a>build-image</h3><p>这是 Spring Boot Maven 插件的默认目标，用于构建基于 Cloud Native Buildpacks 的 Docker 镜像</p>
+<p>先调用 Paketo Buildpacks（默认构建工具）来分析项目、编译代码并生成镜像。<br>然后 打包 JAR 文件，再基于 JAR 生成镜像。</p>
+<ul>
+<li><p>执行过程：</p>
+<ul>
+<li>在独立的 Maven 进程（forked process）中运行。</li>
+<li>会启动一个新的 JVM 实例来执行构建任务，与当前的 Maven 构建进程分离。</li>
+</ul>
+</li>
+<li><p>优点</p>
+<ul>
+<li>隔离性好，构建镜像的过程不会干扰主 Maven 进程。</li>
+<li>适合标准构建流程，尤其是 CI&#x2F;CD 环境。</li>
+</ul>
+</li>
+<li><p>缺点</p>
+<ul>
+<li>启动新进程会增加少量开销</li>
+</ul>
+</li>
+</ul>
+<h3 id="build-image-no-fork"><a href="#build-image-no-fork" class="headerlink" title="build-image-no-fork"></a>build-image-no-fork</h3><p>在当前 Maven 进程中构建 Docker 镜像，而不启动新的子进程，这样虽然会与其他操作冲突，但会更快，适合本地开发时使用（没有并发）。</p>
+<ul>
+<li><p>执行过程：</p>
+<ul>
+<li>在当前 JVM 实例内直接执行镜像构建任务，不进行 fork</li>
+</ul>
+</li>
+<li><p>优点</p>
+<ul>
+<li>减少进程创建的开销，构建速度可能略快（尤其在小型项目中）</li>
+<li>更适合调试或本地开发，因为它与当前 Maven 上下文紧密耦合。</li>
+</ul>
+</li>
+<li><p>缺点</p>
+<ul>
+<li>如果构建过程中出现问题（例如内存不足、异常），可能会影响整个 Maven 构建流程</li>
+<li>因为没有进程隔离的原因，可能导致资源竞争或配置冲突</li>
+</ul>
+</li>
+</ul>
+<p>主要区别</p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th><code>build-image</code></th>
+<th><code>build-image-no-fork</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>执行进程</strong></td>
+<td>新建独立进程（forked）</td>
+<td>当前进程（no fork）</td>
+</tr>
+<tr>
+<td><strong>隔离性</strong></td>
+<td>高，独立于主 Maven 进程</td>
+<td>低，与主 Maven 进程共享环境</td>
+</tr>
+<tr>
+<td><strong>性能开销</strong></td>
+<td>略高（启动新 JVM）</td>
+<td>略低（无需新进程）</td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>CI&#x2F;CD、标准构建</td>
+<td>本地调试、小型项目</td>
+</tr>
+<tr>
+<td><strong>稳定性</strong></td>
+<td>更稳定（隔离问题）</td>
+<td>可能受主进程影响</td>
+</tr>
+</tbody></table>
+<p>你学废了吗？</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://docs.spring.io/spring-boot/how-to/native-image/developing-your-first-application.html#howto.native-image.developing-your-first-application.native-build-tools">使用GraalVM打包系统可执行程序</a></p>
+<p><a href="https://github.com/Hanchers/springboot3-demo/tree/main/graalvm-native-app">github demo</a></p>
+<p><a href="https://docs.spring.io/spring-boot/maven-plugin/build-image.html">springboot打包docker镜像配置</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/spring/" class="category-chain-item">spring</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/spring/springboot/" class="category-chain-item">springboot</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/docker/" class="print-no-link">#docker</a>
+      
+        <a href="/tags/spring/" class="print-no-link">#spring</a>
+      
+        <a href="/tags/springboot3-x/" class="print-no-link">#springboot3.x</a>
+      
+        <a href="/tags/native-image/" class="print-no-link">#native-image</a>
+      
+        <a href="/tags/GraalVM/" class="print-no-link">#GraalVM</a>
+      
+        <a href="/tags/native-application/" class="print-no-link">#native-application</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>springboot可以把项目打包成app了，docker打包版</div>
+      <div>https://www.hancher.top/2025/03/08/spring-spring-native-image-docker/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>寒澈</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年3月8日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="ND - 禁止演绎">
+                    <i class="iconfont icon-cc-nd"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/03/11/linux-centos7-install-py3-10-no-ssl-err/" title="centos7安装Python3.10提示no ssl错误解决">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">centos7安装Python3.10提示no ssl错误解决</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/03/04/spring-spring-native-image-graalvm/" title="springboot可以把项目打包成app了，Graal打包版">
+                        <span class="hidden-mobile">springboot可以把项目打包成app了，Graal打包版</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.8/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"https://hancherblogcommenthahaha.netlify.app/.netlify/functions/twikoo","region":"ap-beijing","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              Fluid.utils.listenDOMLoaded(function() {
+                var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+                Fluid.plugins.imageCaption(imgSelector);
+                Fluid.plugins.fancyBox(imgSelector);
+              });
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <div style="font-size: 0.85rem"> Copyright <i class="iconfont icon-copyright"> 2022 -  <script> document.write(new Date().getFullYear()); </script> <a href="/about" target="_blank" rel="nofollow noopener"> <span> <strong>Hancher</strong> </span> </a>  </i> | Power by  <a href="https://hexo.io" target="_blank" rel="nofollow noopener"> <span> <strong>Hexo</strong> </span> </a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <span> <strong>Fluid</strong> </span> </a> </div> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/duration.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

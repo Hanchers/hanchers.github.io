@@ -1,0 +1,948 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN,zh-HK,en,default" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/images/site/coder.jpeg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="寒澈">
+  <meta name="keywords" content="java,Python，go,vue, 大数据，AI,机器学习,Mysql,数据库,spring">
+  
+    <meta name="description" content="对比常见的几种单点登录方案：CAS, OAuth2, SAML, OIDC 在应用场景上的异同，方便大家选型时使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一文弄懂单点登录的几种技术选型">
+<meta property="og:url" content="https://www.hancher.top/2025/02/12/architecture-sso-index/index.html">
+<meta property="og:site_name" content="寒澈笔记">
+<meta property="og:description" content="对比常见的几种单点登录方案：CAS, OAuth2, SAML, OIDC 在应用场景上的异同，方便大家选型时使用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.hancher.top/images/tech/architecture/sso/single_sign_on.webp">
+<meta property="article:published_time" content="2025-02-12T10:51:00.000Z">
+<meta property="article:modified_time" content="2025-02-13T10:05:00.000Z">
+<meta property="article:author" content="寒澈">
+<meta property="article:tag" content="架构">
+<meta property="article:tag" content="单点登录">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.hancher.top/images/tech/architecture/sso/single_sign_on.webp">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>一文弄懂单点登录的几种技术选型 - 寒澈笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/blog.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.hancher.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"255889a39686581da013e7c8a40eef7c","google":{"measurement_id":"G-4VZMWRNQQE"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"zqhOsrozoSMTfBNVSHXyTh45-gzGzoHsz","app_key":"EUXdctCzoy7rxXqCDUDv1J6a","server_url":"https://zqhosroz.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?255889a39686581da013e7c8a40eef7c";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-4VZMWRNQQE", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-4VZMWRNQQE');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>寒澈笔记</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/game/2048_game.html" target="_self">
+                <i class="iconfont icon-game"></i>
+                <span>游戏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/favorite/" target="_self">
+                <i class="iconfont icon-book"></i>
+                <span>收藏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/site/night.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="一文弄懂单点登录的几种技术选型"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          2.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          18 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">一文弄懂单点登录的几种技术选型</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>最近在搞一个单点登录的项目，顺便把单点登录的几种方案研究了一下,在这里汇总分析一下，让大家有一个整体的认识。</p>
+<h2 id="什么是单点登录"><a href="#什么是单点登录" class="headerlink" title="什么是单点登录"></a>什么是单点登录</h2><p>在介绍单点登录的方案前，先说明一下什么是单点登录？  </p>
+<p>单点登录（Single Sign On，简称 SSO），是指在多系统应用群中登录一个系统，便可在其他所有系统中得到授权，无需再次登录。</p>
+<p>它核心解决了一个问题：用户只需要登录一次，就可以访问所有相互信任的应用系统。</p>
+<p>即，在单点登录体系（SSO）中，必然会涉及到下面几种角色：</p>
+<ul>
+<li>多套系统应用：如果是单套的话，没必要SSO</li>
+<li>登录用户：一套全局通行的用户中心</li>
+<li>SSO认证中心：用来实现登录认证的地址，只有这里说用户是可信的，这个用户才是可信的。</li>
+</ul>
+<p>而且进一步划分，单点登录还可以细化分为两个部分：认证和授权。  </p>
+<blockquote>
+<p>认证：也可以称为鉴权，就是鉴定账号是否是可信的，是否系统约定的合法账号。<br>授权：就是给合法的账号授予一定的权限，比如只读权限，比如读写权限等。</p>
+</blockquote>
+<p>在这个基础上， 单点登录的类型又可以分为细分为两种: 仅支持认证，和认证授权都支持。</p>
+<h2 id="常见的单点登录方案"><a href="#常见的单点登录方案" class="headerlink" title="常见的单点登录方案"></a>常见的单点登录方案</h2><p>简单介绍一下当前主流的单点登录方案，以及适用场景。</p>
+<h3 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h3><p>CAS(Central Authentication Service): 中心授权服务。顾名思义就是先有一个中心授权服务器，<br>其他的所有的业务服务器在需要身份认证的时候，都会向 <strong>中心授权服务</strong> 确认身份，鉴定是否合法。<br>这个过程中一般不涉及权限的管理，或者说权限的管理在各个子系统实现。</p>
+<p>所以，CAS是一种仅支持认证的认证方案！但相对其他认证授权方案来说，CAS也足够简单。</p>
+<p>对于大部分的应用场景来说，这就够了。因为CAS足够简单，很多场景也不需要权限管理，只需要鉴定访问是否合法就行了。</p>
+<p>以下是cas协议架构：<br><img src="/../../images/tech/architecture/sso/cas_arch.png" srcset="/img/loading.gif" lazyload alt="cas协议架构"></p>
+<p>cas请求认证的时序图：<br><img src="/../../images/tech/architecture/sso/cas_flow_diagram.png" srcset="/img/loading.gif" lazyload alt="cas请求认证的时序图"></p>
+<p>应用场景：所有不需要权限管理的应用集群</p>
+<ul>
+<li>后台服务器间的跨服务访问</li>
+<li>普通的一处登录，处处访问</li>
+<li>内部服务内部集群，因为内网的保护，彼此间天然就是可信的</li>
+</ul>
+<h3 id="OAuth2"><a href="#OAuth2" class="headerlink" title="OAuth2"></a>OAuth2</h3><p>OAuth2(Open Authorization）: 开发授权协议。他的定位最开始是用于第三方免密登录和资源授权，比如使用微信免密登录微博。<br>因为这个特性，其天然的算是一种单点登录方案。</p>
+<p>OAuth2支持认证和授权。与cas大多实在一个可信的内网环境不同，<br>OAuth2的核心目的是为了解决在完全不可信的网络环境下解决登录方与应用方的信任问题，并在此基础上提供了一套授权功能。<br>所以，OAuth2的定位和CAS还是不同的，那么相应的应用场景也就有了区别：</p>
+<p>OAuth2的应用场景：</p>
+<ul>
+<li>第三方免费登录某个应用系统</li>
+<li>对于不同来源的用户设置不同的访问级别</li>
+<li>企业内部的单点登录</li>
+</ul>
+<p>OAuth2体系的角色划分：</p>
+<ul>
+<li>资源拥有者(resource owner)：比如登录用户</li>
+<li>资源服务(resource server)：用户的资源所存储的服务</li>
+<li>客户端(client)：用户现在需要登录的应用</li>
+<li>授权服务(authorization server)：授权认证的服务</li>
+</ul>
+<p>还是以上面微信免密登录微博为例，一般在登录过程中，会提示我们授权微博使用微信的头像等信息，登录成功后，微博的头像就是微信的头像了：</p>
+<ul>
+<li>资源拥有者：微信用户</li>
+<li>资源服务：微信用户的一些信息提供方的服务，比如微信的头像、昵称等信息服务。简单来说就是微信服务器。</li>
+<li>客户端：微信用户现在要登录的微博应用。</li>
+<li>授权服务：微信的OAuth2授权服务。</li>
+</ul>
+<p>OAuth2协议的架构图：<br><img src="/../../images/tech/architecture/sso/oauth2_flow.png" srcset="/img/loading.gif" lazyload alt="oauth2协议架构"></p>
+<p>OAuth2选型流程图：<br><img src="/../../images/tech/architecture/sso/oauth2_grant_flowchart.png" srcset="/img/loading.gif" lazyload alt="oauth2选型流程"></p>
+<h3 id="JWT"><a href="#JWT" class="headerlink" title="JWT"></a>JWT</h3><p>JWT(JSON Web Token)，是一种用于在应用程序之间使用json的方式传递数据的安全令牌。严格来说，JWT不是一种sso协议，而是一种数据格式。</p>
+<p>但是在sso协议过程中，生成的可信凭证，如果想在互联网这个不可信的环境下传输，JWT也就派上了用场。</p>
+<h4 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h4><p>JWT由三部分组成：</p>
+<ul>
+<li>头部(Header)：包含签名算法、加密算法等信息。<ul>
+<li>typ：令牌的类型，通常是JWT</li>
+<li>alg：签名算法，如HS256、RS256等。</li>
+</ul>
+</li>
+<li>负载(Payload)：包含用户信息、权限信息等,可以包含以下字段以及任意自定义的字段。<ul>
+<li>iss: Issuer。JWT的签发人，非必填</li>
+<li>sub: Subject。主题，JWT所面向的用户或实体的唯一标识符，非必填</li>
+<li>aud: Audience。受众，JWT的预期接收者，非必填</li>
+<li>exp: Expiration Time。过期时间，非必填</li>
+<li>nbf: Not Before。生效时间，JWT在此时间之前不可用，非必填</li>
+<li>iat: Issued At。签发时间，非必填</li>
+<li>jti: JWT ID。JWT的唯一标识，非必填</li>
+</ul>
+</li>
+<li>签名(Signature)：将头部、负载和密钥进行签名。<ul>
+<li>前面算法：signature &#x3D; HS256（base64UrlEncode(header) + “.” + base64UrlEncode(payload), secret）</li>
+</ul>
+</li>
+</ul>
+<p>最后形成一个Token字符串：<code>xxx.yyy.zzz</code>， 即：</p>
+<blockquote>
+<p>base64UrlEncode(header).base64UrlEncode(payload).signature</p>
+</blockquote>
+<p>由此可见，JWT里的数据虽然经过base64编码，但是未加密，所以一般仅放一些公共信息。</p>
+<p>不过因为其中也有通过密钥进行签名的环节，如果再配上加密算法对一些信息的加密，也可以当做一个无服务器化的极简版sso凭证：即能够正确解密识别JWT的凭证都是可信凭证。</p>
+<p>但这仅是特殊场景的使用，一般情况还是将JWT当做CAS 或 OAuth2 的凭证在互联网中传输的载体。</p>
+<h3 id="OIDC"><a href="#OIDC" class="headerlink" title="OIDC"></a>OIDC</h3><p>OIDC（OpenID Connect）协议，是在OAuth2 的基础上发展出来的一个协议，主要应用与身份的认证。<br>与OAuth2相比，OIDC衍生出了一个<code>ID Token</code>的概念，用来标识登录用户的身份验证。</p>
+<p>OIDC的角色划分：</p>
+<ul>
+<li>End User（EU）：资源所有者，即用户，对应OAuth2中的资源拥有者；</li>
+<li>Relying Party（RP）：指代在 OAuth 2.0 中，受信任的客户端，身份认证和授权信息的消费方；</li>
+<li>ID Token：OIDC新增，包含 EU 身份认证信息的 JWT 格式数据，是用户的身份凭证；</li>
+<li>OpenID Provider（OP）：有能力提供身份认证的服务方， 对应OAuth2中的授权服务；</li>
+<li>UserInfo Endpoint：受 OAuth 2.0 保护的用户信息接口，此接口必须使用 HTTPS，能够当 RP 使用 ID Token 访问时返回用户的信息。</li>
+</ul>
+<p>所以，相对于OAuth2，OIDC其设计更加精简，也更适用于sso的场景。 一般情况下，如果决定选型OAuth2，那么OIDC可能更好一点。</p>
+<p>OIDC的架构图：<br><img src="/../../images/tech/architecture/sso/oidc_arch.png" srcset="/img/loading.gif" lazyload alt="oidc协议架构"></p>
+<h3 id="SAML"><a href="#SAML" class="headerlink" title="SAML"></a>SAML</h3><p>SAML（Security Assertion Markup Language）是一种基于XML的标准，用于在不同的安全域之间传递身份验证和授权数据，侧重于不同企业间身份认证。</p>
+<p>涉及的角色：</p>
+<ul>
+<li>Service Provider(SP)：服务提供方，</li>
+<li>Identity Provider(IdP)：身份提供方，</li>
+</ul>
+<p>SAML2的架构图：<br><img src="/../../images/tech/architecture/sso/saml-flow-overview.png" srcset="/img/loading.gif" lazyload alt="saml-flow-overview.png"><br>由图中可以看出，SP和IdP之间的通信必须是通过浏览器来实现的。</p>
+<p>SAML2的应用场景：</p>
+<ul>
+<li>不同企业间的单点登录场景</li>
+<li>因为使用了浏览器的重定向技术，适用于web场景，移动端的sso不要考虑</li>
+<li>企业内部的不同Saas集成，比如一个账号登录不同的Saas应用</li>
+<li>SAML 2.0 支持数字签名、加密断言等功能，适用于对安全性要求较高的系统</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>以上三种协议都支持单点登录功能。</p>
+<p>从应用定位角度还是有些差异的：</p>
+<ul>
+<li>cas更适用于公司内部搭建轻量授权服务。</li>
+<li>OAuth&#x2F;OIDC，是面向于在非信认条件下的信任授权问题，既支持认证，又支持授权。</li>
+<li>SAML，三者里面的老大哥，功能上与OAuth有点重叠。更重，但也更安全,适用于跨企业端通信。</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://auth0.com/intro-to-iam/saml-vs-oauth">SAML与OAuth对比</a></p>
+<p><a href="https://apereo.github.io/cas/7.1.x/index.html">CAS官方介绍</a></p>
+<p><a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1-11">OAuth2官方介绍</a></p>
+<p><a href="https://jwt.io/">JWT官方介绍</a><br><a href="https://datatracker.ietf.org/doc/html/rfc7519">JWT协议</a></p>
+<p><a href="https://www.cnblogs.com/CKExp/p/16084545.html">理解OIDC协议和认证机制</a></p>
+<p><a href="https://docs.authing.cn/v2/concepts/saml/saml-flow.html">理解 SAML 流程</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/" class="category-chain-item">系统设计</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%9E%B6%E6%9E%84/" class="print-no-link">#架构</a>
+      
+        <a href="/tags/%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95/" class="print-no-link">#单点登录</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>一文弄懂单点登录的几种技术选型</div>
+      <div>https://www.hancher.top/2025/02/12/architecture-sso-index/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>寒澈</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年2月12日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年2月13日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="ND - 禁止演绎">
+                    <i class="iconfont icon-cc-nd"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/02/18/site-hexo-site-url-auto-submit/" title="主动推送我们的博客到搜索引擎">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">主动推送我们的博客到搜索引擎</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/11/exception-doris-stream-load-from-clickhouse-by-data-crash/" title="doris通过dataX导入数据发生宕机问题解决">
+                        <span class="hidden-mobile">doris通过dataX导入数据发生宕机问题解决</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.8/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"https://hancherblogcommenthahaha.netlify.app/.netlify/functions/twikoo","region":"ap-beijing","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              Fluid.utils.listenDOMLoaded(function() {
+                var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+                Fluid.plugins.imageCaption(imgSelector);
+                Fluid.plugins.fancyBox(imgSelector);
+              });
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <div style="font-size: 0.85rem"> Copyright <i class="iconfont icon-copyright"> 2022 -  <script> document.write(new Date().getFullYear()); </script> <a href="/about" target="_blank" rel="nofollow noopener"> <span> <strong>Hancher</strong> </span> </a>  </i> | Power by  <a href="https://hexo.io" target="_blank" rel="nofollow noopener"> <span> <strong>Hexo</strong> </span> </a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <span> <strong>Fluid</strong> </span> </a> </div> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/duration.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
