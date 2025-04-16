@@ -1,0 +1,847 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN,zh-HK,en,default" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/images/site/coder.jpeg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="寒澈">
+  <meta name="keywords" content="spring,PathPattern,ant,AntPathMatcher">
+  
+    <meta name="description" content="AntPathMatcher 已经要被取代了吗">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AntPathMatcher VS PathPattern">
+<meta property="og:url" content="https://www.hancher.top/2023/05/21/spring-spring-path-matcher/index.html">
+<meta property="og:site_name" content="寒澈笔记">
+<meta property="og:description" content="AntPathMatcher 已经要被取代了吗">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-05-21T04:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-21T04:00:00.000Z">
+<meta property="article:author" content="寒澈">
+<meta property="article:tag" content="spring">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>AntPathMatcher VS PathPattern - 寒澈笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/blog.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.hancher.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"255889a39686581da013e7c8a40eef7c","google":{"measurement_id":"G-4VZMWRNQQE"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"zqhOsrozoSMTfBNVSHXyTh45-gzGzoHsz","app_key":"EUXdctCzoy7rxXqCDUDv1J6a","server_url":"https://zqhosroz.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?255889a39686581da013e7c8a40eef7c";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-4VZMWRNQQE", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-4VZMWRNQQE');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>寒澈笔记</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/game/2048_game.html" target="_self">
+                <i class="iconfont icon-game"></i>
+                <span>游戏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/favorite/" target="_self">
+                <i class="iconfont icon-book"></i>
+                <span>收藏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/site/night.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="AntPathMatcher VS PathPattern"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          1.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          12 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">AntPathMatcher VS PathPattern</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>spring路径匹配，在spring5以后，有了AntPathMatcher 和 PathPattern 两种方式。</p>
+<p>PathPattern是在spring 5 以后新增的。本文就介绍 AntPathMatcher 和 PathPattern 的异同，以及这两者的使用场景和方式。</p>
+<h1 id="创建实例"><a href="#创建实例" class="headerlink" title="创建实例"></a>创建实例</h1><p>AntPathMatcher在1.x版本就存在了，在spring5以前，一直作为spring的路径匹配器存在。</p>
+<p>AntPathMatcher在spring中是作为工具类存在的，所以直接<code>new</code>对象即可。</p>
+<p>PathPattern出现在spring5.x版本中, 旨在用于替换掉较为“古老”的AntPathMatcher。</p>
+<p>PathPattern是spring一个内部类，不能通过public的方式来创建。不过spring 官方提供了一个<code>parser</code>开提供PathPattern的默认实例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 构建AntPathMatcher 实例</span><br><span class="hljs-type">AntPathMatcher</span> <span class="hljs-variable">antPathMatcher</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">AntPathMatcher</span>();<br><span class="hljs-comment">// 构建PathPattern 实例</span><br><span class="hljs-type">PathPatternParser</span> <span class="hljs-variable">patternParser</span> <span class="hljs-operator">=</span> PathPatternParser.defaultInstance;<br></code></pre></td></tr></table></figure>
+
+<h1 id="匹配规则"><a href="#匹配规则" class="headerlink" title="匹配规则"></a>匹配规则</h1><p>AntPathMatcher 官方文档：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs awk">映射使用以下规则匹配 URL： <br>? 匹配一个字符<br>* 匹配零个或多个字符<br>** 匹配路径中的零 个 或多个目录<br>&#123;spring:[a-z]+&#125; 将正则表达 [a-z]+ 式匹配为名为“spring”的路径变量<br>        <br>例子<br>com<span class="hljs-regexp">/t?st.jsp — 匹配 com/</span>test.jsp ，但也 com<span class="hljs-regexp">/tast.jsp 匹配或 com/</span>txst.jsp<br>com/*.jsp— 匹配目录中com的所有.jsp文件<br>com<span class="hljs-regexp">/**/</span>test.jsp— 匹配路径下com的所有test.jsp文件<br>org<span class="hljs-regexp">/springframework/</span>**<span class="hljs-regexp">/*.jsp— 匹配路径下org/</span>springframework的所有.jsp文件<br>org<span class="hljs-regexp">/**/</span>servlet<span class="hljs-regexp">/bla.jsp — 匹配 org/</span>springframework<span class="hljs-regexp">/servlet/</span>bla.jsp ，但也 org<span class="hljs-regexp">/springframework/</span>testing<span class="hljs-regexp">/servlet/</span>bla.jsp 和 org<span class="hljs-regexp">/servlet/</span>bla.jsp<br>com<span class="hljs-regexp">/&#123;filename:\\w+&#125;.jsp将匹配com/</span>test.jsp该值testfilename并将其分配给变量<br>注意： 模式和路径必须都是绝对的，或者必须都是相对的，才能使两者匹配。因此，建议此实现的用户清理模式，以便在使用模式的上下文中为“/”作为前缀。<br></code></pre></td></tr></table></figure>
+
+<p>PathPattern 官方文档</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">PathPattern 使用以下规则匹配 URL 路径： <br>? 匹配一个字符<br>* 匹配路径段中的零个或多个字符<br>** 匹配零个或多个 路径段 ，直到路径结束<br>&#123;spring&#125; 匹配 路径段 并将其捕获为名为“spring”的变量<br>&#123;spring:[a-z]+&#125; 将正则表达 [a-z]+ 式匹配为名为“spring”的路径变量<br>&#123;*spring&#125; 匹配零个或多个 路径段 ，直到路径的末尾，并将其捕获为名为“spring”的变量<br>注意： 与 org.springframework.util.AntPathMatcher相反， ** 仅在模式的末尾受支持。例如 <span class="hljs-string">/pages/</span>&#123;**&#125; ，是有效的，但不是 <span class="hljs-string">/pages/</span>&#123;**&#125;<span class="hljs-string">/details</span> 。这同样适用于捕获变体 &#123;*spring&#125;。目的是在比较模式的特异性时消除歧义。<br><br>例子<br><span class="hljs-string">/pages/t</span>?st.html — 匹配 <span class="hljs-string">/pages/test.html</span> ， <span class="hljs-string">/pages/tXst.html</span> 但不是 <span class="hljs-string">/pages/toast.html</span><br><span class="hljs-string">/resources/</span>*<span class="hljs-string">.png</span>— 匹配目录中resources的所有<span class="hljs-string">.png</span>文件<br><span class="hljs-string">/resources/</span>** — 匹配路径下 <span class="hljs-string">/resources/</span> 的所有文件，包括 <span class="hljs-string">/resources/image.png</span> 和 <span class="hljs-string">/resources/css/spring.css</span><br><span class="hljs-string">/resources/</span>&#123;*path&#125; — 匹配 和 下的所有文件 <span class="hljs-string">/resources/</span>， <span class="hljs-string">/resources</span>并在名为 “path” 的变量中捕获它们的相对路径; <span class="hljs-string">/resources/image.png</span> 将与 “path” 匹配 → “<span class="hljs-string">/image.png</span>”，并将 <span class="hljs-string">/resources/css/spring.css</span> 与 “path” 匹配 → “<span class="hljs-string">/css/spring.css</span>”<br><span class="hljs-string">/resources/</span>&#123;filename:\\w+&#125;<span class="hljs-string">.dat</span>将匹配<span class="hljs-string">/resources/spring.dat</span>该值<span class="hljs-string">&quot;spring&quot;</span>filename并将其分配给变量<br></code></pre></td></tr></table></figure>
+<p>可见，AntPathMatcher 和 PathPattern 的匹配规则是差不多的，都支持<code>?</code> <code>*</code> <code>**</code> 已经部分正则匹配。</p>
+<p>但PathPattern增加了路径匹配并提取结果的能力，同时为了消除歧义，不再支持路径中间的<code>**</code>匹配，其他一样。</p>
+<p>demo:   </p>
+<p>*匹配</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TestPathMatch</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">AntPathMatcher</span> <span class="hljs-variable">antPathMatcher</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">AntPathMatcher</span>();<br>        <span class="hljs-type">PathPatternParser</span> <span class="hljs-variable">patternParser</span> <span class="hljs-operator">=</span> PathPatternParser.defaultInstance;<br><br>        List&lt;String&gt; list = List.of(<span class="hljs-string">&quot;aaa_1.csv&quot;</span>, <span class="hljs-string">&quot;aaa_2.csv&quot;</span>, <span class="hljs-string">&quot;aaa_3.csv&quot;</span>, <span class="hljs-string">&quot;aaa_1.xlsx&quot;</span>, <span class="hljs-string">&quot;aaa&quot;</span>, <span class="hljs-string">&quot;aaa.pdf&quot;</span>);<br>        <span class="hljs-type">String</span> <span class="hljs-variable">pattern1</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;a*.csv&quot;</span>;<br><br>        System.out.println(<span class="hljs-string">&quot;by antPathMatcher..&quot;</span>);<br>        <span class="hljs-keyword">for</span> (String s : list) &#123;<br>            System.out.printf(<span class="hljs-string">&quot;pattern %s match %s is %s %n&quot;</span>, pattern1,s, antPathMatcher.match(pattern1,s));<br>        &#125;<br>        System.out.println(<span class="hljs-string">&quot;by patternParser..&quot;</span>);<br>        <span class="hljs-keyword">for</span> (String s : list) &#123;<br>            System.out.printf(<span class="hljs-string">&quot;pattern %s match %s is %s %n&quot;</span>, pattern1,s, patternParser.parse(pattern1).matches(PathContainer.parsePath(s)));<br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// 结果</span><br><span class="hljs-comment">// by antPathMatcher..</span><br><span class="hljs-comment">// pattern a*.csv match aaa_1.csv is true</span><br><span class="hljs-comment">// pattern a*.csv match aaa_2.csv is true</span><br><span class="hljs-comment">// pattern a*.csv match aaa_3.csv is true</span><br><span class="hljs-comment">// pattern a*.csv match aaa_1.xlsx is false</span><br><span class="hljs-comment">// pattern a*.csv match aaa is false</span><br><span class="hljs-comment">// pattern a*.csv match aaa.pdf is false</span><br><span class="hljs-comment">// by patternParser..</span><br><span class="hljs-comment">// pattern a*.csv match aaa_1.csv is true</span><br><span class="hljs-comment">// pattern a*.csv match aaa_2.csv is true</span><br><span class="hljs-comment">// pattern a*.csv match aaa_3.csv is true</span><br><span class="hljs-comment">// pattern a*.csv match aaa_1.xlsx is false</span><br><span class="hljs-comment">// pattern a*.csv match aaa is false</span><br><span class="hljs-comment">// pattern a*.csv match aaa.pdf is false </span><br></code></pre></td></tr></table></figure>
+<p>PathPattern 路径提取</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TestPathMatch</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">AntPathMatcher</span> <span class="hljs-variable">antPathMatcher</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">AntPathMatcher</span>();<br>        <span class="hljs-type">PathPatternParser</span> <span class="hljs-variable">patternParser</span> <span class="hljs-operator">=</span> PathPatternParser.defaultInstance;<br><br>        <span class="hljs-type">String</span> <span class="hljs-variable">pattern</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;/api/hancher/&#123;*spring&#125;&quot;</span>;<br>        List&lt;String&gt; list = List.of(<span class="hljs-string">&quot;/api/hancher/a/b/c&quot;</span>, <span class="hljs-string">&quot;/api/hancher/a&quot;</span>, <span class="hljs-string">&quot;/api/hancher/a/&quot;</span>, <span class="hljs-string">&quot;/api/hancher/a/b/c.csv&quot;</span>,<span class="hljs-string">&quot;/api/test/a/b/c&quot;</span>);<br><br>        <span class="hljs-keyword">for</span> (String s : list) &#123;<br>            System.out.printf(<span class="hljs-string">&quot;pattern %s match %s is %s %n&quot;</span>, pattern,s, patternParser.parse(pattern).matches(PathContainer.parsePath(s)));<br>            System.out.printf(<span class="hljs-string">&quot;pattern %s match %s result %s %n&quot;</span>, pattern,s, patternParser.parse(pattern).matchAndExtract(PathContainer.parsePath(s)));<br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// 结果</span><br><span class="hljs-comment">//pattern /api/hancher/&#123;*spring&#125; match /api/hancher/a/b/c is true </span><br><span class="hljs-comment">//pattern /api/hancher/&#123;*spring&#125; match /api/hancher/a/b/c result PathMatchInfo[uriVariables=&#123;spring=/a/b/c&#125;, matrixVariables=&#123;&#125;] </span><br><span class="hljs-comment">//pattern /api/hancher/&#123;*spring&#125; match /api/hancher/a is true </span><br><span class="hljs-comment">//pattern /api/hancher/&#123;*spring&#125; match /api/hancher/a result PathMatchInfo[uriVariables=&#123;spring=/a&#125;, matrixVariables=&#123;&#125;] </span><br><span class="hljs-comment">//pattern /api/hancher/&#123;*spring&#125; match /api/hancher/a/ is true </span><br><span class="hljs-comment">//pattern /api/hancher/&#123;*spring&#125; match /api/hancher/a/ result PathMatchInfo[uriVariables=&#123;spring=/a/&#125;, matrixVariables=&#123;&#125;] </span><br><span class="hljs-comment">//pattern /api/hancher/&#123;*spring&#125; match /api/hancher/a/b/c.csv is true </span><br><span class="hljs-comment">//pattern /api/hancher/&#123;*spring&#125; match /api/hancher/a/b/c.csv result PathMatchInfo[uriVariables=&#123;spring=/a/b/c.csv&#125;, matrixVariables=&#123;&#125;] </span><br><span class="hljs-comment">//pattern /api/hancher/&#123;*spring&#125; match /api/test/a/b/c is false </span><br><span class="hljs-comment">//pattern /api/hancher/&#123;*spring&#125; match /api/test/a/b/c result null </span><br></code></pre></td></tr></table></figure>
+
+<h1 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h1><p>官方说PathPattern 比 AntPathMatcher 更快一些，所以咱们验证一下：</p>
+<p>测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TestPathMatch</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">AntPathMatcher</span> <span class="hljs-variable">antPathMatcher</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">AntPathMatcher</span>();<br>        <span class="hljs-type">PathPatternParser</span> <span class="hljs-variable">patternParser</span> <span class="hljs-operator">=</span> PathPatternParser.defaultInstance;<br><br>        <span class="hljs-type">long</span> <span class="hljs-variable">start</span> <span class="hljs-operator">=</span> System.currentTimeMillis();<br>        <span class="hljs-type">String</span> <span class="hljs-variable">pattern</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;/api/hanc?er/**&quot;</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100000</span>; i++) &#123;<br>            <span class="hljs-type">String</span> <span class="hljs-variable">path</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;/api/hancher/&quot;</span> + i + <span class="hljs-string">&quot;/&quot;</span> + i + <span class="hljs-string">&quot;/a.txt&quot;</span>;<br>            System.out.println(antPathMatcher.match(pattern, path));<br><span class="hljs-comment">//            System.out.println(patternParser.parse(pattern).matches(PathContainer.parsePath(path)));</span><br>        &#125;<br>        System.out.println(System.currentTimeMillis() - start);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>分别跑了5次。<br>AntPathMatcher 平均耗时：392ms<br>PathPattern 平均耗时：323.4ms<br>官方所言不虚！  </p>
+<h1 id="选择"><a href="#选择" class="headerlink" title="选择"></a>选择</h1><ol>
+<li>在满足需求的情况下，尽量选PathPattern，更快</li>
+<li>如果需要通过*<em>匹配中间路径，或者通过</em>匹配文件扩展名这种场景，用AntPathMatcher， 因为PathPattern不支持。</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/spring/" class="category-chain-item">spring</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/spring/" class="print-no-link">#spring</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>AntPathMatcher VS PathPattern</div>
+      <div>https://www.hancher.top/2023/05/21/spring-spring-path-matcher/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>寒澈</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年5月21日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="ND - 禁止演绎">
+                    <i class="iconfont icon-cc-nd"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/06/19/safe-dev-info-leak/" title="中间件版本号泄露问题修复">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">中间件版本号泄露问题修复</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/04/28/exception-spring-http-form-too-big-err/" title="spring服务form表单内容过大导致后端参数接收为null情况">
+                        <span class="hidden-mobile">spring服务form表单内容过大导致后端参数接收为null情况</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.8/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"https://hancherblogcommenthahaha.netlify.app/.netlify/functions/twikoo","region":"ap-beijing","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              Fluid.utils.listenDOMLoaded(function() {
+                var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+                Fluid.plugins.imageCaption(imgSelector);
+                Fluid.plugins.fancyBox(imgSelector);
+              });
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <div style="font-size: 0.85rem"> Copyright <i class="iconfont icon-copyright"> 2022 -  <script> document.write(new Date().getFullYear()); </script> <a href="/about" target="_blank" rel="nofollow noopener"> <span> <strong>Hancher</strong> </span> </a>  </i> | Power by  <a href="https://hexo.io" target="_blank" rel="nofollow noopener"> <span> <strong>Hexo</strong> </span> </a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <span> <strong>Fluid</strong> </span> </a> </div> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/duration.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
