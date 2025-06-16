@@ -1,0 +1,936 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN,zh-HK,en,default" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/images/site/coder.jpeg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="寒澈">
+  <meta name="keywords" content="java,Python，go,vue, 大数据，AI,机器学习,Mysql,数据库,spring">
+  
+    <meta name="description" content="https、docker api交互中使用到的tls证书是如何生成的？本文介绍了tls是什么，以及如何生成，并附属一键生成脚本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一键生成TLS证书">
+<meta property="og:url" content="https://www.hancher.top/2025/06/16/site-tls-tls-cert-create/index.html">
+<meta property="og:site_name" content="寒澈笔记">
+<meta property="og:description" content="https、docker api交互中使用到的tls证书是如何生成的？本文介绍了tls是什么，以及如何生成，并附属一键生成脚本">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.hancher.top/images/tech/safe/tls/tls.png">
+<meta property="article:published_time" content="2025-06-16T04:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-16T04:00:00.000Z">
+<meta property="article:author" content="寒澈">
+<meta property="article:tag" content="tls">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.hancher.top/images/tech/safe/tls/tls.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>一键生成TLS证书 - 寒澈笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/blog.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.hancher.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"255889a39686581da013e7c8a40eef7c","google":{"measurement_id":"G-4VZMWRNQQE"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"zqhOsrozoSMTfBNVSHXyTh45-gzGzoHsz","app_key":"EUXdctCzoy7rxXqCDUDv1J6a","server_url":"https://zqhosroz.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?255889a39686581da013e7c8a40eef7c";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-4VZMWRNQQE", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-4VZMWRNQQE');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>寒澈笔记</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/game/2048_game.html" target="_self">
+                <i class="iconfont icon-game"></i>
+                <span>游戏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/favorite/" target="_self">
+                <i class="iconfont icon-book"></i>
+                <span>收藏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/site/night.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="一键生成TLS证书"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          1.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          11 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">一键生成TLS证书</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>TLS 证书（也称为 SSL 证书）是用于在客户端和服务器之间建立安全加密通信的基础组件，广泛应用于 HTTPS、API 通信、邮件传输等领域,是现代互联网安全的基础。</p>
+<p>比如HTTPS里的S指的就是TLS。</p>
+<h2 id="🔐-TLS-证书的本质"><a href="#🔐-TLS-证书的本质" class="headerlink" title="🔐 TLS 证书的本质"></a>🔐 TLS 证书的本质</h2><p>TLS 证书本质上是一个 X.509 格式的数字文件，包含以下关键信息：</p>
+<table>
+<thead>
+<tr>
+<th>内容</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>公钥（Public Key）</td>
+<td>用于加密数据或验证签名</td>
+</tr>
+<tr>
+<td>主题（Subject）</td>
+<td>包括证书持有者的身份信息，如域名（CN）、组织名称等</td>
+</tr>
+<tr>
+<td>颁发者（Issuer）</td>
+<td>签发该证书的 CA（证书颁发机构）信息</td>
+</tr>
+<tr>
+<td>有效期（Validity）</td>
+<td>证书有效起止时间</td>
+</tr>
+<tr>
+<td>签名算法（Signature Algorithm）</td>
+<td>使用的加密算法</td>
+</tr>
+<tr>
+<td>扩展字段（Extensions）</td>
+<td>如 SAN（subjectAltName）、EKU（extendedKeyUsage）等</td>
+</tr>
+</tbody></table>
+<h2 id="🌐-TLS-证书的作用"><a href="#🌐-TLS-证书的作用" class="headerlink" title="🌐 TLS 证书的作用"></a>🌐 TLS 证书的作用</h2><ol>
+<li><strong>身份认证（Authentication）</strong><ul>
+<li>客户端可以验证服务器的身份，防止连接到假冒的服务。</li>
+<li>支持双向认证（mTLS），客户端也可以被服务端验证。</li>
+</ul>
+</li>
+<li><strong>数据加密（Encryption）</strong><ul>
+<li>客户端使用服务器的公钥加密数据，只有拥有私钥的服务器才能解密。</li>
+<li>建立连接后使用对称加密提高效率。</li>
+</ul>
+</li>
+<li><strong>完整性保护（Integrity Protection）</strong><ul>
+<li>使用消息摘要机制（如 HMAC）保证数据未被篡改。</li>
+</ul>
+</li>
+<li><strong>支持多域名&#x2F;IP（通过 SAN）</strong><ul>
+<li>可在一个证书中配置多个域名、IP 地址等访问方式。</li>
+</ul>
+</li>
+</ol>
+<p>比如我们浏览器里常用的https协议，就通过TLS的身份认证机制，构建出了一套完整的<code>信任链</code>体系，以此来保护我们的上网安全，在我们莫名奇妙的进入到一个未经认证的钓鱼网站时，给出警示。</p>
+<p><img src="/../../../images/tech/safe/tls/google_https.png" srcset="/img/loading.gif" lazyload alt="经过安全认证的网站"></p>
+<h2 id="🏗️-TLS证书自定义签发"><a href="#🏗️-TLS证书自定义签发" class="headerlink" title="🏗️ TLS证书自定义签发"></a>🏗️ TLS证书自定义签发</h2><h3 id="先生成根证书及key"><a href="#先生成根证书及key" class="headerlink" title="先生成根证书及key"></a>先生成根证书及key</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 创建证书目录</span><br><span class="hljs-built_in">mkdir</span> -p certs<br><br><span class="hljs-comment"># 在受信任的机器（如管理员笔记本或受控运维节点）上生成 CA 私钥，建议使用强加密并保护私钥文件权限</span><br>openssl genrsa -aes256 -out ca-key.pem 4096<br></code></pre></td></tr></table></figure>
+<ul>
+<li>-aes256 表示使用 AES-256 加密私钥</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 使用上一步生成的 CA 私钥，创建自签名 CA 证书，设定合适的 CN 和有效期：</span><br>openssl req -new -x509 -days 3650 -key ca-key.pem -sha256 -out ca.pem -subj <span class="hljs-string">&quot;/CN=docker.com/O=MyCompany&quot;</span><br><br></code></pre></td></tr></table></figure>
+<ul>
+<li>-x509 表示生成自签名证书</li>
+<li>-days 3650 表示证书有效期 10 年</li>
+<li>-subj “&#x2F;CN&#x3D;docker-CA” 中CN (Common Name) ，可以标识一些证书的信息、用途等，比如域名等 &#x2F;O组织，证书所属组织</li>
+</ul>
+<p>可选的<code>subj</code>字段内容</p>
+<table>
+<thead>
+<tr>
+<th>字段缩写</th>
+<th>全称</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>CN</code></td>
+<td>Common Name</td>
+<td><code>/CN=example.com</code></td>
+</tr>
+<tr>
+<td><code>O</code></td>
+<td>Organization</td>
+<td><code>/O=My Company</code></td>
+</tr>
+<tr>
+<td><code>OU</code></td>
+<td>Organizational Unit</td>
+<td><code>/OU=IT Department</code></td>
+</tr>
+<tr>
+<td><code>L</code></td>
+<td>Locality</td>
+<td><code>/L=Beijing</code></td>
+</tr>
+<tr>
+<td><code>ST</code></td>
+<td>State or Province</td>
+<td><code>/ST=Beijing</code></td>
+</tr>
+<tr>
+<td><code>C</code></td>
+<td>Country</td>
+<td><code>/C=CN</code></td>
+</tr>
+<tr>
+<td><code>emailAddress</code></td>
+<td>Email Address</td>
+<td><code>/emailAddress=admin@example.com</code></td>
+</tr>
+</tbody></table>
+<h3 id="根据根证书创建服务端证书"><a href="#根据根证书创建服务端证书" class="headerlink" title="根据根证书创建服务端证书"></a>根据根证书创建服务端证书</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 生成服务端私钥和证书</span><br>openssl genrsa -out server-key.pem 4096<br>openssl req -subj <span class="hljs-string">&quot;/CN=&lt;服务器IP或域名&gt;&quot;</span> -sha256 -new -key server-key.pem -out server.csr<br><span class="hljs-comment"># 配置</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;subjectAltName = IP:&lt;服务器IP&gt;,IP:127.0.0.1&quot;</span> &gt; extfile.cnf<br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;extendedKeyUsage = serverAuth&quot;</span> &gt;&gt; extfile.cnf<br><br><span class="hljs-comment"># 创建证书</span><br>openssl x509 -req -days 3650 -<span class="hljs-keyword">in</span> server.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out server-cert.pem -extfile extfile.cnf<br><span class="hljs-comment"># 签发完成后，可删除 CSR 和扩展配置文件以减少泄露风险</span><br><span class="hljs-comment"># rm server.csr extfile.cnf</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="根据根证书创建客户端证书"><a href="#根据根证书创建客户端证书" class="headerlink" title="根据根证书创建客户端证书"></a>根据根证书创建客户端证书</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 生成客户端私钥和证书</span><br>openssl genrsa -out client-key.pem 4096<br>openssl req -subj <span class="hljs-string">&quot;/CN=client&quot;</span> -new -key client-key.pem -out client.csr<br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;extendedKeyUsage = clientAuth&quot;</span> &gt; extfile-client.cnf<br>openssl x509 -req -days 3650 -<span class="hljs-keyword">in</span> client.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out client-cert.pem -extfile extfile-client.cnf<br></code></pre></td></tr></table></figure>
+
+<h3 id="配置证书权限"><a href="#配置证书权限" class="headerlink" title="配置证书权限"></a>配置证书权限</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">chmod</span> -v 400 /etc/docker/certs/*key.pem   <span class="hljs-comment"># 私钥仅允许 root 读取</span><br><span class="hljs-built_in">chmod</span> -v 444 /etc/docker/certs/*.pem      <span class="hljs-comment"># 证书文件只读[8](@ref)</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="验证证书"><a href="#验证证书" class="headerlink" title="验证证书"></a>验证证书</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">openssl s_client -connect &lt;服务器IP&gt;:&lt;端口&gt; -CAfile ~/.docker/ca.pem -cert ~/.docker/client-cert.pem -key ~/.docker/client-key.pem<br></code></pre></td></tr></table></figure>
+<p>如果输出以下内容，表名证书有效</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs lasso">CONNECTED(<span class="hljs-number">00000003</span>)<br><span class="hljs-params">...</span><br>SSL handshake has read XXX <span class="hljs-built_in">bytes</span> <span class="hljs-literal">and</span> written XXX <span class="hljs-built_in">bytes</span><br><span class="hljs-params">...</span><br>Verify <span class="hljs-keyword">return</span> code: <span class="hljs-number">0</span> (ok)<br></code></pre></td></tr></table></figure>
+
+<h2 id="一键创建证书脚本"><a href="#一键创建证书脚本" class="headerlink" title="一键创建证书脚本"></a>一键创建证书脚本</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><br><span class="hljs-comment"># 自动创建tls 客户端和服务端证书</span><br><br><span class="hljs-comment"># 配置变量</span><br>YOUR_COMPANY=<span class="hljs-string">&quot;your company&quot;</span>  <span class="hljs-comment"># 公司名称&quot;</span><br>SERVER_HOST=<span class="hljs-string">&quot;192.168.1.2&quot;</span>  <span class="hljs-comment"># 服务域名更好</span><br>TIMEOUT_DAYS=365  <span class="hljs-comment"># 证书有效期</span><br>PASSWORD=<span class="hljs-string">&quot;123456&quot;</span>  <span class="hljs-comment"># 密码保护CA私钥</span><br><br><span class="hljs-comment"># 创建证书目录</span><br><span class="hljs-built_in">mkdir</span> -p certs &amp;&amp; <span class="hljs-built_in">cd</span> certs<br><br><span class="hljs-comment"># 创建CA证书</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;🔐 正在生成加密的 RSA 私钥...&quot;</span><br>openssl genrsa -aes256 -passout pass:<span class="hljs-variable">$PASSWORD</span>  -out ca-key.pem 4096<br>openssl req -new -x509 -days <span class="hljs-string">&quot;<span class="hljs-variable">$TIMEOUT_DAYS</span>&quot;</span> -key ca-key.pem -sha256 -passin pass:<span class="hljs-variable">$PASSWORD</span> -out ca.pem -subj <span class="hljs-string">&quot;/CN=<span class="hljs-variable">$SERVER_HOST</span>/O=<span class="hljs-variable">$YOUR_COMPANY</span>&quot;</span><br><br><span class="hljs-comment"># 创建服务端证书</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;㊙ 开始创建服务端证书...&quot;</span><br>openssl genrsa -out server-key.pem 4096<br>openssl req -subj <span class="hljs-string">&quot;/CN=<span class="hljs-variable">$SERVER_HOST</span>&quot;</span> -sha256 -new -key server-key.pem -out server.csr<br><span class="hljs-comment"># 配置</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;subjectAltName = IP:<span class="hljs-variable">$SERVER_HOST</span>,IP:127.0.0.1&quot;</span> &gt; extfile.cnf<br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;extendedKeyUsage = serverAuth&quot;</span> &gt;&gt; extfile.cnf<br><span class="hljs-comment"># 创建证书</span><br>openssl x509 -req -days <span class="hljs-string">&quot;<span class="hljs-variable">$TIMEOUT_DAYS</span>&quot;</span> -<span class="hljs-keyword">in</span> server.csr -CA ca.pem -CAkey ca-key.pem -passin pass:<span class="hljs-variable">$PASSWORD</span> -CAcreateserial -out server-cert.pem -extfile extfile.cnf<br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;㊙ 服务端证书创建完成，保存为 server-cert.pem, server-key.pem&quot;</span><br><br><span class="hljs-comment"># 生成客户端私钥和证书</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;🔑 开始创建客户端证书...&quot;</span><br>openssl genrsa -out client-key.pem 4096<br>openssl req -subj <span class="hljs-string">&quot;/CN=client&quot;</span> -new -key client-key.pem -out client.csr<br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;extendedKeyUsage = clientAuth&quot;</span> &gt; extfile-client.cnf<br>openssl x509 -req -days <span class="hljs-string">&quot;<span class="hljs-variable">$TIMEOUT_DAYS</span>&quot;</span> -<span class="hljs-keyword">in</span> client.csr -CA ca.pem -CAkey ca-key.pem -passin pass:<span class="hljs-variable">$PASSWORD</span> -CAcreateserial -out client-cert.pem -extfile extfile-client.cnf<br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;🔑 客户端证书创建完成，保存为 client-cert.pem 和 client-key.pem&quot;</span><br><br><span class="hljs-comment"># 清理临时文件</span><br><span class="hljs-comment"># 签发完成后，可删除 CSR 和扩展配置文件以减少泄露风险</span><br><span class="hljs-built_in">read</span> -p <span class="hljs-string">&quot;是否删除临时文件 (server.csr, extfile.cnf, client.csr, extfile-client.cnf)? [y/n] &quot;</span> -r answer<br><span class="hljs-keyword">if</span> [[ <span class="hljs-variable">$answer</span> =~ ^[Yy]$ ]]; <span class="hljs-keyword">then</span><br>    <span class="hljs-built_in">rm</span> server.csr extfile.cnf client.csr extfile-client.cnf<br>    <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;临时文件已删除。&quot;</span><br><span class="hljs-keyword">else</span><br>    <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;临时文件保留。&quot;</span><br><span class="hljs-keyword">fi</span><br><br></code></pre></td></tr></table></figure>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">linux</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/tls/" class="print-no-link">#tls</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>一键生成TLS证书</div>
+      <div>https://www.hancher.top/2025/06/16/site-tls-tls-cert-create/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>寒澈</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年6月16日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="ND - 禁止演绎">
+                    <i class="iconfont icon-cc-nd"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/05/27/frame-prometheus-select-label-var/" title="普罗米修斯自定义label作为变量的显示值和实际值">
+                        <span class="hidden-mobile">普罗米修斯自定义label作为变量的显示值和实际值</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.8/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"https://hancherblogcommenthahaha.netlify.app/.netlify/functions/twikoo","region":"ap-beijing","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              Fluid.utils.listenDOMLoaded(function() {
+                var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+                Fluid.plugins.imageCaption(imgSelector);
+                Fluid.plugins.fancyBox(imgSelector);
+              });
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <div style="font-size: 0.85rem"> Copyright <i class="iconfont icon-copyright"> 2022 -  <script> document.write(new Date().getFullYear()); </script> <a href="/about" target="_blank" rel="nofollow noopener"> <span> <strong>Hancher</strong> </span> </a>  </i> | Power by  <a href="https://hexo.io" target="_blank" rel="nofollow noopener"> <span> <strong>Hexo</strong> </span> </a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <span> <strong>Fluid</strong> </span> </a> </div> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/duration.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

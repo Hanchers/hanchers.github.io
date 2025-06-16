@@ -1,0 +1,985 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN,zh-HK,en,default" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/images/site/coder.jpeg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="寒澈">
+  <meta name="keywords" content="java,Python，go,vue, 大数据，AI,机器学习,Mysql,数据库,spring">
+  
+    <meta name="description" content="JDK 21在2023年9月发布,是一个长期支持版本, 本文就是简单介绍一下这次更新的新特性与改动">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JDK 21新特性简介">
+<meta property="og:url" content="https://www.hancher.top/2025/04/21/java-jdk-v21/index.html">
+<meta property="og:site_name" content="寒澈笔记">
+<meta property="og:description" content="JDK 21在2023年9月发布,是一个长期支持版本, 本文就是简单介绍一下这次更新的新特性与改动">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.hancher.top/images/tech/java/jdk21.png">
+<meta property="article:published_time" content="2025-04-21T04:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-24T04:00:00.000Z">
+<meta property="article:author" content="寒澈">
+<meta property="article:tag" content="java版本特性">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.hancher.top/images/tech/java/jdk21.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>JDK 21新特性简介 - 寒澈笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/blog.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.hancher.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"255889a39686581da013e7c8a40eef7c","google":{"measurement_id":"G-4VZMWRNQQE"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"zqhOsrozoSMTfBNVSHXyTh45-gzGzoHsz","app_key":"EUXdctCzoy7rxXqCDUDv1J6a","server_url":"https://zqhosroz.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?255889a39686581da013e7c8a40eef7c";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-4VZMWRNQQE", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-4VZMWRNQQE');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>寒澈笔记</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/game/2048_game.html" target="_self">
+                <i class="iconfont icon-game"></i>
+                <span>游戏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/favorite/" target="_self">
+                <i class="iconfont icon-book"></i>
+                <span>收藏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/site/night.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="JDK 21新特性简介"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          4.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          36 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">JDK 21新特性简介</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>按照JDK每半年发布一次版本的节奏, JDK21在2023年9月19日发布，是一个长期支持版本, 本文就是简单介绍一下这次更新的新特性与改动.</p>
+<p>一句话总结, 这仍然是jdk的一个短期支持版本,此版本包括7个 JEP（jdk增强建议），以及数百个较小的功能增强和数千个错误修复.</p>
+<h2 id="新特性汇总"><a href="#新特性汇总" class="headerlink" title="新特性汇总"></a>新特性汇总</h2><h3 id="语言特性"><a href="#语言特性" class="headerlink" title="语言特性:"></a>语言特性:</h3><ul>
+<li><strong><a href="https://openjdk.org/jeps/440">JEP 440</a> Record Patterns</strong>(记录模式) : 记录模式是经过了前两个版本的孵化，这个版本正式发布了。其目的是将我们从java复杂的类构造中解放出来,更关注于数据. 一般用于一组数据构成的一个整体,比如坐标point(x,y)。记录模式可以嵌套，switch也支持记录模式。</li>
+<li><strong><a href="https://openjdk.org/jeps/441">JEP 4441</a> Pattern Matching for switch</strong>(switch记录模式): switch增强，支持记录模式等解析.<ul>
+<li>switch 支持null的判断，不用在外面判断一遍null了。当然为了兼容性，如果没有null case ,仍然会报空指针异常。</li>
+<li>switch 支持when的语法支持，可以对case的子集进行二次匹配，返回布尔值即可</li>
+<li>switch 支持类型自动推断（boolean 、 long 、 float 和 double等原始类型之外的类型）</li>
+<li>switch 记录模式泛型的解析</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">C</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">I</span> &#123;&#125;<br><br><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testSwitch</span><span class="hljs-params">(Object o)</span> &#123;<br>    <span class="hljs-keyword">switch</span> (o) &#123;<br>        <span class="hljs-keyword">case</span> <span class="hljs-literal">null</span> -&gt; &#123; &#125;<br>        <span class="hljs-keyword">case</span> Integer i -&gt; String.format(<span class="hljs-string">&quot;int %d&quot;</span>, i);<br>        <span class="hljs-keyword">case</span> Long l    -&gt; String.format(<span class="hljs-string">&quot;long %d&quot;</span>, l);<br>        <span class="hljs-keyword">case</span> Double d  -&gt; String.format(<span class="hljs-string">&quot;double %f&quot;</span>, d);<br>        <span class="hljs-keyword">case</span> String s<br>        <span class="hljs-keyword">when</span> s.equalsIgnoreCase(<span class="hljs-string">&quot;YES&quot;</span>) -&gt; &#123;<br>            System.out.println(<span class="hljs-string">&quot;You got it&quot;</span>);<br>        &#125;<br>        <span class="hljs-keyword">case</span> String s<br>        <span class="hljs-keyword">when</span> s.equalsIgnoreCase(<span class="hljs-string">&quot;NO&quot;</span>) -&gt; &#123;<br>            System.out.println(<span class="hljs-string">&quot;Shame&quot;</span>);<br>        &#125;<br>        <span class="hljs-keyword">case</span> String s -&gt; &#123;<br>            System.out.println(<span class="hljs-string">&quot;Sorry?&quot;</span>);<br>        &#125;<br>      <span class="hljs-keyword">case</span> Pair&lt;I&gt;(I fst, C snd) p -&gt; &#123;<br>        System.out.println(<span class="hljs-string">&quot;Sorry?&quot;</span>);<br>      &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="库升级"><a href="#库升级" class="headerlink" title="库升级"></a>库升级</h3><ul>
+<li><strong><a href="https://openjdk.org/jeps/444">JEP 444</a> Virtual Threads</strong>(虚线程) : 对标go语言协程的虚线程终于投入了使用,也就是说在一个系统线程上可以再开辟出平台级的虚线程来实现轻量级并发<ul>
+<li>根据官方的建议，虚线程因为更轻量，所以不用搞什么虚线程池，随用随建即可</li>
+<li>虚线程与系统线程的关系是M:N</li>
+<li>G1 GC 不支持巨大的栈块对象。如果一个虚拟线程的栈达到区域大小的一半，可能小至 512KB，那么可能会抛出 StackOverflowError</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 虚线程的调用</span><br><span class="hljs-keyword">try</span> (<span class="hljs-type">var</span> <span class="hljs-variable">executor</span> <span class="hljs-operator">=</span> Executors.newVirtualThreadPerTaskExecutor()) &#123;<br>    IntStream.range(<span class="hljs-number">0</span>, <span class="hljs-number">10_000</span>).forEach(i -&gt; &#123;<br>        executor.submit(() -&gt; &#123;<br>            Thread.sleep(Duration.ofSeconds(<span class="hljs-number">1</span>));<br>            <span class="hljs-keyword">return</span> i;<br>        &#125;);<br>    &#125;);<br>&#125;  <span class="hljs-comment">// executor.close() is called implicitly, and waits</span><br></code></pre></td></tr></table></figure>
+<ul>
+<li><strong><a href="https://openjdk.org/jeps/431">JEP 431</a> Sequenced Collections</strong>(有序集合) : 原先集合类接口是没有在顺序方面的相关接口，这些都是依赖于底层实现类实现的，现在这些顶层接口补上了这一功能,主要影响是<code>collection</code>和<code>map</code>接口。<ul>
+<li>新增SequencedCollection接口</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">interface</span> <span class="hljs-title class_">SequencedMap</span>&lt;K,V&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Map</span>&lt;K,V&gt; &#123;<br>  <span class="hljs-keyword">interface</span> <span class="hljs-title class_">SequencedCollection</span>&lt;E&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Collection</span>&lt;E&gt; &#123;<br>    <span class="hljs-comment">// 新方法</span><br>    SequencedCollection&lt;E&gt; <span class="hljs-title function_">reversed</span><span class="hljs-params">()</span>;<br>    <span class="hljs-comment">// 从 Deque 提取的方法</span><br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">addFirst</span><span class="hljs-params">(E)</span>;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">addLast</span><span class="hljs-params">(E)</span>;<br>    E <span class="hljs-title function_">getFirst</span><span class="hljs-params">()</span>;<br>    E <span class="hljs-title function_">getLast</span><span class="hljs-params">()</span>;<br>    E <span class="hljs-title function_">removeFirst</span><span class="hljs-params">()</span>;<br>    E <span class="hljs-title function_">removeLast</span><span class="hljs-params">()</span>;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>新增SequencedMap</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">interface</span> <span class="hljs-title class_">SequencedMap</span>&lt;K,V&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Map</span>&lt;K,V&gt; &#123;<br>    <span class="hljs-comment">// 新方法</span><br>    SequencedMap&lt;K,V&gt; <span class="hljs-title function_">reversed</span><span class="hljs-params">()</span>;<br>    SequencedSet&lt;K&gt; <span class="hljs-title function_">sequencedKeySet</span><span class="hljs-params">()</span>;<br>    SequencedCollection&lt;V&gt; <span class="hljs-title function_">sequencedValues</span><span class="hljs-params">()</span>;<br>    SequencedSet&lt;Entry&lt;K,V&gt;&gt; <span class="hljs-title function_">sequencedEntrySet</span><span class="hljs-params">()</span>;<br>    V <span class="hljs-title function_">putFirst</span><span class="hljs-params">(K, V)</span>;<br>    V <span class="hljs-title function_">putLast</span><span class="hljs-params">(K, V)</span>;<br>    <span class="hljs-comment">// 从 NavigableMap 提取的方法</span><br>    Entry&lt;K, V&gt; <span class="hljs-title function_">firstEntry</span><span class="hljs-params">()</span>;<br>    Entry&lt;K, V&gt; <span class="hljs-title function_">lastEntry</span><span class="hljs-params">()</span>;<br>    Entry&lt;K, V&gt; <span class="hljs-title function_">pollFirstEntry</span><span class="hljs-params">()</span>;<br>    Entry&lt;K, V&gt; <span class="hljs-title function_">pollLastEntry</span><span class="hljs-params">()</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>最终类图：<br><img src="/../../images/tech/java/jdk21-seq-collection.png" srcset="/img/loading.gif" lazyload alt="jdk21中新增的有序接口"></p>
+<ul>
+<li><strong><a href="https://openjdk.org/jeps/452">JEP 452</a> Key Encapsulation Mechanism API</strong>(密钥封装机制) : 一种使用公钥密码学来保护对称密钥的加密技术,现在java把这套标准接口实现类。</li>
+</ul>
+<h3 id="性能提升"><a href="#性能提升" class="headerlink" title="性能提升"></a>性能提升</h3><ul>
+<li><strong><a href="https://openjdk.org/jeps/439">JEP 439</a> Generational ZGC</strong>(ZGC垃圾回收器) : 垃圾收集器（ZGC）扩展到维护年轻和旧对象的单独代，提高应用程序性能</li>
+</ul>
+<h3 id="其他新特性"><a href="#其他新特性" class="headerlink" title="其他新特性"></a>其他新特性</h3><ul>
+<li><strong><a href="https://openjdk.org/jeps/451">JEP 451</a> Prepare to Disallow the Dynamic Loading of Agents</strong>(准备禁止动态加载Agents) : 动态加载（Attach API）可以在程序运行过程中，“热加载”一些功能(比如修复bug)到运行的程序中，这不安全，也不符合代码的完整性。所以这个版本会提示警告，并在未来将这个功能禁用。</li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8301226">JDK-8301226</a> 新增Math.clamp() 和 StrictMath.clamp() 方法</strong> : 这两个方法可以方便地将数值值限制在指定的最小值和最大值之间。</li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8302590">JDK-8302590</a> 新增 String indexOf(int,int,int) 和 indexOf(String,int,int) 方法</strong> : 添加了两个新方法 indexOf(int ch, int beginIndex, int endIndex) 和 indexOf(String str, int beginIndex, int endIndex) 到 java.lang.String 中，以支持对字符 ch 的前向搜索，以及分别对 String str 的搜索，并限制在指定的索引范围内。</li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8305486">JDK-8305486</a> 新增 splitWithDelimiters 方法</strong> : 与这些 split() 方法不同，在 <code>java.lang.String</code> 和 <code>java.util.regex.Pattern</code> 中新增的 <code>splitWithDelimiters()</code> 方法返回字符串和分隔符，而不仅仅是字符串。</li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8302323">JDK-8302323</a> StringBuilder和StringBuffer新增 repeat 方法</strong> : sb.repeat(‘-‘, 80) 将将 80 个连字符插入到 java.lang.StringBuilder sb 对象的值中</li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8305107">JDK-8305107</a> 支持Emoji的正则匹配</strong> : 可以使用新的 \p{IsXXX} 构造来匹配具有 Emoji 相关属性的字符, 如：<code>Pattern.compile(&quot;\\p&#123;IsEmoji&#125;&quot;).matcher(&quot;🉐&quot;).matches()</code></li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8191565">JDK-8191565</a> Last Resort G1 Full GC Moves Humongous Objects</strong> : G1垃圾回收时会移动巨型对象，这样可以保持尽量多的连续空间，方便后续巨型对象的分配。</li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8298127">JDK-8298127</a> 新增 HSS&#x2F;LMS 签名验证</strong> </li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8288050">JDK-8288050</a> PBES2 摘要算法新增 SHA-512&#x2F;224 和 SHA-512&#x2F;256 实现</strong> </li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8301553">JDK-8301553</a> 新增基于密码的加密的算法SunPKCS11</strong> </li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8306560">JDK-8306560</a> JShell 里可以调用jdk工具</strong> ： 比如在JShell里调用<code>jmap</code>工具 </li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8208077">JDK-8208077</a> File::listRoots 将 Windows 上可用的驱动器全部返回</strong> ： 在本次版本中，方法 java.io.File.listRoots() 在 Microsoft Windows 上的行为已更改，返回的数组现在包括所有可用磁盘驱动器的 File 对象。这与 JDK 10 到 JDK 20 中的行为不同，当时此方法会过滤掉不可访问或没有媒体的磁盘驱动器。此更改避免了在先前版本中观察到的性能问题，并确保该方法与 FileSystem.getDefault().getRootDirectories() 返回的根目录迭代保持一致。</li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8305092">JDK-8305092</a> Thread.sleep(millis, nanos) 现在能够执行亚毫秒级睡眠</strong> ： Thread.sleep(millis, nanos) 方法能够在 POSIX 平台上执行亚毫秒级睡眠。在此更改之前，非零 nanos 参数会向上取整到完整的毫秒。虽然大多数 POSIX 系统上的精度得到了提高，但实际的睡眠持续时间仍然受系统设施的精度和准确性的影响。</li>
+</ul>
+<h2 id="预览阶段特性"><a href="#预览阶段特性" class="headerlink" title="预览阶段特性:"></a>预览阶段特性:</h2><h3 id="语言特性-1"><a href="#语言特性-1" class="headerlink" title="语言特性"></a>语言特性</h3><ul>
+<li><strong><a href="https://openjdk.org/jeps/430">JEP 430</a> String Templates</strong>(字符串模板) : 对原来的<code>str.format()</code>能力进行了增强，使其可以更易读和更容易使用。<ul>
+<li>比如：<code>STR.&quot;\&#123;x&#125; + \&#123;y&#125; = \&#123;x + y&#125;&quot;;</code> 结果为：<code>&quot;10 + 20 = 30&quot;</code></li>
+<li>支持数组：<code>STR.&quot;\&#123;array[0]&#125; + \&#123;array[1]&#125; = \&#123;array[0] + array[1]&#125;&quot;;</code> </li>
+<li>支持模板的嵌套使用：<code>String tmp = STR.&quot;\&#123;x&#125;, \&#123;y&#125;&quot;;  String s = STR.&quot;\&#123;z&#125;, \&#123;tmp&#125;&quot;;</code></li>
+<li>跨行使用：</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">String</span> <span class="hljs-variable">title</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;My Web Page&quot;</span>;<br><span class="hljs-type">String</span> <span class="hljs-variable">text</span>  <span class="hljs-operator">=</span> <span class="hljs-string">&quot;Hello, world&quot;</span>;<br><span class="hljs-type">String</span> <span class="hljs-variable">html</span> <span class="hljs-operator">=</span> STR.<span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">&lt;html&gt;</span><br><span class="hljs-string">&lt;head&gt;</span><br><span class="hljs-string">&lt;title&gt;\&#123;title&#125;&lt;/title&gt;</span><br><span class="hljs-string">&lt;/head&gt;</span><br><span class="hljs-string">&lt;body&gt;</span><br><span class="hljs-string">&lt;p&gt;\&#123;text&#125;&lt;/p&gt;</span><br><span class="hljs-string">&lt;/body&gt;</span><br><span class="hljs-string">&lt;/html&gt;</span><br><span class="hljs-string">&quot;&quot;&quot;</span>;<br></code></pre></td></tr></table></figure>
+<ul>
+<li>自定义字符串模板工具：<code>FMT</code>和<code>RAW </code>，其中<code>FMT</code>负责字符串模板的插值操作，<code>RAW</code>负责生成一个未经解析的<code>StringTemplate</code>对象。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;Joan&quot;</span>;<br><span class="hljs-type">String</span> <span class="hljs-variable">info</span> <span class="hljs-operator">=</span> STR.<span class="hljs-string">&quot;My name is \&#123;name&#125;&quot;</span>;<br><br><span class="hljs-comment">// 等价于</span><br><span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;Joan&quot;</span>;<br><span class="hljs-type">StringTemplate</span> <span class="hljs-variable">st</span> <span class="hljs-operator">=</span> RAW.<span class="hljs-string">&quot;My name is \&#123;name&#125;&quot;</span>;<br><span class="hljs-type">String</span> <span class="hljs-variable">info</span> <span class="hljs-operator">=</span> STR.process(st);<br></code></pre></td></tr></table></figure>
+<ul>
+<li><strong><a href="https://openjdk.org/jeps/443">JEP 443</a> Unnamed Patterns and Variables</strong>(未命名模式) : 通过未命名模式增强 Java 语言，这些模式匹配记录组件而不声明组件的名称或类型，以及未命名变量，这些变量可以初始化但不能使用。两者均以下划线字符表示，即 _。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">int</span> <span class="hljs-variable">acc</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br><span class="hljs-keyword">for</span> (Order order : orders) &#123;<br>        <span class="hljs-keyword">if</span> (acc &lt; LIMIT) &#123;<br>         acc++;<br>        &#125;<br>&#125;<br><span class="hljs-comment">// order 声明了但是没有使用，可以简化成下面形式</span><br><span class="hljs-keyword">for</span> (Order _ : orders) &#123;<br>    <span class="hljs-keyword">if</span> (acc &lt; LIMIT) &#123; <br>        acc++;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li><strong><a href="https://openjdk.org/jeps/445">JEP 445</a> Unnamed Classes and Instance Main Methods</strong>(未命名主方法) : 简单来说，就是简化了main入口方法的声明。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">HelloWorld</span> &#123; <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123; <br>        System.out.println(<span class="hljs-string">&quot;Hello, World!&quot;</span>);<br>    &#125;<br>&#125;<br><span class="hljs-comment">// 可以写成实例主方法，而不再是一个静态方法：</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">HelloWorld</span> &#123;<br>  <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> &#123;<br>    System.out.println(<span class="hljs-string">&quot;Hello, World!&quot;</span>);<br>  &#125;<br>&#125;<br><br><span class="hljs-comment">// 甚至可以写成未命名类的形式：</span><br><span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> &#123;<br>  System.out.println(<span class="hljs-string">&quot;Hello, World!&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>通过这种方式简化java主方法的声明，但这也带来了一个问题，当一个类里有多个main方法的时候，执行的是哪一个呢？jvm会选择下面的第一个来调用</p>
+<ol>
+<li>public static void main(String[] args)</li>
+<li>public static void main()</li>
+<li>void main(String[] args)</li>
+<li>void main()</li>
+</ol>
+<h3 id="库升级-1"><a href="#库升级-1" class="headerlink" title="库升级"></a>库升级</h3><ul>
+<li><strong><a href="https://openjdk.org/jeps/442">JEP 442</a> Foreign Function &amp; Memory API</strong>(外部函数和内存访问) : 第三次预览。java 程序可以通过它与 Java 运行时之外代码和数据交互。通过高效调用外部函数（即 JVM 之外的代码），以及安全访问外部内存（即不由 JVM 管理的内存），该 API 使 Java 程序能够在没有 JNI 的脆弱性和危险的情况下调用本地库和处理本地数据.</li>
+<li><strong><a href="https://openjdk.org/jeps/446">JEP 446</a> Scoped Values</strong>(作用域值) : 通过引入作用域值，使得一些信息可以在线程及其子线程间共享数据,类似<code>ThreadLocal</code>这样，跳过传参来进行值传递的方式。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> ScopedValue&lt;String&gt; X = ScopedValue.newInstance();<br><br><span class="hljs-keyword">void</span> <span class="hljs-title function_">foo</span><span class="hljs-params">()</span> &#123;<br>    ScopedValue.where(X, <span class="hljs-string">&quot;hello&quot;</span>).run(() -&gt; bar());<br>&#125;<br><br><span class="hljs-keyword">void</span> <span class="hljs-title function_">bar</span><span class="hljs-params">()</span> &#123;<br>    System.out.println(X.get()); <span class="hljs-comment">// prints hello</span><br>    ScopedValue.where(X, <span class="hljs-string">&quot;goodbye&quot;</span>).run(() -&gt; baz());<br>    System.out.println(X.get()); <span class="hljs-comment">// prints hello</span><br>&#125;<br><br><span class="hljs-keyword">void</span> <span class="hljs-title function_">baz</span><span class="hljs-params">()</span> &#123;<br>    System.out.println(X.get()); <span class="hljs-comment">// prints goodbye</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li><strong><a href="https://openjdk.org/jeps/448">JEP 448</a> Vector API</strong>(向量api) : 第六次预览。现代的CPU都提供了向量指令集，该 API 能够在支持的 CPU 架构上可靠地编译为最优向量指令，从而实现比等效标量计算更优越的性能。</li>
+</ul>
+<h2 id="移除的功能"><a href="#移除的功能" class="headerlink" title="移除的功能"></a>移除的功能</h2><ul>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8300977">JDK-8300977</a> java.io.File’s Canonical Path Cache Is Removed</strong> ： <code>File::getCanonicalFile</code> 和 <code>File::getCanonicalPath</code>的路径缓存功能被废除，对使用没有影响</li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8297295">JDK-8297295</a> ThreadGroup.allowThreadSuspension Is Removed</strong> ： 本版本中已移除 java.lang.ThreadGroup.allowThreadSuspension(boolean) 方法。该方法用于 JDK 1.1 中的低内存处理，但从未完全指定。它在 JDK 1.2（1998 年）中被弃用，并改为“无操作”。</li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8205129">JDK-8205129</a> The java.lang.Compiler Class Has Been Removed</strong> ：java.lang.Compiler 类已被移除。这个未指定充分 API 始于 JDK 1.0，早期 JDK 版本中使用的“经典 VM”。在 HotSpot VM 中的实现只是打印一条警告，指出它不受支持。该类自 Java SE 9 以来已被弃用并标记为删除。</li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8302819">JDK-8302819</a> Remove the JAR Index Feature</strong> ：“JAR 索引”功能已被从 JAR 文件规范中删除。JAR 索引是早期 JDK 版本中的遗留优化，允许在通过网络加载小程序或其他类时推迟下载 JAR 文件。自 JDK 18 以来，该功能已被禁用，意味着 JAR 文件中的 META-INF&#x2F;INDEX.LIST 条目在运行时将被忽略。</li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8307244">JDK-8307244</a> Remove the JAR Index Feature</strong> ：该类 javax.management.remote.rmi.RMIIIOPServerImpl 已被移除。在 JDK 9 中，IIOP 传输已被从 JMX 远程 API 中移除。自 Java SE 9 以来，此类已被弃用，其构造函数已更改为抛出 UnsupportedOperationException 。</li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8225409">JDK-8225409</a> Removal of G1 Hot Card Cache</strong> ：G1 热卡缓存已被移除。性能测试表明，在并发精炼控制的改进之后，它对性能没有贡献。而移除该功能后，减少了 G1 垃圾收集器的内存占用，大约为 Java 堆大小的 0.2%</li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8302385">JDK-8302385</a> The MetaspaceReclaimPolicy Flag has Been Obsoleted</strong> ：MetaspaceReclaimPolicy 选项曾用于在类卸载后微调元空间的内存回收行为。实际上，这效果有限，很少使用。</li>
+</ul>
+<h2 id="废弃的功能（后来会移除）"><a href="#废弃的功能（后来会移除）" class="headerlink" title="废弃的功能（后来会移除）"></a>废弃的功能（后来会移除）</h2><ul>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8280031">JDK-8280031</a> Deprecate GTK2 for Removal</strong> ： GTK2 用于linux上对 AWT&#x2F;Swing 的实现支持，随着 GTK4 在 2020 年 12 月的发布，GTK 2 工具包即将达到其生命周期的终点</li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8303175">JDK-8303175</a> com.sun.nio.file.SensitivityWatchEventModifier Is Deprecated</strong> ： 该枚举中的常量用于在 macOS 上基于轮询的 WatchService 实现中设置轮询文件更改的间隔。基于轮询的 WatchService 已更改，在注册要监视的文件时忽略这些修饰符。</li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8304982">JDK-8304982</a> Emit Warning for Removal of COMPAT Provider</strong> ： COMPAT 在 JDK 9 时代提供，用于迁移到 CLDR 区域数据，当时它成为了默认的区域数据（JEP 252）。JDK 21 为了兼容性保留了 JDK 8 的遗留区域数据，但一些新功能并未应用。遗留的区域数据将在未来的版本中删除。鼓励用户迁移到 CLDR 区域数据</li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8298966">JDK-8298966</a> Deprecate JMX Subject Delegation and the JMXConnector.getMBeanServerConnection(Subject) Method for Removal</strong> ： JMX Subject Delegation 功能已被废弃，并计划在未来版本中删除。</li>
+</ul>
+<h2 id="问题修复"><a href="#问题修复" class="headerlink" title="问题修复"></a>问题修复</h2><ul>
+<li><p><strong><a href="https://bugs.openjdk.org/browse/JDK-8307990">JDK-8307990</a> Fixed Indefinite jspawnhelper Hangs</strong> ： 修复了不定时 jspawnhelper 停滞问题</p>
+<p>自 JDK 13 以来，在 Linux 上执行子进程的命令默认使用所谓的 POSIX_SPAWN 启动机制（即 -Djdk.lang.Process.launchMechanism&#x3D;POSIX_SPAWN ）。在父 JVM 进程在 JVM 与新创建的 jspawnhelper 进程之间的握手完成之前异常终止的情况下， jspawnhelper 在 JDK 13 到 JDK 20 中可能会无限期地停滞。此问题已在 JDK 21 中修复。如果父进程有打开的套接字，则此问题尤其有害，因为在这种情况下，派生的 jspawnhelper 进程将继承它们并保持所有相应的端口打开，从而有效地阻止其他进程绑定到它们。 </p>
+<p>这种异常行为已在内存约束严格的环境中频繁 fork 子进程的应用程序中观察到。在这种情况下，操作系统可能会在 fork 过程中终止 JVM，从而导致所述问题。如果新进程尝试绑定与初始应用程序相同的端口，则由于它们将被挂起的 jspawnhelper 子进程阻塞，因此无法在崩溃后重启 JVM 进程。</p>
+<p>此问题的根本原因是 jspawnhelper 未关闭用于与父 JVM 握手的管道的写入端，这已在尝试从父进程读取数据之前关闭了通信管道的写入端得到修复。这样， jspawnhelper 将可靠地从通信管道读取 EOF 事件，并在父进程意外死亡时终止。</p>
+<p>这种问题的第二个变体可能发生，因为 JDK 中的握手代码没有正确处理 write(2) 的中断。这可能导致向 jspawnhelper 子进程发送不完整的信息。结果是父线程和子进程之间的死锁，这表现为在读取管道时被阻塞的 jspawnhelper 进程，以及相应的父 Java 进程中的以下堆栈跟踪</p>
+</li>
+<li><p><strong><a href="https://bugs.openjdk.org/browse/JDK-8307466">JDK-8307466</a> Error Computing the Amount of Milli- and Microseconds between java.time.Instants</strong> ： 使用 <code>ChronoUnit.MILLIS.between(t1, t2)</code> 、 <code>ChronoUnit.MICROS.between(t1, t2)</code> 、 <code>t1.until(t2, MILLIS)</code> 或 <code>t1.until(t2, MICROS)</code> 计算两个时间点之间的时间差已被纠正。自 JDK 18 以来，计算实例之间单位的实现没有在计算毫秒和微秒时在秒和纳秒时进行进位和借位。</p>
+</li>
+<li><p><strong><a href="https://bugs.openjdk.org/browse/JDK-8303465">JDK-8303465</a> Enhance Contents (Trusted Certificate Entries) of macOS KeychainStore</strong> : macOS KeychainStore 实现现在在用户域、管理员域或两者中正确信任证书。在此之前，只有用户域被考虑。此外，如果证书的信任设置中在任一域存在针对特定目的的“拒绝”条目，则该证书将不会成为 macOS KeychainStore 的一部分.</p>
+</li>
+<li><p><strong><a href="https://bugs.openjdk.org/browse/JDK-8305091">JDK-8305091</a> Allow Key&#x2F;Nonce Reuse for DECRYPT_MODE ChaCha20 and ChaCha20-Poly1305 Cipher Objects</strong> : SunJCE 对 Cipher 对象使用 ChaCha20 和 ChaCha20-Poly1305 算法的实现现在将在 DECRYPT_MODE 时允许密钥&#x2F;nonce 重用。此更改使这些算法与当前 SunJCE AES-GCM 解密模式行为在密钥&#x2F;nonce 重用方面保持一致。所有 ENCRYPT_MODE 密钥&#x2F;nonce 重用禁令的行为保持不变。</p>
+</li>
+<li><p><strong><a href="https://bugs.openjdk.org/browse/JDK-8027682">JDK-8027682</a> Disallow Extra Semicolons Between “import” Statements</strong> : Java 语言规范不允许在 import 语句之间出现多余的分号，然而编译器之前允许这样做；JDK21 修复了这个问题。</p>
+</li>
+</ul>
+<h2 id="jdk21-支持的工具"><a href="#jdk21-支持的工具" class="headerlink" title="jdk21 支持的工具"></a>jdk21 支持的工具</h2><p>全平台可用的jdk 工具<br><img src="/../../images/tech/java/jdk21-tool-all.png" srcset="/img/loading.gif" lazyload alt="全平台可用"></p>
+<p>仅windows可用的jdk工具<br><img src="/../../images/tech/java/jdk21-tool-windows.png" srcset="/img/loading.gif" lazyload alt="windows only"></p>
+<h2 id="名词解析"><a href="#名词解析" class="headerlink" title="名词解析"></a>名词解析</h2><ul>
+<li><p>HarfBuzz: 一个开源的用于文字塑形的软件开发库，亦即用于转换Unicode文本到字形指标及方位的过程</p>
+</li>
+<li><p>FreeType:  同HarfBuzz一样, 也是一个开源字体库. 它是一个用C语言实现的一个字体光栅化库。它可以用来将字符栅格化并映射成位图以及提供其他字体相关业务的支持</p>
+</li>
+<li><p>Preview(预览): 功能已经基本完整, 可以试用了. 可以简单理解为beta公测版. 来源于 <a href="https://openjdk.org/jeps/12">JEP12</a></p>
+<blockquote>
+<p>功能以预览版的形式发布，以收集有关它们的反馈而不承诺保持其向后兼容性——这意味着鼓励每个人尝试它们，但同时不鼓励在生产中使用它们。</p>
+<p>预览功能不是开箱即用的，为了访问它们，需要使用*–enable-preview*编译器标志。</p>
+</blockquote>
+</li>
+<li><p>Incubator(孵化) : 实验性 API已经到了一定阶段, 已经计划开发出一整套完整的功能.以独立模块的形式发布. 来源于 <a href="https://openjdk.org/jeps/11">JEP11</a></p>
+</li>
+<li><p>Experimental(实验) : vm级的早期功能, 不稳定, 功能不完整. 实验性质.</p>
+<blockquote>
+<p>实验性功能代表（主要是）VM 级功能的早期版本，这些功能可能是有风险的、不完整的，甚至是不稳定的。在大多数情况下，需要使用专用标志启用它们</p>
+<p>出于比较的目的，如果一个实验功能被认为是 25%“完成”，那么一个预览功能应该至少 95%“完成”。</p>
+<p>预览,孵化,实验三者的关系大致: 实验 &#x3D;&gt; 孵化 &#x3D;&gt; 预览 &#x3D;&gt; 合并jdk主体功能.</p>
+</blockquote>
+</li>
+<li><p>JEP : JDK Enhancement Proposal , jdk增强建议. 也就是我们常说的jdk新特性的来源. <a href="https://openjdk.org/jeps/0">JEP大全</a></p>
+</li>
+</ul>
+<h2 id="往期文章"><a href="#往期文章" class="headerlink" title="往期文章"></a>往期文章</h2><p><a href="/2022/10/20/java-jdk-v19/">jdk19新特性</a></p>
+<p><a href="/2023/04/04/java-jdk-v20/">jdk20新特性</a></p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://docs.oracle.com/en/java/javase/21/">jdk21官方文档</a><br><a href="https://www.oracle.com/java/technologies/javase/21-relnote-issues.html#NewFeature">jdk21的新特性</a><br><a href="https://www.oracle.com/java/technologies/javase/21all-relnotes.html">jdk21及后续修复bug版本文档</a><br><a href="https://docs.oracle.com/en/java/javase/21/gctuning/index.html">jdk21垃圾回收器官网</a><br><a href="https://docs.oracle.com/en/java/javase/21/vm/preface.html">jdk21虚拟机介绍</a>    </p>
+<p><a href="https://openjdk.org/">openjdk官网</a><br><a href="https://4comprehension.com/preview-experimental-and-incubating-features-in-java/">jdk中预览,实验,孵化的关系</a><br><a href="https://www.oracle.com/java/technologies/java-se-support-roadmap.html">jdk各版本支持时间</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7/" class="category-chain-item">java版本特性</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7/" class="print-no-link">#java版本特性</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>JDK 21新特性简介</div>
+      <div>https://www.hancher.top/2025/04/21/java-jdk-v21/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>寒澈</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年4月21日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年4月24日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="ND - 禁止演绎">
+                    <i class="iconfont icon-cc-nd"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/05/27/frame-prometheus-select-label-var/" title="普罗米修斯自定义label作为变量的显示值和实际值">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">普罗米修斯自定义label作为变量的显示值和实际值</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/04/16/life-code-line/" title="关于工作中考核代码量的一些思考">
+                        <span class="hidden-mobile">关于工作中考核代码量的一些思考</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.8/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"https://hancherblogcommenthahaha.netlify.app/.netlify/functions/twikoo","region":"ap-beijing","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              Fluid.utils.listenDOMLoaded(function() {
+                var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+                Fluid.plugins.imageCaption(imgSelector);
+                Fluid.plugins.fancyBox(imgSelector);
+              });
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <div style="font-size: 0.85rem"> Copyright <i class="iconfont icon-copyright"> 2022 -  <script> document.write(new Date().getFullYear()); </script> <a href="/about" target="_blank" rel="nofollow noopener"> <span> <strong>Hancher</strong> </span> </a>  </i> | Power by  <a href="https://hexo.io" target="_blank" rel="nofollow noopener"> <span> <strong>Hexo</strong> </span> </a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <span> <strong>Fluid</strong> </span> </a> </div> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/duration.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
