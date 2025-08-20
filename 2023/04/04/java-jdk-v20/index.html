@@ -1,0 +1,916 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN,zh-HK,en,default" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/images/site/coder.jpeg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="寒澈">
+  <meta name="keywords" content="java,jdk20">
+  
+    <meta name="description" content="JDK 20在2023年3月发布了, 本文就是简单介绍一下这次更新的新特性与改动">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JDK 20新特性简介">
+<meta property="og:url" content="https://www.hancher.top/2023/04/04/java-jdk-v20/index.html">
+<meta property="og:site_name" content="寒澈笔记">
+<meta property="og:description" content="JDK 20在2023年3月发布了, 本文就是简单介绍一下这次更新的新特性与改动">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.hancher.top/images/tech/java/jdk20-new-feature.jpeg">
+<meta property="og:image" content="https://www.hancher.top/images/tech/java/java-bin-desc.png">
+<meta property="article:published_time" content="2023-04-04T04:00:00.000Z">
+<meta property="article:modified_time" content="2023-04-04T04:00:00.000Z">
+<meta property="article:author" content="寒澈">
+<meta property="article:tag" content="java版本特性">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.hancher.top/images/tech/java/jdk20-new-feature.jpeg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>JDK 20新特性简介 - 寒澈笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/blog.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.hancher.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"255889a39686581da013e7c8a40eef7c","google":{"measurement_id":"G-4VZMWRNQQE"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"zqhOsrozoSMTfBNVSHXyTh45-gzGzoHsz","app_key":"EUXdctCzoy7rxXqCDUDv1J6a","server_url":"https://zqhosroz.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?255889a39686581da013e7c8a40eef7c";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-4VZMWRNQQE", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-4VZMWRNQQE');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>寒澈笔记</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/game/2048_game.html" target="_self">
+                <i class="iconfont icon-game"></i>
+                <span>游戏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/favorite/" target="_self">
+                <i class="iconfont icon-book"></i>
+                <span>收藏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/site/night.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="JDK 20新特性简介"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          2.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          21 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">JDK 20新特性简介</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p><img src="/images/tech/java/jdk20-new-feature.jpeg" srcset="/img/loading.gif" lazyload alt="jdk20"><br>按照JDK每半年发布一次版本的节奏, JDK20在2023年3月发布了, 本文就是简单介绍一下这次更新的新特性与改动.</p>
+<p>一句话总结, 这仍然是jdk的一个短期支持版本,此版本包括7个 JEP（jdk增强建议），以及数百个较小的功能增强和数千个错误修复.</p>
+<h2 id="新特性汇总"><a href="#新特性汇总" class="headerlink" title="新特性汇总"></a>新特性汇总</h2><h3 id="预览特性"><a href="#预览特性" class="headerlink" title="预览特性"></a>预览特性</h3><h4 id="语言特性"><a href="#语言特性" class="headerlink" title="语言特性:"></a>语言特性:</h4><ul>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8294078">JEP 432</a> Record Patterns</strong>(记录模式) :  第2预览阶段. 记录模式是java语言的一个新语言特性.其目的是将我们从java复杂的类构造中解放出来,更关注于数据. 一般用于一组数据构成的一个整体,比如坐标point(x,y).</li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8294285">JEP 433</a> Pattern Matching for switch</strong>(switch记录模式):第4次预览, switch语法支持记录模式.</li>
+</ul>
+<h4 id="API库扩充"><a href="#API库扩充" class="headerlink" title="API库扩充:"></a>API库扩充:</h4><ul>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8293649">JEP 434</a> Foreign Function &amp;Memory AP</strong>(访问jvm外部函数或内存的API) : 引入一个API，通过该API，Java程序可以在Java运行时之外与代码和数据进行互操作。通过有效地调用外部函数（即JVM外部的代码），并通过安全访问外部内存（即不由JVM管理的内存），API使Java程序能够调用本机库并处理本机数据，而没有JNI的脆性和危险性。</li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8303262">JEP 438</a> Vector API</strong>(向量API): 第5孵化阶段.向量计算由对向量的一系列操作组成。向量 API 用来表达向量计算，该计算可以在运行时可靠地编译为支持的 CPU 架构上的最佳向量指令，从而实现优于等效标量计算的性能。向量 API 的目标是为用户提供简洁易用且与平台无关的表达范围广泛的向量计算.</li>
+</ul>
+<h4 id="并发增强"><a href="#并发增强" class="headerlink" title="并发增强:"></a>并发增强:</h4><ul>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8263012">JEP 429</a> Scoped Values</strong>(作用域值) : 孵化阶段.引入范围值，允许在线程内和线程之间共享不可变的数据。它们优于线程本地变量，特别是在使用大量虚拟线程时。因为变量是不可变的,也就避免了并发问题.</li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8295817">JEP 436</a> Virtual Threads</strong>(虚拟线程) : 第2预览阶段. 将虚拟线程引入Java平台。虚拟线程是轻量级线程，大大减少了编写、维护和观察高吞吐量并发应用程序的工作量. 本次主要是一些核心功能升级.</li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8296037">JEP 437</a> Structured Concurrency</strong>(结构化并发) : 第2孵化阶段. 通过引入结构化并发的API来简化多线程编程。结构化并发将在不同线程中运行的多个任务视为单个工作单元，从而简化错误处理和取消，提高可靠性并提高可观察性。</li>
+</ul>
+<h3 id="主要特性"><a href="#主要特性" class="headerlink" title="主要特性"></a>主要特性</h3><h4 id="核心库"><a href="#核心库" class="headerlink" title="核心库"></a>核心库</h4><ul>
+<li><strong>Support Unicode 15.0</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8284842">JDK-8284842</a>) : 支持Unicode15.0 .</li>
+<li><strong>Print Warning to Standard Error If Bad java.io.tmpdir Setting Is Detected</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8290313">JDK-8290313</a>) : 新增一种警告输出场景</li>
+</ul>
+<h4 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h4><ul>
+<li><strong>New JFR Event: jdk.InitialSecurityProperty</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8292177">JDK-8292177</a>) : 新增一个新的JFR(Java Flight Recorder)事件.</li>
+<li><strong>New JFR Event: jdk.SecurityProviderService</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8254711">JDK-8254711</a>) : 新增一个新的JFR(Java Flight Recorder)事件.</li>
+<li><strong>Provide Poly1305 Intrinsic on x86_64 platforms with AVX512 instructions</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8288047">JDK-8288047</a>) : 此功能在x86_64平台上使用AVX512指令为SunJCE提供商的Poly1305消息身份验证代码算法提供优化。</li>
+<li><strong>Provide ChaCha20 Intrinsics on x86_64 and aarch64 Platforms</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8247645">JDK-8247645</a>) : 此功能为SunJCE提供商提供的ChaCha20密码提供了优化的内在实现。这些优化的例程专为支持AVX、AVX2和&#x2F;或AVX512指令集的x86_64芯片组以及支持高级SIMD指令集的aarch64芯片组而设计。</li>
+<li><strong>(D)TLS Key Exchange Named Groups</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8281236">JDK-8281236</a>) : 加密功能增强.</li>
+<li><strong>DTLS Resumption Uses HelloVerifyRequest Messages</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8287411">JDK-8287411</a>) : 加密功能增强.</li>
+</ul>
+<h4 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h4><ul>
+<li><strong>Javac Warns about Type Casts in Compound Assignments with Possible Lossy Conversions</strong>(<a href="https://bugs.openjdk.org/browse/JDK-8244681">JDK-8244681</a>) : javac命令增加了有损类型强转警告.</li>
+<li><strong>New ‘jmod –compress’ Command Line Option</strong>(<a href="https://bugs.openjdk.org/browse/JDK-8293499">JDK-8293499</a>) : 在jmod工具中添加了一个新的–compress命令行选项，以便在创建JMOD存档时指定压缩级别。接受的值是zip-[0-9]，其中zip-0不提供压缩，zip-9提供最佳压缩。默认是zip-6。</li>
+</ul>
+<p>jdk20 工具箱全集<br><img src="/images/tech/java/java-bin-desc.png" srcset="/img/loading.gif" lazyload alt="java-bin"></p>
+<h4 id="虚拟机"><a href="#虚拟机" class="headerlink" title="虚拟机"></a>虚拟机</h4><ul>
+<li><strong>add bean for Remark and Cleanup Pause Time in G1</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8297247">JDK-8297247</a>) : G1垃圾回收在标记和清理阶段引入了一个新的回收bean : “G1 Concurrent GC”</li>
+</ul>
+<h3 id="移出功能"><a href="#移出功能" class="headerlink" title="移出功能"></a>移出功能</h3><ul>
+<li><strong>Thread.suspend&#x2F;resume Changed to Throw UnsupportedOperationException</strong>  (<a href="https://bugs.openjdk.org/browse/JDK-8249627">JDK-8249627</a>) : 在此版本中，使用Thread.suspend()和Thread.resume()方法暂停或恢复线程的能力已被删除。方法已更改为抛出UnsupportedOperationException。这些方法本质上容易陷入僵局，自JDK 1.2（1998年）以来已被弃用。ThreadGroup中的相应方法，即暂停或恢复一组线程，已更改为在Java 19中抛出UnsupportedOperationException。</li>
+<li><strong>Thread.Stop Changed to Throw UnsupportedOperationException</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8289610">JDK-8289610</a>) : 在此版本中，使用Thread.stop()方法“停止”线程的功能已被删除。该方法已更改为抛出UnsupportedOperationException。通过使其抛出java.lang.ThreadDeath来阻止线程本质上是不安全的。自JDK 1.2（1998）以来，停止方法已被弃用。ThreadGroup中的相应方法“停止”一组线程，已更改为在Java 19中抛出UnsupportedOperationException。同时, java.lang.ThreadDeath也被标记为废弃.</li>
+<li><strong>Remove Support for javac -source&#x2F;-target&#x2F;–release 7</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8173605">JDK-8173605</a>) : javac移出了一些选项</li>
+<li><strong>Improved Control of G1 Concurrent Refinement Threads</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8137022">JDK-8137022</a>): G1并发细化线程的控制已被完全取代。新控制器通常分配更少的线程。它在细化线程活动中的峰值往往较少。它还倾向于延迟细化，当对相同或附近位置有多个写入时，允许通过写入屏障进行更多过滤，从而提高屏障的效率。</li>
+</ul>
+<h3 id="废弃功能"><a href="#废弃功能" class="headerlink" title="废弃功能"></a>废弃功能</h3><ul>
+<li><strong>java.net.URL Constructors Are Deprecated</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8294241">JDK-8294241</a>) : 废弃URL构造方法,推荐使用 java.net.URI 来构建URL.</li>
+<li><strong>Deprecate JMX Management Applets for Removal</strong> (<a href="https://bugs.openjdk.org/browse/DK-8297794">DK-8297794</a>) : 废弃JMX</li>
+</ul>
+<h2 id="小优化"><a href="#小优化" class="headerlink" title="小优化"></a>小优化</h2><p>这里主要介绍一些小的优化, 太长可以不看.</p>
+<ul>
+<li><strong>HTTP Response Input Streams Will Throw an IOException on Interrupt</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8294047">JDK-8294047</a>) :  http请求中断抛出异常</li>
+<li><strong>HttpClient Default Keep Alive Time is 30 Seconds</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8297030">JDK-8297030</a>) : 由java.net.http.HttpClient创建的HTTP&#x2F;1.1和HTTP&#x2F;2连接的默认空闲连接超时值已从1200秒减少到30秒</li>
+<li><strong>Idle Connection Timeouts for HTTP&#x2F;2</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8288717">JDK-8288717</a>) : 此版本中添加了HTTP&#x2F;2的空闲连接超时。</li>
+<li><strong>FileChannel Positional Write Is Unspecified in APPEND Mode</strong> (<a href="https://bugs.openjdk.org/browse/JDK-6924219">JDK-6924219</a>) : append模式下,FileChannel写入位置因操作系统而定</li>
+<li><strong>Update Timezone Data to 2022c</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8292579">JDK-8292579</a>) : 此版本包括2022b的更改，将1970年后具有相同时间戳数据的多个区域合并到单个时区数据库中。所有时区ID保持不变，但合并的时区将指向共享区域数据库。</li>
+<li><strong>IdentityHashMap’s Remove and Replace Methods Use Object Identity</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8178355">JDK-8178355</a>) : IdentityHashMap的这两个方法, 对象比较由 <code>equals</code> 改为 <code>==</code></li>
+<li><strong>Support for CLDR Version 42</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8284840">JDK-8284840</a>) : 基于Unicode Consortium的CLDR的本地数据已升级到版本42</li>
+<li><strong>Introduce LDAP and RMI Protocol Specific Object Factory Filters to JNDI Implementation</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8290368">JDK-8290368</a>) : 引入了新的系统和安全属性，以允许对允许从JNDI&#x2F;LDAP和JNDI&#x2F;RMI上下文重建Java对象的JNDI对象工厂集进行更精细的控制</li>
+<li><strong>G1: Disable Preventive GCs by Default</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8293861">JDK-8293861</a>) : G1默认禁用Preventive垃圾回收器</li>
+<li><strong>appendToClassPathForInstrumentation Must Be Used in a Thread-Safe Manner</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8296472">JDK-8296472</a>) : 如题, 当时用java agent时,自定义类加载器中的appendToClassPathForInstrumentation方法必须以线程安全的方式添加到类搜索路径中。</li>
+<li><strong>Deprecate and Disable Legacy Parallel Class Loading Workaround for Non-Parallel-Capable Class Loaders</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8295673">JDK-8295673</a>) :  一些用户定义的旧类加载器会通过在加载过程中释放类加载器锁来解决死锁问题。为了防止这些加载程序在通过并行线程加载同一类时遇到“java.lang.LinkageError：尝试重复类定义”，HotSpot虚拟机在JDK 6中引入了一种变通方法，将加载尝试序列化，导致随后的尝试等待第一个完成. 现在将这种变通 方法废弃了</li>
+<li><strong>Disabled DTLS 1.0</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8256660">JDK-8256660</a>)  : 废弃 DTLS 1.0</li>
+<li><strong>Remove Thread Text from Subject.current</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8297276">JDK-8297276</a>) : 在此版本中，Subject.current的规范已更改，以降低创建线程时继承主题的期望。此时，主题存储在AccessControlContext中，并在创建平台线程时被继承。虚拟线程在线程创建时不会捕获调用者上下文，并且不会继承AccessControlContext。在删除对SecurityManager和继承的AccessControlContext的支持之前，将在未来的版本中重新审查继承。</li>
+<li><strong>Generalize ‘see’ and ‘link’ Tags for User-Defined Anchors</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8200337">JDK-8200337</a>) : {@link}、{@linkplain}和@see标签已增强，允许链接到JavaDoc生成的元素文档中的任意锚点。为了区分这些引用和成员引用，使用双散列标记（<code>##</code>）将元素名称与URI片段分开。</li>
+</ul>
+<h2 id="名词解析"><a href="#名词解析" class="headerlink" title="名词解析"></a>名词解析</h2><ul>
+<li><p>HarfBuzz: 一个开源的用于文字塑形的软件开发库，亦即用于转换Unicode文本到字形指标及方位的过程</p>
+</li>
+<li><p>FreeType:  同HarfBuzz一样, 也是一个开源字体库. 它是一个用C语言实现的一个字体光栅化库。它可以用来将字符栅格化并映射成位图以及提供其他字体相关业务的支持</p>
+</li>
+<li><p>Preview(预览): 功能已经基本完整, 可以试用了. 可以简单理解为beta公测版. 来源于 <a href="https://openjdk.org/jeps/12">JEP12</a></p>
+<blockquote>
+<p>功能以预览版的形式发布，以收集有关它们的反馈而不承诺保持其向后兼容性——这意味着鼓励每个人尝试它们，但同时不鼓励在生产中使用它们。</p>
+<p>预览功能不是开箱即用的，为了访问它们，需要使用*–enable-preview*编译器标志。</p>
+</blockquote>
+</li>
+<li><p>Incubator(孵化) : 实验性 API已经到了一定阶段, 已经计划开发出一整套完整的功能.以独立模块的形式发布. 来源于 <a href="https://openjdk.org/jeps/11">JEP11</a></p>
+</li>
+<li><p>Experimental(实验) : vm级的早期功能, 不稳定, 功能不完整. 实验性质.</p>
+<blockquote>
+<p>实验性功能代表（主要是）VM 级功能的早期版本，这些功能可能是有风险的、不完整的，甚至是不稳定的。在大多数情况下，需要使用专用标志启用它们</p>
+<p>出于比较的目的，如果一个实验功能被认为是 25%“完成”，那么一个预览功能应该至少 95%“完成”。</p>
+<p>预览,孵化,实验三者的关系大致: 实验 &#x3D;&gt; 孵化 &#x3D;&gt; 预览 &#x3D;&gt; 合并jdk主体功能.</p>
+</blockquote>
+</li>
+<li><p>JEP : JDK Enhancement Proposal , jdk增强建议. 也就是我们常说的jdk新特性的来源. <a href="https://openjdk.org/jeps/0">JEP大全</a></p>
+</li>
+</ul>
+<h2 id="往期文章"><a href="#往期文章" class="headerlink" title="往期文章"></a>往期文章</h2><p><a href="jdk-v19">jdk19新特性</a></p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://docs.oracle.com/en/java/javase/20/">jdk20官方文档</a><br><a href="https://www.oracle.com/java/technologies/javase/20-relnote-issues.html">jdk20新特性文档</a><br><a href="https://docs.oracle.com/en/java/javase/20/migrate/getting-started.html">jdk20升级指南</a><br><a href="https://docs.oracle.com/en/java/javase/20/install/index.html">jdk20安装指南</a><br><a href="https://cr.openjdk.org/~iris/se/20/latestSpec/">jdk20的开发计划</a><br><a href="https://docs.oracle.com/en/java/javase/20/vm/index.html">jdk20虚拟机简介</a><br><a href="https://docs.oracle.com/en/java/javase/20/gctuning/index.html">jdk20垃圾回收机制</a><br><a href="https://docs.oracle.com/en/java/javase/20/security/index.html">jdk20安全机制</a></p>
+<p><a href="https://bugs.openjdk.org/secure/Dashboard.jspa">openjdk bug反馈系统</a><br><a href="https://openjdk.org/">openjdk官网</a><br><a href="https://4comprehension.com/preview-experimental-and-incubating-features-in-java/">jdk中预览,实验,孵化的关系</a>  </p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7/" class="category-chain-item">java版本特性</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7/" class="print-no-link">#java版本特性</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>JDK 20新特性简介</div>
+      <div>https://www.hancher.top/2023/04/04/java-jdk-v20/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>寒澈</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月4日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="ND - 禁止演绎">
+                    <i class="iconfont icon-cc-nd"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/04/20/bash-shc/" title="如何给bash脚本进行加密？">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">如何给bash脚本进行加密？</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/03/26/net-intranet-frp/" title="通过frp实现内网穿透功能">
+                        <span class="hidden-mobile">通过frp实现内网穿透功能</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.8/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"https://hancherblogcommenthahaha.netlify.app/.netlify/functions/twikoo","region":"ap-beijing","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              Fluid.utils.listenDOMLoaded(function() {
+                var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+                Fluid.plugins.imageCaption(imgSelector);
+                Fluid.plugins.fancyBox(imgSelector);
+              });
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <div style="font-size: 0.85rem"> Copyright <i class="iconfont icon-copyright"> 2022 -  <script> document.write(new Date().getFullYear()); </script> <a href="/about" target="_blank" rel="nofollow noopener"> <span> <strong>Hancher</strong> </span> </a>  </i> | Power by  <a href="https://hexo.io" target="_blank" rel="nofollow noopener"> <span> <strong>Hexo</strong> </span> </a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <span> <strong>Fluid</strong> </span> </a> </div> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/duration.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
