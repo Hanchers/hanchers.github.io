@@ -1,0 +1,839 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN,zh-HK,en,default" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/images/site/coder.jpeg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="寒澈">
+  <meta name="keywords" content="java,Python，go,vue, 大数据，AI,机器学习,Mysql,数据库,spring">
+  
+    <meta name="description" content="恶意攻击者往Web页面里插入恶意Script代码，当用户浏览该页时，嵌入其中Web里面的Script代码会被执行，进而窃取到管理员用户权限等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="存储XSS问题与修复">
+<meta property="og:url" content="https://www.hancher.top/2023/06/21/safe-xss-reactive/index.html">
+<meta property="og:site_name" content="寒澈笔记">
+<meta property="og:description" content="恶意攻击者往Web页面里插入恶意Script代码，当用户浏览该页时，嵌入其中Web里面的Script代码会被执行，进而窃取到管理员用户权限等。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-06-21T04:00:00.000Z">
+<meta property="article:modified_time" content="2023-06-21T04:00:00.000Z">
+<meta property="article:author" content="寒澈">
+<meta property="article:tag" content="spring">
+<meta property="article:tag" content="安全">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>存储XSS问题与修复 - 寒澈笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/blog.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.hancher.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"255889a39686581da013e7c8a40eef7c","google":{"measurement_id":"G-4VZMWRNQQE"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"zqhOsrozoSMTfBNVSHXyTh45-gzGzoHsz","app_key":"EUXdctCzoy7rxXqCDUDv1J6a","server_url":"https://zqhosroz.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?255889a39686581da013e7c8a40eef7c";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-4VZMWRNQQE", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-4VZMWRNQQE');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>寒澈笔记</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/game/2048_game.html" target="_self">
+                <i class="iconfont icon-game"></i>
+                <span>游戏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/favorite/" target="_self">
+                <i class="iconfont icon-book"></i>
+                <span>收藏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/site/night.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="存储XSS问题与修复"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          2.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          24 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">存储XSS问题与修复</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="安全漏洞描述"><a href="#安全漏洞描述" class="headerlink" title="安全漏洞描述"></a>安全漏洞描述</h2><p>恶意攻击者往Web页面里插入恶意Script代码，当用户浏览该页时，嵌入其中Web里面的Script代码会被执行，进而窃取到管理员用户权限等。</p>
+<h2 id="风险等级：高"><a href="#风险等级：高" class="headerlink" title="风险等级：高"></a>风险等级：高</h2><h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><ol>
+<li>对网页端输入的特殊字符过滤<br>建议过滤的关键字为：<br>[1]’单引号<br>[2]”双引号<br>[3]&#x2F;斜杠<br>[4]反斜杠<br>[5])括号<br>[6];分号<br>[7][中括号<br>[8]&lt;尖括号<br>[9]&gt;尖括号<br>比如把&lt;编码为&lt;   </li>
+<li>在cookie中加入httponly属性可以在一定程度上保护用户的cookie，减少出现XSS时损失。</li>
+</ol>
+<p>一段简易的字符过滤程序</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">function</span> htmlEncode(str)&#123;<br>    var s = <span class="hljs-string">&quot;&quot;</span>;<br>    <span class="hljs-keyword">if</span> (str.length == 0) <span class="hljs-built_in">return</span> <span class="hljs-string">&quot;&quot;</span>;<br>    s = str.replace(/&amp;/g, <span class="hljs-string">&quot;&amp;&quot;</span>);<br>    s = s.replace(//g, <span class="hljs-string">&quot;&gt;&quot;</span>);<br>    s = s.replace(/ /g, <span class="hljs-string">&quot; &quot;</span>);<br>    s = s.replace(/\&#x27;/g, <span class="hljs-string">&quot;&#x27;&quot;</span>);<br>    s = s.replace(/\&quot;/g, <span class="hljs-string">&quot;&quot;</span><span class="hljs-string">&quot;);</span><br><span class="hljs-string">    return s;</span><br><span class="hljs-string">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>在服务端增加filter过滤<br>通过自定义filter的方式拦截过滤请求</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">XssFilter</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Filter</span><br>&#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 排除链接</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> List&lt;String&gt; excludes = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">init</span><span class="hljs-params">(FilterConfig filterConfig)</span> <span class="hljs-keyword">throws</span> ServletException<br>    &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">tempExcludes</span> <span class="hljs-operator">=</span> filterConfig.getInitParameter(<span class="hljs-string">&quot;excludes&quot;</span>);<br>        <span class="hljs-keyword">if</span> (StringUtils.isNotEmpty(tempExcludes))<br>        &#123;<br>            String[] url = tempExcludes.split(<span class="hljs-string">&quot;,&quot;</span>);<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; url != <span class="hljs-literal">null</span> &amp;&amp; i &lt; url.length; i++)<br>            &#123;<br>                excludes.add(url[i]);<br>            &#125;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">doFilter</span><span class="hljs-params">(ServletRequest request, ServletResponse response, FilterChain chain)</span><br>            <span class="hljs-keyword">throws</span> IOException, ServletException<br>    &#123;<br>        <span class="hljs-type">HttpServletRequest</span> <span class="hljs-variable">req</span> <span class="hljs-operator">=</span> (HttpServletRequest) request;<br>        <span class="hljs-type">HttpServletResponse</span> <span class="hljs-variable">resp</span> <span class="hljs-operator">=</span> (HttpServletResponse) response;<br>        <span class="hljs-keyword">if</span> (handleExcludeURL(req, resp))<br>        &#123;<br>            chain.doFilter(request, response);<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>        <span class="hljs-type">XssHttpServletRequestWrapper</span> <span class="hljs-variable">xssRequest</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">XssHttpServletRequestWrapper</span>((HttpServletRequest) request);<br>        chain.doFilter(xssRequest, response);<br>    &#125;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">handleExcludeURL</span><span class="hljs-params">(HttpServletRequest request, HttpServletResponse response)</span><br>    &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">url</span> <span class="hljs-operator">=</span> request.getServletPath();<br>        <span class="hljs-type">String</span> <span class="hljs-variable">method</span> <span class="hljs-operator">=</span> request.getMethod();<br>        <span class="hljs-comment">// GET DELETE 不过滤</span><br>        <span class="hljs-keyword">if</span> (method == <span class="hljs-literal">null</span> || HttpMethod.GET.matches(method) || HttpMethod.DELETE.matches(method))<br>        &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>        &#125;<br>        <span class="hljs-keyword">return</span> StringUtils.matches(url, excludes);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>在wrapper里过滤参数   </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">XssHttpServletRequestWrapper</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">HttpServletRequestWrapper</span><br>&#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> request</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">XssHttpServletRequestWrapper</span><span class="hljs-params">(HttpServletRequest request)</span><br>    &#123;<br>        <span class="hljs-built_in">super</span>(request);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> String[] getParameterValues(String name)<br>    &#123;<br>        String[] values = <span class="hljs-built_in">super</span>.getParameterValues(name);<br>        <span class="hljs-keyword">if</span> (values != <span class="hljs-literal">null</span>)<br>        &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">length</span> <span class="hljs-operator">=</span> values.length;<br>            String[] escapesValues = <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>[length];<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; length; i++)<br>            &#123;<br>                <span class="hljs-comment">// 防xss攻击和过滤前后空格</span><br>                escapesValues[i] = EscapeUtil.clean(values[i]).trim();<br>            &#125;<br>            <span class="hljs-keyword">return</span> escapesValues;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">super</span>.getParameterValues(name);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> ServletInputStream <span class="hljs-title function_">getInputStream</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> IOException<br>    &#123;<br>        <span class="hljs-comment">// 非json类型，直接返回</span><br>        <span class="hljs-keyword">if</span> (!isJsonRequest())<br>        &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-built_in">super</span>.getInputStream();<br>        &#125;<br><br>        <span class="hljs-comment">// 为空，直接返回</span><br>        <span class="hljs-type">String</span> <span class="hljs-variable">json</span> <span class="hljs-operator">=</span> IOUtils.toString(<span class="hljs-built_in">super</span>.getInputStream(), <span class="hljs-string">&quot;utf-8&quot;</span>);<br>        <span class="hljs-keyword">if</span> (StringUtils.isEmpty(json))<br>        &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-built_in">super</span>.getInputStream();<br>        &#125;<br><br>        <span class="hljs-comment">// xss过滤</span><br>        json = EscapeUtil.clean(json).trim();<br>        <span class="hljs-type">byte</span>[] jsonBytes = json.getBytes(<span class="hljs-string">&quot;utf-8&quot;</span>);<br>        <span class="hljs-keyword">final</span> <span class="hljs-type">ByteArrayInputStream</span> <span class="hljs-variable">bis</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ByteArrayInputStream</span>(jsonBytes);<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ServletInputStream</span>()<br>        &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isFinished</span><span class="hljs-params">()</span><br>            &#123;<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>            &#125;<br><br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isReady</span><span class="hljs-params">()</span><br>            &#123;<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>            &#125;<br><br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">available</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> IOException<br>            &#123;<br>                <span class="hljs-keyword">return</span> jsonBytes.length;<br>            &#125;<br><br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setReadListener</span><span class="hljs-params">(ReadListener readListener)</span><br>            &#123;<br>            &#125;<br><br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">read</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> IOException<br>            &#123;<br>                <span class="hljs-keyword">return</span> bis.read();<br>            &#125;<br>        &#125;;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 是否是Json请求</span><br><span class="hljs-comment">     * </span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> request</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isJsonRequest</span><span class="hljs-params">()</span><br>    &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">header</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">super</span>.getHeader(HttpHeaders.CONTENT_TYPE);<br>        <span class="hljs-keyword">return</span> StringUtils.startsWithIgnoreCase(header, MediaType.APPLICATION_JSON_VALUE);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>xssUtil</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br><span class="line">435</span><br><span class="line">436</span><br><span class="line">437</span><br><span class="line">438</span><br><span class="line">439</span><br><span class="line">440</span><br><span class="line">441</span><br><span class="line">442</span><br><span class="line">443</span><br><span class="line">444</span><br><span class="line">445</span><br><span class="line">446</span><br><span class="line">447</span><br><span class="line">448</span><br><span class="line">449</span><br><span class="line">450</span><br><span class="line">451</span><br><span class="line">452</span><br><span class="line">453</span><br><span class="line">454</span><br><span class="line">455</span><br><span class="line">456</span><br><span class="line">457</span><br><span class="line">458</span><br><span class="line">459</span><br><span class="line">460</span><br><span class="line">461</span><br><span class="line">462</span><br><span class="line">463</span><br><span class="line">464</span><br><span class="line">465</span><br><span class="line">466</span><br><span class="line">467</span><br><span class="line">468</span><br><span class="line">469</span><br><span class="line">470</span><br><span class="line">471</span><br><span class="line">472</span><br><span class="line">473</span><br><span class="line">474</span><br><span class="line">475</span><br><span class="line">476</span><br><span class="line">477</span><br><span class="line">478</span><br><span class="line">479</span><br><span class="line">480</span><br><span class="line">481</span><br><span class="line">482</span><br><span class="line">483</span><br><span class="line">484</span><br><span class="line">485</span><br><span class="line">486</span><br><span class="line">487</span><br><span class="line">488</span><br><span class="line">489</span><br><span class="line">490</span><br><span class="line">491</span><br><span class="line">492</span><br><span class="line">493</span><br><span class="line">494</span><br><span class="line">495</span><br><span class="line">496</span><br><span class="line">497</span><br><span class="line">498</span><br><span class="line">499</span><br><span class="line">500</span><br><span class="line">501</span><br><span class="line">502</span><br><span class="line">503</span><br><span class="line">504</span><br><span class="line">505</span><br><span class="line">506</span><br><span class="line">507</span><br><span class="line">508</span><br><span class="line">509</span><br><span class="line">510</span><br><span class="line">511</span><br><span class="line">512</span><br><span class="line">513</span><br><span class="line">514</span><br><span class="line">515</span><br><span class="line">516</span><br><span class="line">517</span><br><span class="line">518</span><br><span class="line">519</span><br><span class="line">520</span><br><span class="line">521</span><br><span class="line">522</span><br><span class="line">523</span><br><span class="line">524</span><br><span class="line">525</span><br><span class="line">526</span><br><span class="line">527</span><br><span class="line">528</span><br><span class="line">529</span><br><span class="line">530</span><br><span class="line">531</span><br><span class="line">532</span><br><span class="line">533</span><br><span class="line">534</span><br><span class="line">535</span><br><span class="line">536</span><br><span class="line">537</span><br><span class="line">538</span><br><span class="line">539</span><br><span class="line">540</span><br><span class="line">541</span><br><span class="line">542</span><br><span class="line">543</span><br><span class="line">544</span><br><span class="line">545</span><br><span class="line">546</span><br><span class="line">547</span><br><span class="line">548</span><br><span class="line">549</span><br><span class="line">550</span><br><span class="line">551</span><br><span class="line">552</span><br><span class="line">553</span><br><span class="line">554</span><br><span class="line">555</span><br><span class="line">556</span><br><span class="line">557</span><br><span class="line">558</span><br><span class="line">559</span><br><span class="line">560</span><br><span class="line">561</span><br><span class="line">562</span><br><span class="line">563</span><br><span class="line">564</span><br><span class="line">565</span><br><span class="line">566</span><br><span class="line">567</span><br><span class="line">568</span><br><span class="line">569</span><br><span class="line">570</span><br><span class="line">571</span><br><span class="line">572</span><br><span class="line">573</span><br><span class="line">574</span><br><span class="line">575</span><br><span class="line">576</span><br><span class="line">577</span><br><span class="line">578</span><br><span class="line">579</span><br><span class="line">580</span><br><span class="line">581</span><br><span class="line">582</span><br><span class="line">583</span><br><span class="line">584</span><br><span class="line">585</span><br><span class="line">586</span><br><span class="line">587</span><br><span class="line">588</span><br><span class="line">589</span><br><span class="line">590</span><br><span class="line">591</span><br><span class="line">592</span><br><span class="line">593</span><br><span class="line">594</span><br><span class="line">595</span><br><span class="line">596</span><br><span class="line">597</span><br><span class="line">598</span><br><span class="line">599</span><br><span class="line">600</span><br><span class="line">601</span><br><span class="line">602</span><br><span class="line">603</span><br><span class="line">604</span><br><span class="line">605</span><br><span class="line">606</span><br><span class="line">607</span><br><span class="line">608</span><br><span class="line">609</span><br><span class="line">610</span><br><span class="line">611</span><br><span class="line">612</span><br><span class="line">613</span><br><span class="line">614</span><br><span class="line">615</span><br><span class="line">616</span><br><span class="line">617</span><br><span class="line">618</span><br><span class="line">619</span><br><span class="line">620</span><br><span class="line">621</span><br><span class="line">622</span><br><span class="line">623</span><br><span class="line">624</span><br><span class="line">625</span><br><span class="line">626</span><br><span class="line">627</span><br><span class="line">628</span><br><span class="line">629</span><br><span class="line">630</span><br><span class="line">631</span><br><span class="line">632</span><br><span class="line">633</span><br><span class="line">634</span><br><span class="line">635</span><br><span class="line">636</span><br><span class="line">637</span><br><span class="line">638</span><br><span class="line">639</span><br><span class="line">640</span><br><span class="line">641</span><br><span class="line">642</span><br><span class="line">643</span><br><span class="line">644</span><br><span class="line">645</span><br><span class="line">646</span><br><span class="line">647</span><br><span class="line">648</span><br><span class="line">649</span><br><span class="line">650</span><br><span class="line">651</span><br><span class="line">652</span><br><span class="line">653</span><br><span class="line">654</span><br><span class="line">655</span><br><span class="line">656</span><br><span class="line">657</span><br><span class="line">658</span><br><span class="line">659</span><br><span class="line">660</span><br><span class="line">661</span><br><span class="line">662</span><br><span class="line">663</span><br><span class="line">664</span><br><span class="line">665</span><br><span class="line">666</span><br><span class="line">667</span><br><span class="line">668</span><br><span class="line">669</span><br><span class="line">670</span><br><span class="line">671</span><br><span class="line">672</span><br><span class="line">673</span><br><span class="line">674</span><br><span class="line">675</span><br><span class="line">676</span><br><span class="line">677</span><br><span class="line">678</span><br><span class="line">679</span><br><span class="line">680</span><br><span class="line">681</span><br><span class="line">682</span><br><span class="line">683</span><br><span class="line">684</span><br><span class="line">685</span><br><span class="line">686</span><br><span class="line">687</span><br><span class="line">688</span><br><span class="line">689</span><br><span class="line">690</span><br><span class="line">691</span><br><span class="line">692</span><br><span class="line">693</span><br><span class="line">694</span><br><span class="line">695</span><br><span class="line">696</span><br><span class="line">697</span><br><span class="line">698</span><br><span class="line">699</span><br><span class="line">700</span><br><span class="line">701</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">EscapeUtil</span><br>&#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">RE_HTML_MARK</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;(&lt;[^&lt;]*?&gt;)|(&lt;[\\s]*?/[^&lt;]*?&gt;)|(&lt;[^&lt;]*?/[\\s]*?&gt;)&quot;</span>;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">char</span>[][] TEXT = <span class="hljs-keyword">new</span> <span class="hljs-title class_">char</span>[<span class="hljs-number">64</span>][];<br><br>    <span class="hljs-keyword">static</span><br>    &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">64</span>; i++)<br>        &#123;<br>            TEXT[i] = <span class="hljs-keyword">new</span> <span class="hljs-title class_">char</span>[] &#123; (<span class="hljs-type">char</span>) i &#125;;<br>        &#125;<br><br>        <span class="hljs-comment">// special HTML characters</span><br>        TEXT[<span class="hljs-string">&#x27;\&#x27;&#x27;</span>] = <span class="hljs-string">&quot;&amp;#039;&quot;</span>.toCharArray(); <span class="hljs-comment">// 单引号</span><br>        TEXT[<span class="hljs-string">&#x27;&quot;&#x27;</span>] = <span class="hljs-string">&quot;&amp;#34;&quot;</span>.toCharArray(); <span class="hljs-comment">// 双引号</span><br>        TEXT[<span class="hljs-string">&#x27;&amp;&#x27;</span>] = <span class="hljs-string">&quot;&amp;#38;&quot;</span>.toCharArray(); <span class="hljs-comment">// &amp;符</span><br>        TEXT[<span class="hljs-string">&#x27;&lt;&#x27;</span>] = <span class="hljs-string">&quot;&amp;#60;&quot;</span>.toCharArray(); <span class="hljs-comment">// 小于号</span><br>        TEXT[<span class="hljs-string">&#x27;&gt;&#x27;</span>] = <span class="hljs-string">&quot;&amp;#62;&quot;</span>.toCharArray(); <span class="hljs-comment">// 大于号</span><br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 转义文本中的HTML字符为安全的字符</span><br><span class="hljs-comment">     * </span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> text 被转义的文本</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 转义后的文本</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">escape</span><span class="hljs-params">(String text)</span><br>    &#123;<br>        <span class="hljs-keyword">return</span> encode(text);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 还原被转义的HTML特殊字符</span><br><span class="hljs-comment">     * </span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> content 包含转义符的HTML内容</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 转换后的字符串</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">unescape</span><span class="hljs-params">(String content)</span><br>    &#123;<br>        <span class="hljs-keyword">return</span> decode(content);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 清除所有HTML标签，但是不删除标签内的内容</span><br><span class="hljs-comment">     * </span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> content 文本</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 清除标签后的文本</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">clean</span><span class="hljs-params">(String content)</span><br>    &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">HTMLFilter</span>().filter(content);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * Escape编码</span><br><span class="hljs-comment">     * </span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> text 被编码的文本</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 编码后的字符</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">encode</span><span class="hljs-params">(String text)</span><br>    &#123;<br>        <span class="hljs-keyword">if</span> (StringUtils.isEmpty(text))<br>        &#123;<br>            <span class="hljs-keyword">return</span> StringUtils.EMPTY;<br>        &#125;<br><br>        <span class="hljs-keyword">final</span> <span class="hljs-type">StringBuilder</span> <span class="hljs-variable">tmp</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuilder</span>(text.length() * <span class="hljs-number">6</span>);<br>        <span class="hljs-type">char</span> c;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; text.length(); i++)<br>        &#123;<br>            c = text.charAt(i);<br>            <span class="hljs-keyword">if</span> (c &lt; <span class="hljs-number">256</span>)<br>            &#123;<br>                tmp.append(<span class="hljs-string">&quot;%&quot;</span>);<br>                <span class="hljs-keyword">if</span> (c &lt; <span class="hljs-number">16</span>)<br>                &#123;<br>                    tmp.append(<span class="hljs-string">&quot;0&quot;</span>);<br>                &#125;<br>                tmp.append(Integer.toString(c, <span class="hljs-number">16</span>));<br>            &#125;<br>            <span class="hljs-keyword">else</span><br>            &#123;<br>                tmp.append(<span class="hljs-string">&quot;%u&quot;</span>);<br>                <span class="hljs-keyword">if</span> (c &lt;= <span class="hljs-number">0xfff</span>)<br>                &#123;<br>                    <span class="hljs-comment">// issue#I49JU8@Gitee</span><br>                    tmp.append(<span class="hljs-string">&quot;0&quot;</span>);<br>                &#125;<br>                tmp.append(Integer.toString(c, <span class="hljs-number">16</span>));<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> tmp.toString();<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * Escape解码</span><br><span class="hljs-comment">     * </span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> content 被转义的内容</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> 解码后的字符串</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">decode</span><span class="hljs-params">(String content)</span><br>    &#123;<br>        <span class="hljs-keyword">if</span> (StringUtils.isEmpty(content))<br>        &#123;<br>            <span class="hljs-keyword">return</span> content;<br>        &#125;<br><br>        <span class="hljs-type">StringBuilder</span> <span class="hljs-variable">tmp</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuilder</span>(content.length());<br>        <span class="hljs-type">int</span> <span class="hljs-variable">lastPos</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>, pos = <span class="hljs-number">0</span>;<br>        <span class="hljs-type">char</span> ch;<br>        <span class="hljs-keyword">while</span> (lastPos &lt; content.length())<br>        &#123;<br>            pos = content.indexOf(<span class="hljs-string">&quot;%&quot;</span>, lastPos);<br>            <span class="hljs-keyword">if</span> (pos == lastPos)<br>            &#123;<br>                <span class="hljs-keyword">if</span> (content.charAt(pos + <span class="hljs-number">1</span>) == <span class="hljs-string">&#x27;u&#x27;</span>)<br>                &#123;<br>                    ch = (<span class="hljs-type">char</span>) Integer.parseInt(content.substring(pos + <span class="hljs-number">2</span>, pos + <span class="hljs-number">6</span>), <span class="hljs-number">16</span>);<br>                    tmp.append(ch);<br>                    lastPos = pos + <span class="hljs-number">6</span>;<br>                &#125;<br>                <span class="hljs-keyword">else</span><br>                &#123;<br>                    ch = (<span class="hljs-type">char</span>) Integer.parseInt(content.substring(pos + <span class="hljs-number">1</span>, pos + <span class="hljs-number">3</span>), <span class="hljs-number">16</span>);<br>                    tmp.append(ch);<br>                    lastPos = pos + <span class="hljs-number">3</span>;<br>                &#125;<br>            &#125;<br>            <span class="hljs-keyword">else</span><br>            &#123;<br>                <span class="hljs-keyword">if</span> (pos == -<span class="hljs-number">1</span>)<br>                &#123;<br>                    tmp.append(content.substring(lastPos));<br>                    lastPos = content.length();<br>                &#125;<br>                <span class="hljs-keyword">else</span><br>                &#123;<br>                    tmp.append(content.substring(lastPos, pos));<br>                    lastPos = pos;<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> tmp.toString();<br>    &#125;<br>&#125;<br><br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">HTMLFilter</span><br>&#123;<br>   <span class="hljs-comment">/**</span><br><span class="hljs-comment">    * regex flag union representing /si modifiers in php</span><br><span class="hljs-comment">    **/</span><br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">REGEX_FLAGS_SI</span> <span class="hljs-operator">=</span> Pattern.CASE_INSENSITIVE | Pattern.DOTALL;<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">P_COMMENTS</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;&lt;!--(.*?)--&gt;&quot;</span>, Pattern.DOTALL);<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">P_COMMENT</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;^!--(.*)--$&quot;</span>, REGEX_FLAGS_SI);<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">P_TAGS</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;&lt;(.*?)&gt;&quot;</span>, Pattern.DOTALL);<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">P_END_TAG</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;^/([a-z0-9]+)&quot;</span>, REGEX_FLAGS_SI);<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">P_START_TAG</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;^([a-z0-9]+)(.*?)(/?)$&quot;</span>, REGEX_FLAGS_SI);<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">P_QUOTED_ATTRIBUTES</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;([a-z0-9]+)=([\&quot;&#x27;])(.*?)\\2&quot;</span>, REGEX_FLAGS_SI);<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">P_UNQUOTED_ATTRIBUTES</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;([a-z0-9]+)(=)([^\&quot;\\s&#x27;]+)&quot;</span>, REGEX_FLAGS_SI);<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">P_PROTOCOL</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;^([^:]+):&quot;</span>, REGEX_FLAGS_SI);<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">P_ENTITY</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;&amp;#(\\d+);?&quot;</span>);<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">P_ENTITY_UNICODE</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;&amp;#x([0-9a-f]+);?&quot;</span>);<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">P_ENCODE</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;%([0-9a-f]&#123;2&#125;);?&quot;</span>);<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">P_VALID_ENTITIES</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;&amp;([^&amp;;]*)(?=(;|&amp;|$))&quot;</span>);<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">P_VALID_QUOTES</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;(&gt;|^)([^&lt;]+?)(&lt;|$)&quot;</span>, Pattern.DOTALL);<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">P_END_ARROW</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;^&gt;&quot;</span>);<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">P_BODY_TO_END</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;&lt;([^&gt;]*?)(?=&lt;|$)&quot;</span>);<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">P_XML_CONTENT</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;(^|&gt;)([^&lt;]*?)(?=&gt;)&quot;</span>);<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">P_STRAY_LEFT_ARROW</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;&lt;([^&gt;]*?)(?=&lt;|$)&quot;</span>);<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">P_STRAY_RIGHT_ARROW</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;(^|&gt;)([^&lt;]*?)(?=&gt;)&quot;</span>);<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">P_AMP</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;&amp;&quot;</span>);<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">P_QUOTE</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;\&quot;&quot;</span>);<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">P_LEFT_ARROW</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;&lt;&quot;</span>);<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">P_RIGHT_ARROW</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;&gt;&quot;</span>);<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">P_BOTH_ARROWS</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;&lt;&gt;&quot;</span>);<br><br>   <span class="hljs-comment">// @xxx could grow large... maybe use sesat&#x27;s ReferenceMap</span><br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> ConcurrentMap&lt;String, Pattern&gt; P_REMOVE_PAIR_BLANKS = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConcurrentHashMap</span>&lt;&gt;();<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> ConcurrentMap&lt;String, Pattern&gt; P_REMOVE_SELF_BLANKS = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConcurrentHashMap</span>&lt;&gt;();<br><br>   <span class="hljs-comment">/**</span><br><span class="hljs-comment">    * set of allowed html elements, along with allowed attributes for each element</span><br><span class="hljs-comment">    **/</span><br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Map&lt;String, List&lt;String&gt;&gt; vAllowed;<br>   <span class="hljs-comment">/**</span><br><span class="hljs-comment">    * counts of open tags for each (allowable) html element</span><br><span class="hljs-comment">    **/</span><br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Map&lt;String, Integer&gt; vTagCounts = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br><br>   <span class="hljs-comment">/**</span><br><span class="hljs-comment">    * html elements which must always be self-closing (e.g. &quot;&lt;img /&gt;&quot;)</span><br><span class="hljs-comment">    **/</span><br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String[] vSelfClosingTags;<br>   <span class="hljs-comment">/**</span><br><span class="hljs-comment">    * html elements which must always have separate opening and closing tags (e.g. &quot;&lt;b&gt;&lt;/b&gt;&quot;)</span><br><span class="hljs-comment">    **/</span><br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String[] vNeedClosingTags;<br>   <span class="hljs-comment">/**</span><br><span class="hljs-comment">    * set of disallowed html elements</span><br><span class="hljs-comment">    **/</span><br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String[] vDisallowed;<br>   <span class="hljs-comment">/**</span><br><span class="hljs-comment">    * attributes which should be checked for valid protocols</span><br><span class="hljs-comment">    **/</span><br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String[] vProtocolAtts;<br>   <span class="hljs-comment">/**</span><br><span class="hljs-comment">    * allowed protocols</span><br><span class="hljs-comment">    **/</span><br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String[] vAllowedProtocols;<br>   <span class="hljs-comment">/**</span><br><span class="hljs-comment">    * tags which should be removed if they contain no content (e.g. &quot;&lt;b&gt;&lt;/b&gt;&quot; or &quot;&lt;b /&gt;&quot;)</span><br><span class="hljs-comment">    **/</span><br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String[] vRemoveBlanks;<br>   <span class="hljs-comment">/**</span><br><span class="hljs-comment">    * entities allowed within html markup</span><br><span class="hljs-comment">    **/</span><br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String[] vAllowedEntities;<br>   <span class="hljs-comment">/**</span><br><span class="hljs-comment">    * flag determining whether comments are allowed in input String.</span><br><span class="hljs-comment">    */</span><br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-type">boolean</span> stripComment;<br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-type">boolean</span> encodeQuotes;<br>   <span class="hljs-comment">/**</span><br><span class="hljs-comment">    * flag determining whether to try to make tags when presented with &quot;unbalanced&quot; angle brackets (e.g. &quot;&lt;b text &lt;/b&gt;&quot;</span><br><span class="hljs-comment">    * becomes &quot;&lt;b&gt; text &lt;/b&gt;&quot;). If set to false, unbalanced angle brackets will be html escaped.</span><br><span class="hljs-comment">    */</span><br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-type">boolean</span> alwaysMakeTags;<br><br>   <span class="hljs-comment">/**</span><br><span class="hljs-comment">    * Default constructor.</span><br><span class="hljs-comment">    */</span><br>   <span class="hljs-keyword">public</span> <span class="hljs-title function_">HTMLFilter</span><span class="hljs-params">()</span><br>   &#123;<br>      vAllowed = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br><br>      <span class="hljs-keyword">final</span> ArrayList&lt;String&gt; a_atts = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>      a_atts.add(<span class="hljs-string">&quot;href&quot;</span>);<br>      a_atts.add(<span class="hljs-string">&quot;target&quot;</span>);<br>      vAllowed.put(<span class="hljs-string">&quot;a&quot;</span>, a_atts);<br><br>      <span class="hljs-keyword">final</span> ArrayList&lt;String&gt; img_atts = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>      img_atts.add(<span class="hljs-string">&quot;src&quot;</span>);<br>      img_atts.add(<span class="hljs-string">&quot;width&quot;</span>);<br>      img_atts.add(<span class="hljs-string">&quot;height&quot;</span>);<br>      img_atts.add(<span class="hljs-string">&quot;alt&quot;</span>);<br>      vAllowed.put(<span class="hljs-string">&quot;img&quot;</span>, img_atts);<br><br>      <span class="hljs-keyword">final</span> ArrayList&lt;String&gt; no_atts = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>      vAllowed.put(<span class="hljs-string">&quot;b&quot;</span>, no_atts);<br>      vAllowed.put(<span class="hljs-string">&quot;strong&quot;</span>, no_atts);<br>      vAllowed.put(<span class="hljs-string">&quot;i&quot;</span>, no_atts);<br>      vAllowed.put(<span class="hljs-string">&quot;em&quot;</span>, no_atts);<br><br>      vSelfClosingTags = <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>[] &#123; <span class="hljs-string">&quot;img&quot;</span> &#125;;<br>      vNeedClosingTags = <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>[] &#123; <span class="hljs-string">&quot;a&quot;</span>, <span class="hljs-string">&quot;b&quot;</span>, <span class="hljs-string">&quot;strong&quot;</span>, <span class="hljs-string">&quot;i&quot;</span>, <span class="hljs-string">&quot;em&quot;</span> &#125;;<br>      vDisallowed = <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>[] &#123;&#125;;<br>      vAllowedProtocols = <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>[] &#123; <span class="hljs-string">&quot;http&quot;</span>, <span class="hljs-string">&quot;mailto&quot;</span>, <span class="hljs-string">&quot;https&quot;</span> &#125;; <span class="hljs-comment">// no ftp.</span><br>      vProtocolAtts = <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>[] &#123; <span class="hljs-string">&quot;src&quot;</span>, <span class="hljs-string">&quot;href&quot;</span> &#125;;<br>      vRemoveBlanks = <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>[] &#123; <span class="hljs-string">&quot;a&quot;</span>, <span class="hljs-string">&quot;b&quot;</span>, <span class="hljs-string">&quot;strong&quot;</span>, <span class="hljs-string">&quot;i&quot;</span>, <span class="hljs-string">&quot;em&quot;</span> &#125;;<br>      vAllowedEntities = <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>[] &#123; <span class="hljs-string">&quot;amp&quot;</span>, <span class="hljs-string">&quot;gt&quot;</span>, <span class="hljs-string">&quot;lt&quot;</span>, <span class="hljs-string">&quot;quot&quot;</span> &#125;;<br>      stripComment = <span class="hljs-literal">true</span>;<br>      encodeQuotes = <span class="hljs-literal">true</span>;<br>      alwaysMakeTags = <span class="hljs-literal">false</span>;<br>   &#125;<br><br>   <span class="hljs-comment">/**</span><br><span class="hljs-comment">    * Map-parameter configurable constructor.</span><br><span class="hljs-comment">    *</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@param</span> conf map containing configuration. keys match field names.</span><br><span class="hljs-comment">    */</span><br>   <span class="hljs-meta">@SuppressWarnings(&quot;unchecked&quot;)</span><br>   <span class="hljs-keyword">public</span> <span class="hljs-title function_">HTMLFilter</span><span class="hljs-params">(<span class="hljs-keyword">final</span> Map&lt;String, Object&gt; conf)</span><br>   &#123;<br><br>      <span class="hljs-keyword">assert</span> conf.containsKey(<span class="hljs-string">&quot;vAllowed&quot;</span>) : <span class="hljs-string">&quot;configuration requires vAllowed&quot;</span>;<br>      <span class="hljs-keyword">assert</span> conf.containsKey(<span class="hljs-string">&quot;vSelfClosingTags&quot;</span>) : <span class="hljs-string">&quot;configuration requires vSelfClosingTags&quot;</span>;<br>      <span class="hljs-keyword">assert</span> conf.containsKey(<span class="hljs-string">&quot;vNeedClosingTags&quot;</span>) : <span class="hljs-string">&quot;configuration requires vNeedClosingTags&quot;</span>;<br>      <span class="hljs-keyword">assert</span> conf.containsKey(<span class="hljs-string">&quot;vDisallowed&quot;</span>) : <span class="hljs-string">&quot;configuration requires vDisallowed&quot;</span>;<br>      <span class="hljs-keyword">assert</span> conf.containsKey(<span class="hljs-string">&quot;vAllowedProtocols&quot;</span>) : <span class="hljs-string">&quot;configuration requires vAllowedProtocols&quot;</span>;<br>      <span class="hljs-keyword">assert</span> conf.containsKey(<span class="hljs-string">&quot;vProtocolAtts&quot;</span>) : <span class="hljs-string">&quot;configuration requires vProtocolAtts&quot;</span>;<br>      <span class="hljs-keyword">assert</span> conf.containsKey(<span class="hljs-string">&quot;vRemoveBlanks&quot;</span>) : <span class="hljs-string">&quot;configuration requires vRemoveBlanks&quot;</span>;<br>      <span class="hljs-keyword">assert</span> conf.containsKey(<span class="hljs-string">&quot;vAllowedEntities&quot;</span>) : <span class="hljs-string">&quot;configuration requires vAllowedEntities&quot;</span>;<br><br>      vAllowed = Collections.unmodifiableMap((HashMap&lt;String, List&lt;String&gt;&gt;) conf.get(<span class="hljs-string">&quot;vAllowed&quot;</span>));<br>      vSelfClosingTags = (String[]) conf.get(<span class="hljs-string">&quot;vSelfClosingTags&quot;</span>);<br>      vNeedClosingTags = (String[]) conf.get(<span class="hljs-string">&quot;vNeedClosingTags&quot;</span>);<br>      vDisallowed = (String[]) conf.get(<span class="hljs-string">&quot;vDisallowed&quot;</span>);<br>      vAllowedProtocols = (String[]) conf.get(<span class="hljs-string">&quot;vAllowedProtocols&quot;</span>);<br>      vProtocolAtts = (String[]) conf.get(<span class="hljs-string">&quot;vProtocolAtts&quot;</span>);<br>      vRemoveBlanks = (String[]) conf.get(<span class="hljs-string">&quot;vRemoveBlanks&quot;</span>);<br>      vAllowedEntities = (String[]) conf.get(<span class="hljs-string">&quot;vAllowedEntities&quot;</span>);<br>      stripComment = conf.containsKey(<span class="hljs-string">&quot;stripComment&quot;</span>) ? (Boolean) conf.get(<span class="hljs-string">&quot;stripComment&quot;</span>) : <span class="hljs-literal">true</span>;<br>      encodeQuotes = conf.containsKey(<span class="hljs-string">&quot;encodeQuotes&quot;</span>) ? (Boolean) conf.get(<span class="hljs-string">&quot;encodeQuotes&quot;</span>) : <span class="hljs-literal">true</span>;<br>      alwaysMakeTags = conf.containsKey(<span class="hljs-string">&quot;alwaysMakeTags&quot;</span>) ? (Boolean) conf.get(<span class="hljs-string">&quot;alwaysMakeTags&quot;</span>) : <span class="hljs-literal">true</span>;<br>   &#125;<br><br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">reset</span><span class="hljs-params">()</span><br>   &#123;<br>      vTagCounts.clear();<br>   &#125;<br><br>   <span class="hljs-comment">// ---------------------------------------------------------------</span><br>   <span class="hljs-comment">// my versions of some PHP library functions</span><br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">chr</span><span class="hljs-params">(<span class="hljs-keyword">final</span> <span class="hljs-type">int</span> decimal)</span><br>   &#123;<br>      <span class="hljs-keyword">return</span> String.valueOf((<span class="hljs-type">char</span>) decimal);<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">htmlSpecialChars</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String s)</span><br>   &#123;<br>      <span class="hljs-type">String</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> s;<br>      result = regexReplace(P_AMP, <span class="hljs-string">&quot;&amp;amp;&quot;</span>, result);<br>      result = regexReplace(P_QUOTE, <span class="hljs-string">&quot;&amp;quot;&quot;</span>, result);<br>      result = regexReplace(P_LEFT_ARROW, <span class="hljs-string">&quot;&amp;lt;&quot;</span>, result);<br>      result = regexReplace(P_RIGHT_ARROW, <span class="hljs-string">&quot;&amp;gt;&quot;</span>, result);<br>      <span class="hljs-keyword">return</span> result;<br>   &#125;<br><br>   <span class="hljs-comment">// ---------------------------------------------------------------</span><br><br>   <span class="hljs-comment">/**</span><br><span class="hljs-comment">    * given a user submitted input String, filter out any invalid or restricted html.</span><br><span class="hljs-comment">    *</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@param</span> input text (i.e. submitted by a user) than may contain html</span><br><span class="hljs-comment">    * <span class="hljs-doctag">@return</span> &quot;clean&quot; version of input, with only valid, whitelisted html elements allowed</span><br><span class="hljs-comment">    */</span><br>   <span class="hljs-keyword">public</span> String <span class="hljs-title function_">filter</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String input)</span><br>   &#123;<br>      reset();<br>      <span class="hljs-type">String</span> <span class="hljs-variable">s</span> <span class="hljs-operator">=</span> input;<br><br>      s = escapeComments(s);<br><br>      s = balanceHTML(s);<br><br>      s = checkTags(s);<br><br>      s = processRemoveBlanks(s);<br><br>      <span class="hljs-comment">// s = validateEntities(s);</span><br><br>      <span class="hljs-keyword">return</span> s;<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isAlwaysMakeTags</span><span class="hljs-params">()</span><br>   &#123;<br>      <span class="hljs-keyword">return</span> alwaysMakeTags;<br>   &#125;<br><br>   <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isStripComments</span><span class="hljs-params">()</span><br>   &#123;<br>      <span class="hljs-keyword">return</span> stripComment;<br>   &#125;<br><br>   <span class="hljs-keyword">private</span> String <span class="hljs-title function_">escapeComments</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String s)</span><br>   &#123;<br>      <span class="hljs-keyword">final</span> <span class="hljs-type">Matcher</span> <span class="hljs-variable">m</span> <span class="hljs-operator">=</span> P_COMMENTS.matcher(s);<br>      <span class="hljs-keyword">final</span> <span class="hljs-type">StringBuffer</span> <span class="hljs-variable">buf</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuffer</span>();<br>      <span class="hljs-keyword">if</span> (m.find())<br>      &#123;<br>         <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">match</span> <span class="hljs-operator">=</span> m.group(<span class="hljs-number">1</span>); <span class="hljs-comment">// (.*?)</span><br>         m.appendReplacement(buf, Matcher.quoteReplacement(<span class="hljs-string">&quot;&lt;!--&quot;</span> + htmlSpecialChars(match) + <span class="hljs-string">&quot;--&gt;&quot;</span>));<br>      &#125;<br>      m.appendTail(buf);<br><br>      <span class="hljs-keyword">return</span> buf.toString();<br>   &#125;<br><br>   <span class="hljs-keyword">private</span> String <span class="hljs-title function_">balanceHTML</span><span class="hljs-params">(String s)</span><br>   &#123;<br>      <span class="hljs-keyword">if</span> (alwaysMakeTags)<br>      &#123;<br>         <span class="hljs-comment">//</span><br>         <span class="hljs-comment">// try and form html</span><br>         <span class="hljs-comment">//</span><br>         s = regexReplace(P_END_ARROW, <span class="hljs-string">&quot;&quot;</span>, s);<br>         <span class="hljs-comment">// 不追加结束标签</span><br>         s = regexReplace(P_BODY_TO_END, <span class="hljs-string">&quot;&lt;$1&gt;&quot;</span>, s);<br>         s = regexReplace(P_XML_CONTENT, <span class="hljs-string">&quot;$1&lt;$2&quot;</span>, s);<br><br>      &#125;<br>      <span class="hljs-keyword">else</span><br>      &#123;<br>         <span class="hljs-comment">//</span><br>         <span class="hljs-comment">// escape stray brackets</span><br>         <span class="hljs-comment">//</span><br>         s = regexReplace(P_STRAY_LEFT_ARROW, <span class="hljs-string">&quot;&amp;lt;$1&quot;</span>, s);<br>         s = regexReplace(P_STRAY_RIGHT_ARROW, <span class="hljs-string">&quot;$1$2&amp;gt;&lt;&quot;</span>, s);<br><br>         <span class="hljs-comment">//</span><br>         <span class="hljs-comment">// the last regexp causes &#x27;&lt;&gt;&#x27; entities to appear</span><br>         <span class="hljs-comment">// (we need to do a lookahead assertion so that the last bracket can</span><br>         <span class="hljs-comment">// be used in the next pass of the regexp)</span><br>         <span class="hljs-comment">//</span><br>         s = regexReplace(P_BOTH_ARROWS, <span class="hljs-string">&quot;&quot;</span>, s);<br>      &#125;<br><br>      <span class="hljs-keyword">return</span> s;<br>   &#125;<br><br>   <span class="hljs-keyword">private</span> String <span class="hljs-title function_">checkTags</span><span class="hljs-params">(String s)</span><br>   &#123;<br>      <span class="hljs-type">Matcher</span> <span class="hljs-variable">m</span> <span class="hljs-operator">=</span> P_TAGS.matcher(s);<br><br>      <span class="hljs-keyword">final</span> <span class="hljs-type">StringBuffer</span> <span class="hljs-variable">buf</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuffer</span>();<br>      <span class="hljs-keyword">while</span> (m.find())<br>      &#123;<br>         <span class="hljs-type">String</span> <span class="hljs-variable">replaceStr</span> <span class="hljs-operator">=</span> m.group(<span class="hljs-number">1</span>);<br>         replaceStr = processTag(replaceStr);<br>         m.appendReplacement(buf, Matcher.quoteReplacement(replaceStr));<br>      &#125;<br>      m.appendTail(buf);<br><br>      <span class="hljs-comment">// these get tallied in processTag</span><br>      <span class="hljs-comment">// (remember to reset before subsequent calls to filter method)</span><br>      <span class="hljs-keyword">final</span> <span class="hljs-type">StringBuilder</span> <span class="hljs-variable">sBuilder</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuilder</span>(buf.toString());<br>      <span class="hljs-keyword">for</span> (String key : vTagCounts.keySet())<br>      &#123;<br>         <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">ii</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; ii &lt; vTagCounts.get(key); ii++)<br>         &#123;<br>            sBuilder.append(<span class="hljs-string">&quot;&lt;/&quot;</span>).append(key).append(<span class="hljs-string">&quot;&gt;&quot;</span>);<br>         &#125;<br>      &#125;<br>      s = sBuilder.toString();<br><br>      <span class="hljs-keyword">return</span> s;<br>   &#125;<br><br>   <span class="hljs-keyword">private</span> String <span class="hljs-title function_">processRemoveBlanks</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String s)</span><br>   &#123;<br>      <span class="hljs-type">String</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> s;<br>      <span class="hljs-keyword">for</span> (String tag : vRemoveBlanks)<br>      &#123;<br>         <span class="hljs-keyword">if</span> (!P_REMOVE_PAIR_BLANKS.containsKey(tag))<br>         &#123;<br>            P_REMOVE_PAIR_BLANKS.putIfAbsent(tag, Pattern.compile(<span class="hljs-string">&quot;&lt;&quot;</span> + tag + <span class="hljs-string">&quot;(\\s[^&gt;]*)?&gt;&lt;/&quot;</span> + tag + <span class="hljs-string">&quot;&gt;&quot;</span>));<br>         &#125;<br>         result = regexReplace(P_REMOVE_PAIR_BLANKS.get(tag), <span class="hljs-string">&quot;&quot;</span>, result);<br>         <span class="hljs-keyword">if</span> (!P_REMOVE_SELF_BLANKS.containsKey(tag))<br>         &#123;<br>            P_REMOVE_SELF_BLANKS.putIfAbsent(tag, Pattern.compile(<span class="hljs-string">&quot;&lt;&quot;</span> + tag + <span class="hljs-string">&quot;(\\s[^&gt;]*)?/&gt;&quot;</span>));<br>         &#125;<br>         result = regexReplace(P_REMOVE_SELF_BLANKS.get(tag), <span class="hljs-string">&quot;&quot;</span>, result);<br>      &#125;<br><br>      <span class="hljs-keyword">return</span> result;<br>   &#125;<br><br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">regexReplace</span><span class="hljs-params">(<span class="hljs-keyword">final</span> Pattern regex_pattern, <span class="hljs-keyword">final</span> String replacement, <span class="hljs-keyword">final</span> String s)</span><br>   &#123;<br>      <span class="hljs-type">Matcher</span> <span class="hljs-variable">m</span> <span class="hljs-operator">=</span> regex_pattern.matcher(s);<br>      <span class="hljs-keyword">return</span> m.replaceAll(replacement);<br>   &#125;<br><br>   <span class="hljs-keyword">private</span> String <span class="hljs-title function_">processTag</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String s)</span><br>   &#123;<br>      <span class="hljs-comment">// ending tags</span><br>      <span class="hljs-type">Matcher</span> <span class="hljs-variable">m</span> <span class="hljs-operator">=</span> P_END_TAG.matcher(s);<br>      <span class="hljs-keyword">if</span> (m.find())<br>      &#123;<br>         <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> m.group(<span class="hljs-number">1</span>).toLowerCase();<br>         <span class="hljs-keyword">if</span> (allowed(name))<br>         &#123;<br>            <span class="hljs-keyword">if</span> (!inArray(name, vSelfClosingTags))<br>            &#123;<br>               <span class="hljs-keyword">if</span> (vTagCounts.containsKey(name))<br>               &#123;<br>                  vTagCounts.put(name, vTagCounts.get(name) - <span class="hljs-number">1</span>);<br>                  <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;&lt;/&quot;</span> + name + <span class="hljs-string">&quot;&gt;&quot;</span>;<br>               &#125;<br>            &#125;<br>         &#125;<br>      &#125;<br><br>      <span class="hljs-comment">// starting tags</span><br>      m = P_START_TAG.matcher(s);<br>      <span class="hljs-keyword">if</span> (m.find())<br>      &#123;<br>         <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span> m.group(<span class="hljs-number">1</span>).toLowerCase();<br>         <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">body</span> <span class="hljs-operator">=</span> m.group(<span class="hljs-number">2</span>);<br>         <span class="hljs-type">String</span> <span class="hljs-variable">ending</span> <span class="hljs-operator">=</span> m.group(<span class="hljs-number">3</span>);<br><br>         <span class="hljs-comment">// debug( &quot;in a starting tag, name=&#x27;&quot; + name + &quot;&#x27;; body=&#x27;&quot; + body + &quot;&#x27;; ending=&#x27;&quot; + ending + &quot;&#x27;&quot; );</span><br>         <span class="hljs-keyword">if</span> (allowed(name))<br>         &#123;<br>            <span class="hljs-keyword">final</span> <span class="hljs-type">StringBuilder</span> <span class="hljs-variable">params</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuilder</span>();<br><br>            <span class="hljs-keyword">final</span> <span class="hljs-type">Matcher</span> <span class="hljs-variable">m2</span> <span class="hljs-operator">=</span> P_QUOTED_ATTRIBUTES.matcher(body);<br>            <span class="hljs-keyword">final</span> <span class="hljs-type">Matcher</span> <span class="hljs-variable">m3</span> <span class="hljs-operator">=</span> P_UNQUOTED_ATTRIBUTES.matcher(body);<br>            <span class="hljs-keyword">final</span> List&lt;String&gt; paramNames = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>            <span class="hljs-keyword">final</span> List&lt;String&gt; paramValues = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>            <span class="hljs-keyword">while</span> (m2.find())<br>            &#123;<br>               paramNames.add(m2.group(<span class="hljs-number">1</span>)); <span class="hljs-comment">// ([a-z0-9]+)</span><br>               paramValues.add(m2.group(<span class="hljs-number">3</span>)); <span class="hljs-comment">// (.*?)</span><br>            &#125;<br>            <span class="hljs-keyword">while</span> (m3.find())<br>            &#123;<br>               paramNames.add(m3.group(<span class="hljs-number">1</span>)); <span class="hljs-comment">// ([a-z0-9]+)</span><br>               paramValues.add(m3.group(<span class="hljs-number">3</span>)); <span class="hljs-comment">// ([^\&quot;\\s&#x27;]+)</span><br>            &#125;<br><br>            String paramName, paramValue;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">ii</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; ii &lt; paramNames.size(); ii++)<br>            &#123;<br>               paramName = paramNames.get(ii).toLowerCase();<br>               paramValue = paramValues.get(ii);<br><br>               <span class="hljs-comment">// debug( &quot;paramName=&#x27;&quot; + paramName + &quot;&#x27;&quot; );</span><br>               <span class="hljs-comment">// debug( &quot;paramValue=&#x27;&quot; + paramValue + &quot;&#x27;&quot; );</span><br>               <span class="hljs-comment">// debug( &quot;allowed? &quot; + vAllowed.get( name ).contains( paramName ) );</span><br><br>               <span class="hljs-keyword">if</span> (allowedAttribute(name, paramName))<br>               &#123;<br>                  <span class="hljs-keyword">if</span> (inArray(paramName, vProtocolAtts))<br>                  &#123;<br>                     paramValue = processParamProtocol(paramValue);<br>                  &#125;<br>                  params.append(<span class="hljs-string">&#x27; &#x27;</span>).append(paramName).append(<span class="hljs-string">&quot;=\\\&quot;&quot;</span>).append(paramValue).append(<span class="hljs-string">&quot;\\\&quot;&quot;</span>);<br>               &#125;<br>            &#125;<br><br>            <span class="hljs-keyword">if</span> (inArray(name, vSelfClosingTags))<br>            &#123;<br>               ending = <span class="hljs-string">&quot; /&quot;</span>;<br>            &#125;<br><br>            <span class="hljs-keyword">if</span> (inArray(name, vNeedClosingTags))<br>            &#123;<br>               ending = <span class="hljs-string">&quot;&quot;</span>;<br>            &#125;<br><br>            <span class="hljs-keyword">if</span> (ending == <span class="hljs-literal">null</span> || ending.length() &lt; <span class="hljs-number">1</span>)<br>            &#123;<br>               <span class="hljs-keyword">if</span> (vTagCounts.containsKey(name))<br>               &#123;<br>                  vTagCounts.put(name, vTagCounts.get(name) + <span class="hljs-number">1</span>);<br>               &#125;<br>               <span class="hljs-keyword">else</span><br>               &#123;<br>                  vTagCounts.put(name, <span class="hljs-number">1</span>);<br>               &#125;<br>            &#125;<br>            <span class="hljs-keyword">else</span><br>            &#123;<br>               ending = <span class="hljs-string">&quot; /&quot;</span>;<br>            &#125;<br>            <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;&lt;&quot;</span> + name + params + ending + <span class="hljs-string">&quot;&gt;&quot;</span>;<br>         &#125;<br>         <span class="hljs-keyword">else</span><br>         &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;&quot;</span>;<br>         &#125;<br>      &#125;<br><br>      <span class="hljs-comment">// comments</span><br>      m = P_COMMENT.matcher(s);<br>      <span class="hljs-keyword">if</span> (!stripComment &amp;&amp; m.find())<br>      &#123;<br>         <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;&lt;&quot;</span> + m.group() + <span class="hljs-string">&quot;&gt;&quot;</span>;<br>      &#125;<br><br>      <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;&quot;</span>;<br>   &#125;<br><br>   <span class="hljs-keyword">private</span> String <span class="hljs-title function_">processParamProtocol</span><span class="hljs-params">(String s)</span><br>   &#123;<br>      s = decodeEntities(s);<br>      <span class="hljs-keyword">final</span> <span class="hljs-type">Matcher</span> <span class="hljs-variable">m</span> <span class="hljs-operator">=</span> P_PROTOCOL.matcher(s);<br>      <span class="hljs-keyword">if</span> (m.find())<br>      &#123;<br>         <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">protocol</span> <span class="hljs-operator">=</span> m.group(<span class="hljs-number">1</span>);<br>         <span class="hljs-keyword">if</span> (!inArray(protocol, vAllowedProtocols))<br>         &#123;<br>            <span class="hljs-comment">// bad protocol, turn into local anchor link instead</span><br>            s = <span class="hljs-string">&quot;#&quot;</span> + s.substring(protocol.length() + <span class="hljs-number">1</span>);<br>            <span class="hljs-keyword">if</span> (s.startsWith(<span class="hljs-string">&quot;#//&quot;</span>))<br>            &#123;<br>               s = <span class="hljs-string">&quot;#&quot;</span> + s.substring(<span class="hljs-number">3</span>);<br>            &#125;<br>         &#125;<br>      &#125;<br><br>      <span class="hljs-keyword">return</span> s;<br>   &#125;<br><br>   <span class="hljs-keyword">private</span> String <span class="hljs-title function_">decodeEntities</span><span class="hljs-params">(String s)</span><br>   &#123;<br>      <span class="hljs-type">StringBuffer</span> <span class="hljs-variable">buf</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuffer</span>();<br><br>      <span class="hljs-type">Matcher</span> <span class="hljs-variable">m</span> <span class="hljs-operator">=</span> P_ENTITY.matcher(s);<br>      <span class="hljs-keyword">while</span> (m.find())<br>      &#123;<br>         <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">match</span> <span class="hljs-operator">=</span> m.group(<span class="hljs-number">1</span>);<br>         <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">decimal</span> <span class="hljs-operator">=</span> Integer.decode(match).intValue();<br>         m.appendReplacement(buf, Matcher.quoteReplacement(chr(decimal)));<br>      &#125;<br>      m.appendTail(buf);<br>      s = buf.toString();<br><br>      buf = <span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuffer</span>();<br>      m = P_ENTITY_UNICODE.matcher(s);<br>      <span class="hljs-keyword">while</span> (m.find())<br>      &#123;<br>         <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">match</span> <span class="hljs-operator">=</span> m.group(<span class="hljs-number">1</span>);<br>         <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">decimal</span> <span class="hljs-operator">=</span> Integer.valueOf(match, <span class="hljs-number">16</span>).intValue();<br>         m.appendReplacement(buf, Matcher.quoteReplacement(chr(decimal)));<br>      &#125;<br>      m.appendTail(buf);<br>      s = buf.toString();<br><br>      buf = <span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuffer</span>();<br>      m = P_ENCODE.matcher(s);<br>      <span class="hljs-keyword">while</span> (m.find())<br>      &#123;<br>         <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">match</span> <span class="hljs-operator">=</span> m.group(<span class="hljs-number">1</span>);<br>         <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">decimal</span> <span class="hljs-operator">=</span> Integer.valueOf(match, <span class="hljs-number">16</span>).intValue();<br>         m.appendReplacement(buf, Matcher.quoteReplacement(chr(decimal)));<br>      &#125;<br>      m.appendTail(buf);<br>      s = buf.toString();<br><br>      s = validateEntities(s);<br>      <span class="hljs-keyword">return</span> s;<br>   &#125;<br><br>   <span class="hljs-keyword">private</span> String <span class="hljs-title function_">validateEntities</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String s)</span><br>   &#123;<br>      <span class="hljs-type">StringBuffer</span> <span class="hljs-variable">buf</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuffer</span>();<br><br>      <span class="hljs-comment">// validate entities throughout the string</span><br>      <span class="hljs-type">Matcher</span> <span class="hljs-variable">m</span> <span class="hljs-operator">=</span> P_VALID_ENTITIES.matcher(s);<br>      <span class="hljs-keyword">while</span> (m.find())<br>      &#123;<br>         <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">one</span> <span class="hljs-operator">=</span> m.group(<span class="hljs-number">1</span>); <span class="hljs-comment">// ([^&amp;;]*)</span><br>         <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">two</span> <span class="hljs-operator">=</span> m.group(<span class="hljs-number">2</span>); <span class="hljs-comment">// (?=(;|&amp;|$))</span><br>         m.appendReplacement(buf, Matcher.quoteReplacement(checkEntity(one, two)));<br>      &#125;<br>      m.appendTail(buf);<br><br>      <span class="hljs-keyword">return</span> encodeQuotes(buf.toString());<br>   &#125;<br><br>   <span class="hljs-keyword">private</span> String <span class="hljs-title function_">encodeQuotes</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String s)</span><br>   &#123;<br>      <span class="hljs-keyword">if</span> (encodeQuotes)<br>      &#123;<br>         <span class="hljs-type">StringBuffer</span> <span class="hljs-variable">buf</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuffer</span>();<br>         <span class="hljs-type">Matcher</span> <span class="hljs-variable">m</span> <span class="hljs-operator">=</span> P_VALID_QUOTES.matcher(s);<br>         <span class="hljs-keyword">while</span> (m.find())<br>         &#123;<br>            <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">one</span> <span class="hljs-operator">=</span> m.group(<span class="hljs-number">1</span>); <span class="hljs-comment">// (&gt;|^)</span><br>            <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">two</span> <span class="hljs-operator">=</span> m.group(<span class="hljs-number">2</span>); <span class="hljs-comment">// ([^&lt;]+?)</span><br>            <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">three</span> <span class="hljs-operator">=</span> m.group(<span class="hljs-number">3</span>); <span class="hljs-comment">// (&lt;|$)</span><br>            <span class="hljs-comment">// 不替换双引号为&amp;quot;，防止json格式无效 regexReplace(P_QUOTE, &quot;&amp;quot;&quot;, two)</span><br>            m.appendReplacement(buf, Matcher.quoteReplacement(one + two + three));<br>         &#125;<br>         m.appendTail(buf);<br>         <span class="hljs-keyword">return</span> buf.toString();<br>      &#125;<br>      <span class="hljs-keyword">else</span><br>      &#123;<br>         <span class="hljs-keyword">return</span> s;<br>      &#125;<br>   &#125;<br><br>   <span class="hljs-keyword">private</span> String <span class="hljs-title function_">checkEntity</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String preamble, <span class="hljs-keyword">final</span> String term)</span><br>   &#123;<br><br>      <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;;&quot;</span>.equals(term) &amp;&amp; isValidEntity(preamble) ? <span class="hljs-string">&#x27;&amp;&#x27;</span> + preamble : <span class="hljs-string">&quot;&amp;amp;&quot;</span> + preamble;<br>   &#125;<br><br>   <span class="hljs-keyword">private</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isValidEntity</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String entity)</span><br>   &#123;<br>      <span class="hljs-keyword">return</span> inArray(entity, vAllowedEntities);<br>   &#125;<br><br>   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">inArray</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String s, <span class="hljs-keyword">final</span> String[] array)</span><br>   &#123;<br>      <span class="hljs-keyword">for</span> (String item : array)<br>      &#123;<br>         <span class="hljs-keyword">if</span> (item != <span class="hljs-literal">null</span> &amp;&amp; item.equals(s))<br>         &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>         &#125;<br>      &#125;<br>      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>   &#125;<br><br>   <span class="hljs-keyword">private</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">allowed</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String name)</span><br>   &#123;<br>      <span class="hljs-keyword">return</span> (vAllowed.isEmpty() || vAllowed.containsKey(name)) &amp;&amp; !inArray(name, vDisallowed);<br>   &#125;<br><br>   <span class="hljs-keyword">private</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">allowedAttribute</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String name, <span class="hljs-keyword">final</span> String paramName)</span><br>   &#123;<br>      <span class="hljs-keyword">return</span> allowed(name) &amp;&amp; (vAllowed.isEmpty() || vAllowed.get(name).contains(paramName));<br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>前后端组合使用，可解决xss问题</p>
+<h2 id="安全无小事！！！"><a href="#安全无小事！！！" class="headerlink" title="安全无小事！！！"></a>安全无小事！！！</h2><p><a href="https://security.tencent.com/index.php/blog/msg/53">存储型XSS漏洞解决方案</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AE%89%E5%85%A8/" class="category-chain-item">安全</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/spring/" class="print-no-link">#spring</a>
+      
+        <a href="/tags/%E5%AE%89%E5%85%A8/" class="print-no-link">#安全</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>存储XSS问题与修复</div>
+      <div>https://www.hancher.top/2023/06/21/safe-xss-reactive/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>寒澈</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年6月21日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="ND - 禁止演绎">
+                    <i class="iconfont icon-cc-nd"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/06/21/safe-cors-attack/" title="CORS跨域攻击与修复">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">CORS跨域攻击与修复</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/06/20/safe-http-any-file-download/" title="网站任意文件下载或读取">
+                        <span class="hidden-mobile">网站任意文件下载或读取</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.8/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"https://hancherblogcommenthahaha.netlify.app/.netlify/functions/twikoo","region":"ap-beijing","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              Fluid.utils.listenDOMLoaded(function() {
+                var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+                Fluid.plugins.imageCaption(imgSelector);
+                Fluid.plugins.fancyBox(imgSelector);
+              });
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <div style="font-size: 0.85rem"> Copyright <i class="iconfont icon-copyright"> 2022 -  <script> document.write(new Date().getFullYear()); </script> <a href="/about" target="_blank" rel="nofollow noopener"> <span> <strong>Hancher</strong> </span> </a>  </i> | Power by  <a href="https://hexo.io" target="_blank" rel="nofollow noopener"> <span> <strong>Hexo</strong> </span> </a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <span> <strong>Fluid</strong> </span> </a> </div> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/duration.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

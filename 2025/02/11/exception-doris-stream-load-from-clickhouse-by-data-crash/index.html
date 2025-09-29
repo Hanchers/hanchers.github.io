@@ -1,0 +1,868 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN,zh-HK,en,default" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/images/site/coder.jpeg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="寒澈">
+  <meta name="keywords" content="java,Python，go,vue, 大数据，AI,机器学习,Mysql,数据库,spring">
+  
+    <meta name="description" content="通过dataX将16万的clickhouse单表数据导入到doris数据库里是，每次执行都会发生doris be崩溃问题, 这里记录一下问题的排查和解决。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="doris通过dataX导入数据发生宕机问题解决">
+<meta property="og:url" content="https://www.hancher.top/2025/02/11/exception-doris-stream-load-from-clickhouse-by-data-crash/index.html">
+<meta property="og:site_name" content="寒澈笔记">
+<meta property="og:description" content="通过dataX将16万的clickhouse单表数据导入到doris数据库里是，每次执行都会发生doris be崩溃问题, 这里记录一下问题的排查和解决。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.hancher.top/images/tech/db/doris.png">
+<meta property="article:published_time" content="2025-02-11T05:00:00.000Z">
+<meta property="article:modified_time" content="2025-02-12T03:00:00.000Z">
+<meta property="article:author" content="寒澈">
+<meta property="article:tag" content="clickhouse">
+<meta property="article:tag" content="doris">
+<meta property="article:tag" content="dataX">
+<meta property="article:tag" content="异常">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.hancher.top/images/tech/db/doris.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>doris通过dataX导入数据发生宕机问题解决 - 寒澈笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/blog.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.hancher.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"255889a39686581da013e7c8a40eef7c","google":{"measurement_id":"G-4VZMWRNQQE"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"zqhOsrozoSMTfBNVSHXyTh45-gzGzoHsz","app_key":"EUXdctCzoy7rxXqCDUDv1J6a","server_url":"https://zqhosroz.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?255889a39686581da013e7c8a40eef7c";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-4VZMWRNQQE", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-4VZMWRNQQE');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>寒澈笔记</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/game/2048_game.html" target="_self">
+                <i class="iconfont icon-game"></i>
+                <span>游戏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/favorite/" target="_self">
+                <i class="iconfont icon-book"></i>
+                <span>收藏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/site/night.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="doris通过dataX导入数据发生宕机问题解决"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          1.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          11 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">doris通过dataX导入数据发生宕机问题解决</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="依赖版本"><a href="#依赖版本" class="headerlink" title="依赖版本"></a>依赖版本</h2><ul>
+<li>doris： 2.1.0</li>
+<li>clickhouse： 22.1.3.7</li>
+<li>dataX： 使用代码自己编译的最新版本</li>
+</ul>
+<h2 id="问题发现"><a href="#问题发现" class="headerlink" title="问题发现"></a>问题发现</h2><p>创建一个正常的dataX 采集任务，从clickhouse的一张表里向doris里写数据， 使用的是<code>clickhousereader</code>和 <code>doriswriter</code>。 </p>
+<p>很简单的一个任务，数据量理论上也不多，才16万，60多M的注解，可是一执行，doris的be就全部宕机了。</p>
+<p>问题是我们用这套环境跑过很多种数据库的数据采集，比如mysql，oracle, postgresql等，结果都正常。只有clickhouse数据库的采集任务，一执行就报错！</p>
+<p>报的错有两种形式：<br>一种是直接提示be服务连接失败：<br><img src="/../../images/tech/db/doris_from_datax_err.png" srcset="/img/loading.gif" lazyload alt="doris be拒接连接"><br>另一种还有返回值，但是提示<code>Label already exists</code>的错误：<br><img src="/../../images/tech/db/doris_from_datax_err2.png" srcset="/img/loading.gif" lazyload alt="Label already exists"></p>
+<h2 id="问题排查"><a href="#问题排查" class="headerlink" title="问题排查"></a>问题排查</h2><p>在排查问题前，我们要先了解一下dataX同步数据到doris的方式，只有如此我们才能按图索骥来定位问题，而不是漫无目的的乱猜。</p>
+<p>以下是dataX官网对其架构的设计理念：</p>
+<blockquote>
+<p>为了解决异构数据源同步问题，DataX将复杂的网状的同步链路变成了星型数据链路，DataX作为中间传输载体负责连接各种数据源。当需要接入一个新的数据源的时候，只需要将此数据源对接到DataX，便能跟已有的数据源做到无缝数据同步。</p>
+</blockquote>
+<p><img src="/../../images/tech/datax/datax-etl-arch.png" srcset="/img/loading.gif" lazyload alt="datax框架设计"></p>
+<p>如此，我们可以了解到，在dataX的设计里，reader和writer两个独立的模块，是可以任意组合复用的。通过控制变量法，既然其他数据库的数据能正常导入到doris，那说明<code>doriswriter</code>应该是没有问题的。</p>
+<p>所以，我们的第一怀疑对象是clickhouse的问题，要么是clickhouse表的问题，要么是<code>clickhousereader</code>的问题。但是当我们把clickhouse同样的表接入到mysql里时，却发现数据采集成功了！！竟然成功了！</p>
+<p>这么说，clickhouse采集端也没有问题，那问题出在哪里了？</p>
+<p>按照上面dataX的设计图，我们再次把目光看向了doris，这次我们不再怀疑<code>doriswriter</code>，而是直接怀疑doris本身。</p>
+<p>这次我们查看doris的数据表，发现在系统建表的时候出现了大量的<code>varchar(0)</code>的表字段，通过将<code>varchar(0)</code>字段改为正常的有长度的字段，比如<code>varchar(2000)</code>，问题就解决了。</p>
+<p>但是问题真的是这样吗？</p>
+<p>因为我们建表系统bug的原因，其他源采集数据到doris里时，也有可能产生<code>varchar(0)</code>的情况，说明<code>varchar(0)</code>并不会真正的阻碍doris<code>stream load</code>数据的导入。 </p>
+<p>接下来我们尝试对每个<code>varchar(0)</code>字段进行修复的方式，逐个字段排查，最后定位到<code>syslogid</code>这个字段，其对应的值是<code>6f336347a90549789092b11d31b2197a</code>。<br>这个字段只要长度为0，即使有一条数据，也能把doris的be全部干崩溃（全部崩溃是dataX重试的锅）。</p>
+<p>然后在be.out日志里，我们发现报错信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs log">*** Query id: 5a4698a1afd40053-50e26699312ee9a5 ***<br>*** tablet id: 0 ***<br>*** Aborted at 1739168366 (unix time) try &quot;date -d @1739168366&quot; if you are using GNU date ***<br>*** Current BE git commitID: 91efb6a43d ***<br>*** SIGSEGV unknown detail explain (@0x0) received by PID 25235 (TID 26356 OR 0x7fbaf0c76700) from PID 0; stack trace: ***<br> 0# doris::signal::(anonymous namespace)::FailureSignalHandler(int, siginfo_t*, void*) at /home/zcp/repo_center/doris_release/doris/be/src/common/signal_handler.h:417<br> 1# os::Linux::chained_handler(int, siginfo*, void*) in /root/java/jdk1.8.0_221/jre/lib/amd64/server/libjvm.so<br> 2# JVM_handle_linux_signal in /root/java/jdk1.8.0_221/jre/lib/amd64/server/libjvm.so<br> 3# signalHandler(int, siginfo*, void*) in /root/java/jdk1.8.0_221/jre/lib/amd64/server/libjvm.so<br> 4# 0x00007FBE7F8FA400 in /lib64/libc.so.6<br> 5# __memcmp_sse4_1 in /lib64/libc.so.6<br> 6# doris::FieldTypeTraits&lt;(doris::FieldType)13&gt;::cmp(void const*, void const*) at /home/zcp/repo_center/doris_release/doris/be/src/olap/types.h:1349<br> 7# doris::segment_v2::TypedZoneMapIndexWriter&lt;(doris::PrimitiveType)10&gt;::flush() at /home/zcp/repo_center/doris_release/doris/be/src/olap/rowset/segment_v2/zone_map_index.cpp:90<br> 8# doris::segment_v2::ScalarColumnWriter::finish_current_page() at /home/zcp/repo_center/doris_release/doris/be/src/olap/rowset/segment_v2/column_writer.cpp:683<br> 9# doris::segment_v2::ScalarColumnWriter::finish() at /home/zcp/repo_center/doris_release/doris/be/src/olap/rowset/segment_v2/column_writer.cpp:593<br>10# doris::segment_v2::VerticalSegmentWriter::write_batch() at /home/zcp/repo_center/doris_release/doris/be/src/olap/rowset/segment_v2/vertical_segment_writer.cpp:719<br>11# doris::SegmentFlusher::_add_rows(std::unique_ptr&lt;doris::segment_v2::VerticalSegmentWriter, std::default_delete&lt;doris::segment_v2::VerticalSegmentWriter&gt; &gt;&amp;, doris::vectorized::Block const*, unsigned long, unsigned long) at /home/zcp/repo_center/doris_release/doris/be/src/olap/rowset/segment_creator.cpp:183<br>12# doris::SegmentFlusher::flush_single_block(doris::vectorized::Block const*, int, long*) at /home/zcp/repo_center/doris_release/doris/be/src/olap/rowset/segment_creator.cpp:76<br>13# doris::SegmentCreator::flush_single_block(doris::vectorized::Block const*, int, long*) at /home/zcp/repo_center/doris_release/doris/be/src/olap/rowset/segment_creator.cpp:422<br>14# doris::BaseBetaRowsetWriter::flush_memtable(doris::vectorized::Block*, int, long*) at /home/zcp/repo_center/doris_release/doris/be/src/olap/rowset/beta_rowset_writer.cpp:489<br>15# doris::FlushToken::_do_flush_memtable(doris::MemTable*, int, long*) at /home/zcp/repo_center/doris_release/doris/be/src/olap/memtable_flush_executor.cpp:144<br>16# doris::FlushToken::_flush_memtable(std::unique_ptr&lt;doris::MemTable, std::default_delete&lt;doris::MemTable&gt; &gt;, int, long) in /opt/module/doris/be/lib/doris_be<br>17# doris::MemtableFlushTask::run() at /home/zcp/repo_center/doris_release/doris/be/src/olap/memtable_flush_executor.cpp:59<br>18# doris::ThreadPool::dispatch_thread() in /opt/module/doris/be/lib/doris_be<br>19# doris::Thread::supervise_thread(void*) at /home/zcp/repo_center/doris_release/doris/be/src/util/thread.cpp:499<br>20# start_thread in /lib64/libpthread.so.0<br>21# clone in /lib64/libc.so.6<br><br></code></pre></td></tr></table></figure>
+<p>可以看出是<code>memcmp</code>导致的crash，这个就是doris自身的问题了。</p>
+<p>现在这个问题已经提给doris官方了，不过官方会不会处理就不确定了，因为高版本已经没这个问题了。</p>
+<h2 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h2><ol>
+<li>修复建表语句，避免<code>varchar(0)</code>这种非法的字段格式的出现。</li>
+<li>升级doris，实测doris3.0版本没有此问题</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://github.com/alibaba/DataX/blob/master/introduction.md">dataX技术设计</a></p>
+<p><a href="https://doris.apache.org/zh-CN/docs/data-operate/import/import-way/stream-load-manual">doris stream load机制</a></p>
+<p><a href="https://github.com/apache/doris/issues/47684">提交的doris崩溃 bug</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%BC%96%E7%A8%8B%E4%BA%BA%E7%94%9F/" class="category-chain-item">编程人生</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/clickhouse/" class="print-no-link">#clickhouse</a>
+      
+        <a href="/tags/doris/" class="print-no-link">#doris</a>
+      
+        <a href="/tags/dataX/" class="print-no-link">#dataX</a>
+      
+        <a href="/tags/%E5%BC%82%E5%B8%B8/" class="print-no-link">#异常</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>doris通过dataX导入数据发生宕机问题解决</div>
+      <div>https://www.hancher.top/2025/02/11/exception-doris-stream-load-from-clickhouse-by-data-crash/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>寒澈</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年2月11日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年2月12日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="ND - 禁止演绎">
+                    <i class="iconfont icon-cc-nd"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/02/12/architecture-sso-index/" title="一文弄懂单点登录的几种技术选型">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">一文弄懂单点登录的几种技术选型</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/01/22/site-bing-site-seo/" title="将我们的博客录入bing搜索引擎">
+                        <span class="hidden-mobile">将我们的博客录入bing搜索引擎</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.8/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"https://hancherblogcommenthahaha.netlify.app/.netlify/functions/twikoo","region":"ap-beijing","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              Fluid.utils.listenDOMLoaded(function() {
+                var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+                Fluid.plugins.imageCaption(imgSelector);
+                Fluid.plugins.fancyBox(imgSelector);
+              });
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <div style="font-size: 0.85rem"> Copyright <i class="iconfont icon-copyright"> 2022 -  <script> document.write(new Date().getFullYear()); </script> <a href="/about" target="_blank" rel="nofollow noopener"> <span> <strong>Hancher</strong> </span> </a>  </i> | Power by  <a href="https://hexo.io" target="_blank" rel="nofollow noopener"> <span> <strong>Hexo</strong> </span> </a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <span> <strong>Fluid</strong> </span> </a> </div> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/duration.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

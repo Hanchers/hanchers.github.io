@@ -1,0 +1,913 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN,zh-HK,en,default" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/images/site/coder.jpeg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="寒澈">
+  <meta name="keywords" content="java,Python，go,vue, 大数据，AI,机器学习,Mysql,数据库,spring">
+  
+    <meta name="description" content="springboot可以打包成系统可执行程序了，而不是传统的jar，这样我们在部署项目的时候就可以跳过虚拟机，直接启动项目了，是不是很简单。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="springboot可以把项目打包成app了，Graal打包版">
+<meta property="og:url" content="https://www.hancher.top/2025/03/04/spring-spring-native-image-graalvm/index.html">
+<meta property="og:site_name" content="寒澈笔记">
+<meta property="og:description" content="springboot可以打包成系统可执行程序了，而不是传统的jar，这样我们在部署项目的时候就可以跳过虚拟机，直接启动项目了，是不是很简单。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.hancher.top/images/tech/java/graalVM.png">
+<meta property="article:published_time" content="2025-03-04T05:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-06T08:30:00.000Z">
+<meta property="article:author" content="寒澈">
+<meta property="article:tag" content="springboot3.x">
+<meta property="article:tag" content="native-image">
+<meta property="article:tag" content="GraalVM">
+<meta property="article:tag" content="native-application">
+<meta property="article:tag" content="spring6">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.hancher.top/images/tech/java/graalVM.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>springboot可以把项目打包成app了，Graal打包版 - 寒澈笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/blog.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.hancher.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"255889a39686581da013e7c8a40eef7c","google":{"measurement_id":"G-4VZMWRNQQE"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"zqhOsrozoSMTfBNVSHXyTh45-gzGzoHsz","app_key":"EUXdctCzoy7rxXqCDUDv1J6a","server_url":"https://zqhosroz.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?255889a39686581da013e7c8a40eef7c";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-4VZMWRNQQE", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-4VZMWRNQQE');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>寒澈笔记</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/game/2048_game.html" target="_self">
+                <i class="iconfont icon-game"></i>
+                <span>游戏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/favorite/" target="_self">
+                <i class="iconfont icon-book"></i>
+                <span>收藏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/site/night.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="springboot可以把项目打包成app了，Graal打包版"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          1.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          15 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">springboot可以把项目打包成app了，Graal打包版</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>我们都知道，在java的世界，有一个神奇的存在，那就是虚拟机（jvm）。</p>
+<p>因为虚拟机的存在，java实现了最早的“一处编译，处处执行”的设计思想，成功在早期的各大语言的竞争中脱颖而出，并在各种后起之秀的冲击下，长期保持最受欢迎的编程语言的头部区域。</p>
+<p>实在是太方便了，只要有虚拟机的存在，我们在编程的时候就不用考虑各种运行系统的复杂性与差异，这些由各种系统的虚拟机开发专家们替我们解决了，而我们仅需要关注编码就行了。</p>
+<p>但进入了21时间，云原生的兴起，java的最大的优势虚拟机，也渐渐阻碍了其在云上开疆扩土的阻力。</p>
+<p>“内存占用高”、“STW” 、 “启动速度慢”等一些虚拟机的固有特性，导致java在go等这些为云而设计的语言面前尽显颓势。</p>
+<p>所以，java能不能跳过虚拟机，直接把程序编译打包成可以直接在目标系统上运行的呢？</p>
+<p>说实话，刚开始学习java的时候，我就有这个疑问，为了把java的可执行程序（jar）打包成可以在windows上运行的exe程序，当时还搞过很多偏门的的办法。</p>
+<p>现在，随着GraalVM的成熟，springboot的也提出了直接将java程序直接打包成系统可执行程序（本地应用）的技术方案。</p>
+<p><img src="/../../images/tech/spring/spring_native_app_graalvm.png" srcset="/img/loading.gif" lazyload alt="java本地app部署架构"></p>
+<p>今天我们就来验证一下！</p>
+<h2 id="实现过程"><a href="#实现过程" class="headerlink" title="实现过程"></a>实现过程</h2><h3 id="hello-world"><a href="#hello-world" class="headerlink" title="hello world"></a>hello world</h3><p>先写一套<code>hello world</code>的springboot程序，使用maven或gradle打包。</p>
+<p>这里和我们正常的项目开发流程完成一致，没有任何不同。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@SpringBootApplication</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">GraalvmNativeAppApplication</span> &#123;<br><br>	<span class="hljs-meta">@RequestMapping(&quot;/&#123;name&#125;&quot;)</span><br>	String <span class="hljs-title function_">home</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable</span> String name)</span> &#123;<br>		<span class="hljs-type">String</span> <span class="hljs-variable">x</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;Hello &quot;</span> + name;<br>		System.out.println(x);<br>		<span class="hljs-keyword">return</span> x;<br>	&#125;<br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>		SpringApplication.run(GraalvmNativeAppApplication.class, args);<br>	&#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这是这个项目的业务代码，没有其他的了。</p>
+<h3 id="配置GraalVM"><a href="#配置GraalVM" class="headerlink" title="配置GraalVM"></a>配置GraalVM</h3><p>在<code>pom.xml</code>里配置GraalVM 本地应用打包插件,这是我们的springboot程序能够打包成本地应用的核心入口，一定要有。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">build</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">plugins</span>&gt;</span><br>			<br>			<span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span><br>				<span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.graalvm.buildtools<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>				<span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>native-maven-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>			<span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span><br>			<br>		<span class="hljs-tag">&lt;/<span class="hljs-name">plugins</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">build</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<p>其他的，项目里就不需要了。</p>
+<p>也可以通过<a href="https://start.spring.io/">start.spring.io</a>来构建项目，spring会把一切配置好,记得看构架好后的<code>HELP.MD</code>文件呦。<br><img src="/../../images/tech/spring/start-springboot-graalvm.png" srcset="/img/loading.gif" lazyload alt="springboot初始化时配置graalvm"></p>
+<h3 id="环境依赖"><a href="#环境依赖" class="headerlink" title="环境依赖"></a>环境依赖</h3><p>接下来就是要配置一下系统环境了。</p>
+<p>要将项目打包成系统原生运行应用，需要在我们的系统里安装一套本地镜像支持库(<a href="https://bell-sw.com/pages/downloads/native-image-kit/#nik-23-(jdk-17)">Liberica Native Image Kit page</a>),这个nik库实现了将java字节码编译成操作系统二进制执行码这一过程。</p>
+<p>安装nik包可以手动安装，也可以使用<a href="https://sdkman.io/install">sdk</a>版本控制工具来安装, 这个比较简单，我使用的是这种方式（我使用的是mac电脑）。</p>
+<p>使用sdk安装java nik 的命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sdk install 23.0.7.r17-nik<br></code></pre></td></tr></table></figure>
+<p>安装完成后，系统就自动将当前的jdk切换成刚下载的这个jdk了。</p>
+<p>可以在<a href="https://sdkman.io/jdks/nik">官方配置</a>这里查看安装对应jdk的命令。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">% java --version<br><br>openjdk 17.0.14 2025-01-21 LTS<br>OpenJDK Runtime Environment Liberica-NIK-23.0.7-1 (build 17.0.14+10-LTS)<br>OpenJDK 64-Bit Server VM Liberica-NIK-23.0.7-1 (build 17.0.14+10-LTS, mixed mode, sharing)<br></code></pre></td></tr></table></figure>
+<p>出现这个信息，我们就可以打包了。</p>
+<h3 id="打包"><a href="#打包" class="headerlink" title="打包"></a>打包</h3><p>命令行输入</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">mvn -Pnative native:compile<br></code></pre></td></tr></table></figure>
+<p>这个命令会触发<code>native-maven-plugin</code>maven插件，执行本地打包app。</p>
+<p>这个过程会很慢，而且会很耗cpu，我的电脑cpu基本都跑满了，现在终于理解，那些c程序员们在编译项目时会去抽烟了，确实这段时间啥也干不了。</p>
+<p>执行过程：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><code class="hljs log">...<br>[1/8] Initializing...                                                                                    (3.9s @ 0.14GB)<br> Java version: 17.0.14+10-LTS, vendor version: Liberica-NIK-23.0.7-1<br> Graal compiler: optimization level: 2, target machine: armv8-a<br> C compiler: cc (apple, arm64, 15.0.0)<br> Garbage collector: Serial GC (max heap size: 80% of RAM)<br> 1 user-specific feature(s)<br> - org.springframework.aot.nativex.feature.PreComputeFieldFeature<br>SLF4J(W): No SLF4J providers were found.<br>SLF4J(W): Defaulting to no-operation (NOP) logger implementation<br>SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.<br>[2/8] Performing analysis...  [******]                                                                  (35.5s @ 1.50GB)<br>  16,529 (90.73%) of 18,218 types reachable<br>  27,176 (67.68%) of 40,151 fields reachable<br>  79,715 (63.21%) of 126,116 methods reachable<br>   5,144 types,   357 fields, and 5,957 methods registered for reflection<br>      64 types,    72 fields, and    55 methods registered for JNI access<br>       5 native libraries: -framework CoreServices, -framework Foundation, dl, pthread, z<br>[3/8] Building universe...                                                                               (3.9s @ 1.59GB)<br>[4/8] Parsing methods...      [**]                                                                       (2.7s @ 1.79GB)<br>[5/8] Inlining methods...     [****]                                                                     (1.6s @ 1.95GB)<br>[6/8] Compiling methods...    [*****]                                                                   (23.4s @ 1.61GB)<br>[7/8] Layouting methods...    [**]                                                                       (4.5s @ 1.70GB)<br>[8/8] Creating image...       [***]                                                                      (7.9s @ 1.29GB)<br>  36.95MB (50.32%) for code area:    51,915 compilation units<br>  35.50MB (48.34%) for image heap:  386,138 objects and 253 resources<br>1006.98kB ( 1.34%) for other data<br>  73.44MB in total<br>------------------------------------------------------------------------------------------------------------------------<br>Top 10 origins of code area:                                Top 10 object types in image heap:<br>  12.68MB java.base                                            8.53MB byte[] for code metadata<br>   4.24MB tomcat-embed-core-10.1.36.jar                        3.95MB java.lang.Class<br>   3.38MB java.xml                                             3.68MB java.lang.String<br>   2.00MB jackson-databind-2.18.2.jar                          3.30MB byte[] for java.lang.String<br>   1.58MB spring-core-6.2.3.jar                                3.23MB byte[] for general heap data<br>   1.54MB spring-boot-3.4.3.jar                                2.11MB byte[] for embedded resources<br>   1.29MB svm.jar (Native Image)                               1.39MB com.oracle.svm.core.hub.DynamicHubCompanion<br> 983.58kB spring-web-6.2.3.jar                                 1.01MB byte[] for reflection metadata<br> 910.85kB spring-beans-6.2.3.jar                             741.69kB java.lang.String[]<br> 876.34kB spring-webmvc-6.2.3.jar                            597.07kB c.o.svm.core.hub.DynamicHub$ReflectionMetadata<br>   7.23MB for 69 more packages                                 6.15MB for 3522 more object types<br>------------------------------------------------------------------------------------------------------------------------<br>Recommendations:<br> HEAP: Set max heap for improved and more predictable memory usage.<br> CPU:  Enable more CPU features with &#x27;-march=native&#x27; for improved performance.<br>------------------------------------------------------------------------------------------------------------------------<br>                       10.3s (12.1% of total time) in 171 GCs | Peak RSS: 2.64GB | CPU load: 5.10<br>------------------------------------------------------------------------------------------------------------------------<br>Produced artifacts:<br> ../springboot3-demo/graalvm-native-app/target/graalvm-native-app (executable)<br>========================================================================================================================<br>Finished generating &#x27;graalvm-native-app&#x27; in 1m 24s.<br>[INFO] ------------------------------------------------------------------------<br>[INFO] BUILD SUCCESS<br>[INFO] ------------------------------------------------------------------------<br>[INFO] Total time:  01:38 min<br>[INFO] Finished at: 2025-03-03T16:41:31+08:00<br>[INFO] ------------------------------------------------------------------------<br><br></code></pre></td></tr></table></figure>
+<p>运行app</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">./graalvm-native-app<br></code></pre></td></tr></table></figure>
+
+<p>验证：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ curl localhost:8080/hancher<br><br>Hello hancher<br></code></pre></td></tr></table></figure>
+
+<h2 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h2><p>先说优点</p>
+<ul>
+<li>去掉了jvm这一层，部署更加简单方便了</li>
+<li>通过app这种形式，原生级别支持了windows、mac、linux等主流操作系统</li>
+<li>启动更快，因为代码都编译成系统直接运行的二进制文件，不需要jvm的解析<ul>
+<li>上面的helloWorld，使用jar启动，耗时0.9s，使用app启动，耗时0.18秒，将近5倍的差距。</li>
+</ul>
+</li>
+<li>运行时占用内存更低，据统计，能减少50%左右</li>
+</ul>
+<p>再说缺点</p>
+<ul>
+<li>打包很慢,会占用很高的内存和cpu</li>
+<li>对于反射等动态特性支持的不好，比如<code>Class.forName()</code>, 所以仅适用于一些简易项目，重量级项目现阶段还不太支持</li>
+<li>一个系统仅能打包本系统的app，不像go那样，一个系统能打包所有平台的app。</li>
+<li>包体积比原生的jar大了不少<ul>
+<li>上面的helloWorld，jar大小空间20M，app大小73M， 大了3倍</li>
+<li>但如果算上jdk， 我统计了我安装后的jdk17大小300M，再加上jar， 使用jar的总体空间比app大了近5倍</li>
+</ul>
+</li>
+</ul>
+<p>总得来说，java在编译成本地app这一块，还有很大的空间，但已经完成了从0到1的进步，更适合云原生了，剩下的就是不断的优化了。</p>
+<p>适用的场景：</p>
+<ul>
+<li>新项目，轻量级项目。老项目不太建议使用这个特性，因为动态特性的限制，可能会有一些功能验证不到</li>
+<li>类似云原生的Serverless架构，逻辑简单，更强调启动速度与内存占比的服务</li>
+<li>容器化部署的微服务等（native app 有容器版，下篇文章介绍）</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://docs.spring.io/spring-boot/how-to/native-image/developing-your-first-application.html#howto.native-image.developing-your-first-application.native-build-tools">使用GraalVM打包系统可执行程序</a></p>
+<p><a href="https://github.com/Hanchers/springboot3-demo/tree/main/graalvm-native-app">github demo</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/spring/" class="category-chain-item">spring</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/spring/springboot/" class="category-chain-item">springboot</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/springboot3-x/" class="print-no-link">#springboot3.x</a>
+      
+        <a href="/tags/native-image/" class="print-no-link">#native-image</a>
+      
+        <a href="/tags/GraalVM/" class="print-no-link">#GraalVM</a>
+      
+        <a href="/tags/native-application/" class="print-no-link">#native-application</a>
+      
+        <a href="/tags/spring6/" class="print-no-link">#spring6</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>springboot可以把项目打包成app了，Graal打包版</div>
+      <div>https://www.hancher.top/2025/03/04/spring-spring-native-image-graalvm/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>寒澈</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年3月4日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年6月6日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="ND - 禁止演绎">
+                    <i class="iconfont icon-cc-nd"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/03/08/spring-spring-native-image-docker/" title="springboot可以把项目打包成app了，docker打包版">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">springboot可以把项目打包成app了，docker打包版</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/25/site-google-optimize-robot/" title="通过优化robot的方式，加速谷歌收录我们的网站">
+                        <span class="hidden-mobile">通过优化robot的方式，加速谷歌收录我们的网站</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.8/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"https://hancherblogcommenthahaha.netlify.app/.netlify/functions/twikoo","region":"ap-beijing","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              Fluid.utils.listenDOMLoaded(function() {
+                var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+                Fluid.plugins.imageCaption(imgSelector);
+                Fluid.plugins.fancyBox(imgSelector);
+              });
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <div style="font-size: 0.85rem"> Copyright <i class="iconfont icon-copyright"> 2022 -  <script> document.write(new Date().getFullYear()); </script> <a href="/about" target="_blank" rel="nofollow noopener"> <span> <strong>Hancher</strong> </span> </a>  </i> | Power by  <a href="https://hexo.io" target="_blank" rel="nofollow noopener"> <span> <strong>Hexo</strong> </span> </a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <span> <strong>Fluid</strong> </span> </a> </div> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/duration.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

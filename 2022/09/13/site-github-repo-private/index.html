@@ -1,0 +1,876 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN,zh-HK,en,default" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/images/site/coder.jpeg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="寒澈">
+  <meta name="keywords" content="建站, 私有仓库, github, jekyll">
+  
+    <meta name="description" content="使用私有仓库发布 GitHub Pages">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用私有仓库发布 GitHub Pages">
+<meta property="og:url" content="https://www.hancher.top/2022/09/13/site-github-repo-private/index.html">
+<meta property="og:site_name" content="寒澈笔记">
+<meta property="og:description" content="使用私有仓库发布 GitHub Pages">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.hancher.top/images/site/private_repo_flow.png">
+<meta property="og:image" content="https://www.hancher.top/images/site/private_repo_new_action.png">
+<meta property="og:image" content="https://www.hancher.top/images/site/github_person_token_1.png">
+<meta property="og:image" content="https://www.hancher.top/images/site/github_person_token_2.png">
+<meta property="og:image" content="https://www.hancher.top/images/site/github_person_token_3.png">
+<meta property="og:image" content="https://www.hancher.top/images/site/github_person_token_4.png">
+<meta property="og:image" content="https://www.hancher.top/images/site/github_person_token_5.png">
+<meta property="article:published_time" content="2022-09-13T04:00:00.000Z">
+<meta property="article:modified_time" content="2022-09-13T04:00:00.000Z">
+<meta property="article:author" content="寒澈">
+<meta property="article:tag" content="建站">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.hancher.top/images/site/private_repo_flow.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>使用私有仓库发布 GitHub Pages - 寒澈笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/blog.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.hancher.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"255889a39686581da013e7c8a40eef7c","google":{"measurement_id":"G-4VZMWRNQQE"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"zqhOsrozoSMTfBNVSHXyTh45-gzGzoHsz","app_key":"EUXdctCzoy7rxXqCDUDv1J6a","server_url":"https://zqhosroz.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?255889a39686581da013e7c8a40eef7c";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-4VZMWRNQQE", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-4VZMWRNQQE');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>寒澈笔记</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/game/2048_game.html" target="_self">
+                <i class="iconfont icon-game"></i>
+                <span>游戏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/favorite/" target="_self">
+                <i class="iconfont icon-book"></i>
+                <span>收藏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/site/night.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="使用私有仓库发布 GitHub Pages"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          1.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          13 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">使用私有仓库发布 GitHub Pages</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="验证私有库发布文章"><a href="#验证私有库发布文章" class="headerlink" title="验证私有库发布文章"></a>验证私有库发布文章</h2><p>相信已经成功使用github建站的朋友们肯定会有一个想法, 就是可不可以将文章仓库私有也能实现建站的功能呢?</p>
+<p>答案是可以的, 本文就是一个将一个公共仓库站点私有化后的例子. 并将过程总结一下, 方便大家参考使用.</p>
+<h2 id="站点私有化过程的的变与不变"><a href="#站点私有化过程的的变与不变" class="headerlink" title="站点私有化过程的的变与不变"></a>站点私有化过程的的变与不变</h2><p>首先,使用github pages建站, 项目名就固定死了,必然是&lt;用户名&gt;.github.io<br>其次,如果有域名的话,像域名配置等一些配置也是需要放到 外露站点下的.</p>
+<p>除此之外, 其他的内容就就是可以变的了.因为github.io站点最终暴露的就是一个编译好的web静态网站.<br>至于源码是不是在这里,无所谓的.之所以源码与静态站点放到一起,核心还是方便github的 action自动编译.</p>
+<p>好了, 了解了这些核心要素, 我们可以操作的部分也就有了.<br>就像我们正常的开发流程一样,我们可以把整个网站的发布流程拆分为两部分: <strong>打包</strong> 与 <strong>发布</strong>.</p>
+<p>其中打包可以在我们的私有仓库中进行, 然后将打包后的静态网站 发布到github.io公仓中.<br>这里就用到了github的 action 自动编译功能. 其会在我们提交代码的时候触发一个操作,<br>调用一段脚本命令执行.</p>
+<p>而这段脚本的核心就是通过git 将编译后的静态站点push 到github.io公仓中.</p>
+<p>流程如下:<br><img src="/images/site/private_repo_flow.png" srcset="/img/loading.gif" lazyload alt="发布流程图"></p>
+<h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><ol>
+<li>先在github上创建一个私有仓库: private_repo.</li>
+<li>将github.io的源码迁移到新的仓库中.</li>
+<li>准备github跨仓库git 提交代码权限, 参考下一节github申请person token</li>
+<li>在private_repo 的action 中创建打包脚本, 脚本内容参考附录1<br><img src="/images/site/private_repo_new_action.png" srcset="/img/loading.gif" lazyload alt="创建新action"></li>
+</ol>
+<h2 id="github申请person-token"><a href="#github申请person-token" class="headerlink" title="github申请person token"></a>github申请person token</h2><h3 id="第一步-获取token"><a href="#第一步-获取token" class="headerlink" title="第一步, 获取token"></a>第一步, 获取token</h3><ol>
+<li>个人设置里找到入口<br><img src="/images/site/github_person_token_1.png" srcset="/img/loading.gif" lazyload alt="person token 1"></li>
+<li>找到开发者设置<br><img src="/images/site/github_person_token_2.png" srcset="/img/loading.gif" lazyload alt="person token 2"></li>
+<li>创建token<br><img src="/images/site/github_person_token_3.png" srcset="/img/loading.gif" lazyload alt="person token 3"></li>
+</ol>
+<p><strong>这一步一定要记住创建好的token, 因为后面要用,而且这个页面刷新后就没了</strong>.</p>
+<p>其实有过使用ssh经验的朋友们应该已经意识到了, 这一步其实就是一个创建ssh公钥的过程. 只不过这个公钥是放到github服务器上了.</p>
+<h3 id="第二步-私有库配置"><a href="#第二步-私有库配置" class="headerlink" title="第二步, 私有库配置"></a>第二步, 私有库配置</h3><p>有了token, 正常来说就能提交代码了. 但是要知道这个东西是放到脚本里的, 明文暴露还是不太安全.<br>所以我们要在私有库里将这个token配置成一个环境变量,通过环境变量引用的方式使用,这样就安全多了.</p>
+<ol>
+<li>找到private_repo, 配置token环境变量<br><img src="/images/site/github_person_token_4.png" srcset="/img/loading.gif" lazyload alt="person token 4"><br><img src="/images/site/github_person_token_5.png" srcset="/img/loading.gif" lazyload alt="person token 5">  </li>
+<li>配置完后, 我们就可以在脚本里通过环境变量来使用token了.</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs doc">$&#123; &#123; secrets.YOUR_REPO_SECRET_NAME &#125; &#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>可以尝试在私有库private_repo里提交文章了.</p>
+<p>同时你会发现, github.io公仓里的内部全部被静态网站内容覆盖了. 不用担心,这是正常的.</p>
+<h2 id="附录1-完整脚本"><a href="#附录1-完整脚本" class="headerlink" title="附录1 : 完整脚本"></a>附录1 : 完整脚本</h2><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><code class="hljs dockerfile"><span class="hljs-comment"># ci name</span><br><span class="hljs-comment"># ci 脚本名称</span><br>name: Deploy Jekyll site to public github repos<br><br>on:<br>  <span class="hljs-comment"># Runs on pushes targeting the default branch</span><br>  <span class="hljs-comment"># 当代码 push 到 main 分支时, 执行该脚本</span><br>  push:<br>    branches: [<span class="hljs-string">&quot;main&quot;</span>]<br><br>  <span class="hljs-comment"># Allows you to run this workflow manually from the Actions tab</span><br>  <span class="hljs-comment"># 允许你 手动执行 这个脚本</span><br>  workflow_dispatch:<br><br><span class="hljs-comment"># Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages</span><br><span class="hljs-comment"># GITHUB_TOKEN 的操作权限</span><br>permissions:<br>  contents: read<br>  pages: write<br>  id-token: write<br><br><span class="hljs-comment"># Allow one concurrent deployment</span><br>concurrency:<br>  group: <span class="hljs-string">&quot;pages&quot;</span><br>  cancel-in-progress: true<br><br><span class="hljs-comment"># job 执行任务, 可以有多个, 默认并行运行, 可以通过 needs 关键字来设置依赖的其他 jobs</span><br><span class="hljs-comment"># step : 任务下的执行步骤, 一个job 会有多个步骤</span><br><span class="hljs-comment"># 操作:  一个step 下可以执行多个操作, 通常一行脚本为一个操作</span><br>jobs:<br>  <span class="hljs-comment"># Build job</span><br>  build:<br>    runs-on: ubuntu-latest<br>    steps:<br>      - name: Checkout<br>        uses: actions/checkout@v3<br>      <span class="hljs-comment"># 准备ruby 环境</span><br>      - name: Setup Ruby<br>        uses: ruby/setup-ruby@<span class="hljs-number">0</span>a29871fe2b0200a17a4497bae54fe5df0d973aa <span class="hljs-comment"># v1.115.3</span><br>        with:<br>          ruby-version: <span class="hljs-string">&#x27;3.0&#x27;</span> <span class="hljs-comment"># Not needed with a .ruby-version file</span><br>          bundler-cache: true <span class="hljs-comment"># runs &#x27;bundle install&#x27; and caches installed gems automatically</span><br>          cache-version: <span class="hljs-number">0</span> <span class="hljs-comment"># Increment this number if you need to re-download cached gems</span><br><span class="hljs-comment">#      - name: Setup Pages</span><br><span class="hljs-comment">#        id: pages</span><br><span class="hljs-comment">#        uses: actions/configure-pages@v2</span><br>      <span class="hljs-comment"># 打包 jekyll</span><br>      - name: Build with Jekyll<br>        <span class="hljs-comment"># Outputs to the &#x27;./_site&#x27; directory by default</span><br><span class="hljs-comment">#        run: bundle exec jekyll build --baseurl &quot;$&#123;&#123; steps.pages.outputs.base_path &#125;&#125;&quot;</span><br>        <span class="hljs-keyword">run</span><span class="language-bash">: bundle <span class="hljs-built_in">exec</span> jekyll build --verbose</span><br>        <span class="hljs-keyword">env</span>:<br>          JEKYLL_ENV: production<br>       <span class="hljs-comment"># 更新 打tar包</span><br><span class="hljs-comment">#      - name: Upload artifact</span><br><span class="hljs-comment">#        # Automatically uploads an artifact from the &#x27;./_site&#x27; directory by default</span><br><span class="hljs-comment">#        uses: actions/upload-pages-artifact@v1</span><br><br>      - name: 增加外露github文件<br>        working-directory: ./_site  <span class="hljs-comment"># jekyll 默认 build 到 _site 目录，因此设置命令执行的目录为 ./_site</span><br>        <span class="hljs-keyword">run</span><span class="language-bash">: |  <span class="hljs-comment"># run 后面加个 ‘|’ 然后换行可以同时执行多个命令，每行一个</span></span><br>          cp ../README.md .<br> <br>      - name: 部署_site到博客网站仓库<br>        working-directory: ./_site<br>        <span class="hljs-keyword">run</span><span class="language-bash">: |</span><br>          git init<br>          git checkout -b main<br>          git <span class="hljs-keyword">add</span><span class="language-bash"> -A</span><br>          git -c <span class="hljs-keyword">user</span>.name=<span class="hljs-string">&#x27;your_name&#x27;</span> -c <span class="hljs-keyword">user</span>.email=<span class="hljs-string">&#x27;your_email&#x27;</span> commit -m <span class="hljs-string">&#x27;anything&#x27;</span> <br>          git push <span class="hljs-string">&quot;https://$&#123; &#123; github.actor &#125; &#125;:$&#123; &#123; secrets.YOUR_REPO_SECRET_NAME &#125; &#125;@github.com/YOUR_GITHUB_IO_REPO&quot;</span> HEAD:main -f -q<br></code></pre></td></tr></table></figure>
+<ul>
+<li>将上面的your_name,your_email,anything 替换成自己的内容</li>
+<li>YOUR_REPO_SECRET_NAME 替换成privat_repo的secret_token_name</li>
+<li>YOUR_GITHUB_IO_REPO 替换成自己的github.io公仓</li>
+</ul>
+<h2 id="附录2-github-action-脚本简介"><a href="#附录2-github-action-脚本简介" class="headerlink" title="附录2 : github action 脚本简介"></a>附录2 : github action 脚本简介</h2><p>在github的action模块里创建了一个脚本后, 就会在项目的.github&#x2F;workflows里创建一个对应的文件.</p>
+<p>通过workflow 大致可以理解这个模块的功能, 就是一个工作流.<br>在一些操作执行(通常是提交代码)后, 触发一系列的后续自动化操作, 这些操作可以是并行的,也可以是串行的. </p>
+<p>而这些后续操作是通过一些action脚本组织起来的. 整体上看,一个action由以下部分组成.</p>
+<ul>
+<li>jobs: 任务. 最大的逻辑单元. 可以有多个. jobs 默认是并行运行，可以通过 needs 关键字来设置依赖的其他 jobs。</li>
+<li>steps: 步骤. job的执行步骤. 顺序执行. 可以job可以有多个步骤.</li>
+<li>runs: 操作. 也可以理解为指令(bash命令等). 通常一行脚本就是一个操作. 并非所有步骤都会运行操作，但是操作都是在步骤中运行的</li>
+</ul>
+<p>无论是job,还是step, 都可以理解一组指令集合. 他们都是可以配置id的. 可以通过id来互相依赖, 互相调用.</p>
+<p>其他的可以参考里的官方文档.</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://github.com/peaceiris/actions-gh-pages">常见脚本</a></p>
+<p><a href="https://docs.github.com/cn/actions/learn-github-actions/contexts#github-context">github action 官方文档</a></p>
+<p><a href="https://www.xheldon.com/tech/the-using-of-github-pages.html">免费使用私有仓库发布 GitHub Pages</a></p>
+<p><a href="https://juejin.cn/post/7008847699919241229">通过 GitHub Actions 实现私有仓库的免费 Github Pages 部署</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%BD%91%E7%AB%99/" class="category-chain-item">网站</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%BB%BA%E7%AB%99/" class="print-no-link">#建站</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>使用私有仓库发布 GitHub Pages</div>
+      <div>https://www.hancher.top/2022/09/13/site-github-repo-private/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>寒澈</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="ND - 禁止演绎">
+                    <i class="iconfont icon-cc-nd"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/09/22/exception-java-method-too-big/" title="有意思的小问题,java代码过长">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">有意思的小问题,java代码过长</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/12/es-reindex/" title="Elasticsearch重建索引">
+                        <span class="hidden-mobile">Elasticsearch重建索引</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.8/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"https://hancherblogcommenthahaha.netlify.app/.netlify/functions/twikoo","region":"ap-beijing","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              Fluid.utils.listenDOMLoaded(function() {
+                var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+                Fluid.plugins.imageCaption(imgSelector);
+                Fluid.plugins.fancyBox(imgSelector);
+              });
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <div style="font-size: 0.85rem"> Copyright <i class="iconfont icon-copyright"> 2022 -  <script> document.write(new Date().getFullYear()); </script> <a href="/about" target="_blank" rel="nofollow noopener"> <span> <strong>Hancher</strong> </span> </a>  </i> | Power by  <a href="https://hexo.io" target="_blank" rel="nofollow noopener"> <span> <strong>Hexo</strong> </span> </a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <span> <strong>Fluid</strong> </span> </a> </div> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/duration.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,1043 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN,zh-HK,en,default" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/images/site/coder.jpeg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="寒澈">
+  <meta name="keywords" content="java,jdk19,feature">
+  
+    <meta name="description" content="JDK 19在2022年10月18日发布了, 本文就是简单介绍一下这次更新的新特性与改动">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JDK 19新特性简介">
+<meta property="og:url" content="https://www.hancher.top/2022/10/20/java-jdk-v19/index.html">
+<meta property="og:site_name" content="寒澈笔记">
+<meta property="og:description" content="JDK 19在2022年10月18日发布了, 本文就是简单介绍一下这次更新的新特性与改动">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-10-20T04:00:00.000Z">
+<meta property="article:modified_time" content="2022-10-20T04:00:00.000Z">
+<meta property="article:author" content="寒澈">
+<meta property="article:tag" content="java版本特性">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>JDK 19新特性简介 - 寒澈笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/blog.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.hancher.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"255889a39686581da013e7c8a40eef7c","google":{"measurement_id":"G-4VZMWRNQQE"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"zqhOsrozoSMTfBNVSHXyTh45-gzGzoHsz","app_key":"EUXdctCzoy7rxXqCDUDv1J6a","server_url":"https://zqhosroz.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?255889a39686581da013e7c8a40eef7c";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-4VZMWRNQQE", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-4VZMWRNQQE');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>寒澈笔记</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/game/2048_game.html" target="_self">
+                <i class="iconfont icon-game"></i>
+                <span>游戏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/favorite/" target="_self">
+                <i class="iconfont icon-book"></i>
+                <span>收藏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/site/night.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="JDK 19新特性简介"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          2.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          23 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">JDK 19新特性简介</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>JDK 19在2022年10月18日发布了, 本文就是简单介绍一下这次更新的新特性与改动. </p>
+<p>一句话总结, 这仍然是jdk的一个短期支持版本,  而且官方承诺,这次升级将尽可能的保证版本的向下兼容.</p>
+<h2 id="新特性汇总"><a href="#新特性汇总" class="headerlink" title="新特性汇总"></a>新特性汇总</h2><h3 id="新特性"><a href="#新特性" class="headerlink" title="新特性"></a>新特性</h3><h4 id="1-预览版"><a href="#1-预览版" class="headerlink" title="1 预览版"></a>1 预览版</h4><ul>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8277131">JEP 425</a> Virtual Threads</strong>(虚拟线程) :  类似go的协程. 就是在线程上面在开辟出一个更细粒度独立运行的单元. 这个新单元就是虚拟线程, 这个线程官方叫carrier thead(承载线程?)</li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8260244">JEP 405</a> Record Patterns</strong> (记录模式) : Record Patterns 可对 record 的值进行解构，Record patterns 和 Type patterns 通过嵌套能够实现强大的、声明性的、可组合的数据导航和处理形式. </li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8282272">JEP 427</a> Pattern Matching for switch</strong> (switch模式匹配) : 第三次预览. 用 switch 表达式和语句的模式匹配，以及对模式语言的扩展来增强 Java 编程语言。将模式匹配扩展到 switch 中，允许针对一些模式测试表达式，这样就可以简明而安全地表达复杂的面向数据的查询。</li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8282048">JEP 424</a> Foreign Function &amp; Memory API</strong> (外边函数&amp;内存调用API):  提供了一套API 方便的调用 Java 运行时之外的代码或内存。通过高效地调用外部函数（即 JVM 之外的代码）和安全地访问外部内存（即不受 JVM 管理的内存），该 API 使 Java 程序能够调用本机库并处理本机数据，而不会像 JNI 那样危险和脆弱. (Java 在堆外内存使用的路上越走越远 🤪)</li>
+</ul>
+<h4 id="2-孵化器"><a href="#2-孵化器" class="headerlink" title="2 孵化器"></a>2 孵化器</h4><ul>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8277129">JEP 428</a> Structured Concurrency</strong>(结构化并发) : 用来简化并发的功能. 可以将底层多个线程视为一个工作单元, 从而实现像单线程那样的异常处理, 结果收集.</li>
+<li><strong><a href="https://bugs.openjdk.org/browse/JDK-8280173">JEP 426</a> Vector API</strong> (向量API) : 第四孵化阶段. 向量计算由对向量的一系列操作组成。向量 API 用来表达向量计算，该计算可以在运行时可靠地编译为支持的 CPU 架构上的最佳向量指令，从而实现优于等效标量计算的性能。向量 API 的目标是为用户提供简洁易用且与平台无关的表达范围广泛的向量计算</li>
+</ul>
+<h4 id="3-主要特性"><a href="#3-主要特性" class="headerlink" title="3 主要特性"></a>3 主要特性</h4><ul>
+<li><p><strong>Support Unicode 14.0</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8268081">JDK-8268081</a>) : 支持Unicode14.0 .</p>
+</li>
+<li><p><strong>New system properties for <code>System.out</code> and <code>System.err</code></strong> (<a href="https://bugs.openjdk.org/browse/JDK-8283620">JDK-8283620</a>) : 新增了<code>stdout.encoding</code>和 <code>stderr.encoding</code> 两个属性来支持标准输出和错误输出的字符集编码. 可以有效解决标准输出的乱码问题.</p>
+</li>
+<li><p><strong>HTTPS Channel Binding Support for Java GSS&#x2F;Kerberos</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8279842">JDK-8279842</a>) : 在https连接的时候, 支持绑定token来增强安全.</p>
+</li>
+<li><p><strong>Additional Date-Time Formats</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8176706">JDK-8176706</a>) : <code>java.time.format.DateTimeFormatter</code> 增加了一些新的默认格式</p>
+</li>
+<li><p><strong>New Methods to Create Preallocated HashMaps and HashSets</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8186958">JDK-8186958</a>) : HashMap, HashSet新增了一些静态创建方法. 比如</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java">HashMap.newHashMap<br>LinkedHashMap.newLinkedHashMap<br>WeakHashMap.newWeakHashMap<br>HashSet.newHashSet<br>LinkedHashSet.newLinkedHashSet<br></code></pre></td></tr></table></figure>
+
+
+</li>
+<li><p><strong>upport for PAC-RET Protection on Linux&#x2F;AArch64</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8277204">JDK-8277204</a>) : 通过支持ARMv8.3 的PAC功能来防御RET的攻击</p>
+<blockquote>
+<p>When enabled, OpenJDK will use hardware features from the ARMv8.3 Pointer Authentication Code (PAC) extension to protect against Return Orientated Programming (ROP) attacks. For more information on the PAC extension see <a href="https://documentation-service.arm.com/static/602a81dbbc293d2cd05e6b09">“Providing protection for complex software”</a> or the “Pointer authentication in AArch64 state” section in the <a href="https://developer.arm.com/documentation/ddi0487/latest/">Arm ARM</a>.</p>
+</blockquote>
+</li>
+<li><p><strong>Automatic Generation of the CDS Archive</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8261455">JDK-8261455</a>) : CDS的自动打包功能</p>
+</li>
+<li><p><strong>Windows KeyStore Updated to Include Access to the Local Machine Location</strong> (<a href="https://bugs.openjdk.org/browse/JDK-6782021">JDK-6782021</a>) : Windows新增了一些密钥储库支持访问本地位置.</p>
+</li>
+<li><p><strong>Break Up SEQUENCE in X509Certificate and X509Certificate in otherName</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8277976">JDK-8277976</a>) : 如题, 这两个方法的增强.</p>
+<blockquote>
+<p>The JDK implementation of <code>X509Certificate::getSubjectAlternativeNames</code> and <code>X509Certificate::getIssuerAlternativeNames</code> has been enhanced to additionally return the <code>type-id</code> and <code>value</code> fields of an <code>otherName</code>. The <code>value</code> field is returned as a String if it is encoded as a character string or otherwise as a byte array, which is helpful as it avoids having to parse the ASN.1 DER encoded form of the name.</p>
+</blockquote>
+</li>
+<li><p><strong>(D)TLS Signature Schemes</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8280494">JDK-8280494</a>): 增加了一套新的获取TLS签名的方法.</p>
+</li>
+<li><p><strong>Add a -providerPath Option to jarsigner</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8281175">JDK-8281175</a>) : jarsigner新增了一个选项, 用来指定备用密钥库路径</p>
+</li>
+<li><p><strong>New Options for ktab to Provide Non-default Salt</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8279064">JDK-8279064</a>) : ktab命令增加了一些选项来支持自定义’盐’值.</p>
+<blockquote>
+<p>ktab -a username password -s altsalt</p>
+</blockquote>
+</li>
+<li><p><strong>New XML Processing Limits</strong> (JDK-8270504 (not public)) : xml库解析执行增加了3个限制</p>
+<blockquote>
+<p><code>jdk.xml.xpathExprOpLimit</code> :  XPath表达式中group数量的限制</p>
+<p><code>jdk.xml.xpathExprOpLimit</code> :  XPath表达式中operator数量的限制</p>
+<p><code>jdk.xml.xpathTotalOpLimit</code> :  XPath文件中operator总数量的限制</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="bug修复"><a href="#bug修复" class="headerlink" title="bug修复"></a>bug修复</h3><ul>
+<li><a href="https://bugs.openjdk.org/browse/JDK-8289853">JDK-8289853</a> :   <a href="https://harfbuzz.github.io/">HarfBuzz</a>库升级 到 to 4.4.1, 支持最新的字体</li>
+<li><a href="https://bugs.openjdk.org/browse/JDK-8290334">JDK-8290334</a> :   <a href="https://freetype.org/">FreeType</a> 升级到 2.12.1</li>
+<li><a href="https://bugs.openjdk.org/browse/JDK-8291897">JDK-8291897</a> :  解决TerminatingThreadLocal在virtual thread(虚拟线程)某些场景下无法注册的问题</li>
+<li><a href="https://bugs.openjdk.org/browse/JDK-8292240">JDK-8292240</a> :  虚拟线程的承载线程, 某些情况下阻塞时无法重置状态的问题</li>
+<li><a href="https://bugs.openjdk.org/browse/JDK-8287917">JDK-8287917</a> : macOS SDK 10.15 及更早版本下System.loadLibrary不生效的问题</li>
+<li><a href="https://bugs.openjdk.org/browse/JDK-8292654">JDK-8292654</a> : JDK-8286115问题修复导致的G1垃圾回收器 remembered set memory footprint问题</li>
+</ul>
+<h3 id="移出功能"><a href="#移出功能" class="headerlink" title="移出功能"></a>移出功能</h3><ul>
+<li><strong>Diagnostic Flag GCParallelVerificationEnabled</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8286304">JDK-8286304</a>) : 这个开关被移出了. 因为自从创建以来一直都是默认开启, 且并发效率比关闭高很多.</li>
+<li><strong>Finalizer Implementation in SSLSocketImpl</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8212136">JDK-8212136</a>) : SSLSocket的finalizer被移除, 因为基础方法(native)已经实现相关功能.</li>
+<li><strong>Alternate ThreadLocal Implementation of the Subject::current and Subject::callAs APIs</strong> (JDK-8282676 (not public)) : 所述类里的相应方法的备用threadlocal实现被移除.</li>
+</ul>
+<h3 id="废弃功能"><a href="#废弃功能" class="headerlink" title="废弃功能"></a>废弃功能</h3><ul>
+<li><strong>java.lang.ThreadGroup</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8284161">JDK-8284161</a>) : 线程组被标记为废弃. 最大的原因是虚拟线程来了.</li>
+<li><strong>Locale Class Constructors</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8282819">JDK-8282819</a>) : Locale的构造器被 <code>Locale.of()</code> 方法替代</li>
+<li><strong>PSSParameterSpec(int) Constructor and DEFAULT Static Constant</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8254935">JDK-8254935</a>)</li>
+<li><strong>OAEPParameterSpec.DEFAULT Static Constant</strong> (<a href="https://bugs.openjdk.org/browse/JDK-8284553">JDK-8284553</a>) : 因为密码学的进步, 这个Default常量已经落后了.</li>
+</ul>
+<h2 id="小优化"><a href="#小优化" class="headerlink" title="小优化"></a>小优化</h2><p>这里主要介绍一些小的优化, 太长可以不看.</p>
+<ol>
+<li><p>JDK19中, 在macOS上将Metal作为图形渲染的默认配置.</p>
+</li>
+<li><p>像mac或linux系统中,  <code>user.home</code> 存在就用系统提供的配置 , 如果不存在, 则使用<code>$HOME</code>的配置设置这个系统属性.</p>
+</li>
+<li><p>线程的ClassLoader 被处理为一个特殊的可继承的Thread-local</p>
+</li>
+<li><p><strong>java.lang.Thread</strong> 新增了一些方法,  如果现在代码继承了Thread, 可能会导致不兼容.</p>
+<blockquote>
+<p>Thread.Builder模式</p>
+<p>Thread.isVirtual()</p>
+<p>Thread.threadId()</p>
+<p>Thread.join(Duration)</p>
+</blockquote>
+</li>
+<li><p>Double.toString(double) and Float.toString(float) 针对科学记数法的一些优化</p>
+</li>
+<li><p>注解的toString方法针对常量和枚举, 做了一些优化, 输出更友好.</p>
+</li>
+<li><p>HTTP签名鉴权时, MD5和SHA-1 因为不太安全默认被禁用.</p>
+</li>
+<li><p>Windows 上http多代理选择的优化</p>
+</li>
+<li><p><strong>java.net.InetAddress</strong> 针对一些有歧义的IPv4输入, 精细了异常提示.</p>
+</li>
+<li><p><strong>HttpURLConnection</strong> 的默认keep alive 可配置</p>
+</li>
+<li><p><strong>FileChannel.transferFrom</strong> 返回的bytes 可能会小于预订值, 这是允许的.</p>
+<blockquote>
+<p>FileChannel.transferFrom()的性能在Linux内核4.5及更高版本上得到了显著提高</p>
+</blockquote>
+</li>
+<li><p><strong>InputStream and FilterInputStream</strong> 的mark和reset 移出了 synchronized 关键字</p>
+</li>
+<li><p><strong>Files.copy</strong> 方法支持将 <code>POSIX</code>属性跨文件系统复制, 前提是两个系统都支持 <code>POSIX</code></p>
+</li>
+<li><p><strong>FileChannel.lock(long position, long size, boolean shared)</strong> 当size指定为0时, 表示锁定 整个文件, 无论这个文件流被扩展或继承</p>
+</li>
+<li><p>java.time.chrono 新增了3个标准时间</p>
+</li>
+<li><p><strong>ForkJoinPool</strong> 和 <strong>ThreadPoolExecutor</strong> 线程池不再使用Thread.start来启动工作线程.</p>
+</li>
+<li><p>正则 <code>\b</code>  可以匹配ASCII 字符, 像  <code>\w</code> 一样.</p>
+</li>
+<li><p>支持  CLDR Version 41</p>
+</li>
+<li><p>LDAP, DNS, 和 RMI 的URL解析更加严格</p>
+</li>
+</ol>
+<pre><code class="hljs">&gt;    -Dcom.sun.jndi.ldapURLParsing=&quot;legacy&quot; | &quot;compat&quot; | &quot;strict&quot;    (to control &quot;ldap:&quot; URLs)
+&gt;
+&gt;    -Dcom.sun.jndi.dnsURLParsing=&quot;legacy&quot; | &quot;compat&quot; | &quot;strict&quot;     (to control &quot;dns:&quot; URLs)
+&gt;    -Dcom.sun.jndi.rmiURLParsing=&quot;legacy&quot; | &quot;compat&quot; | &quot;strict&quot;     (to control &quot;rmi:&quot; URLs)
+</code></pre>
+<ol start="20">
+<li><p>VM Tool Interface (JVM TI) 支持虚拟线程</p>
+</li>
+<li><p>cpu计算时不再考虑<code>cpu.share</code> , 因为会导致jvm对当前cpu使用情况的误算, 进而影响cpu使用率.</p>
+<blockquote>
+<p>之前的JDK版本对Linux cgroups参数“cpu.shares”使用了错误的解释。这可能会导致JVM使用的CPU少于可用，导致JVM在容器内使用时CPU资源利用率不足。</p>
+<p>从此JDK版本开始，默认情况下，JVM在决定各种线程池使用的线程数量时不再考虑“cpu.shares”。-XX:+UseContainerCpuShares命令行选项可用于恢复到之前的行为。此选项已被弃用，可能会在未来的JDK版本中删除。</p>
+</blockquote>
+</li>
+<li><p>此后, macOS中,相同大版本的jdk将默认安装到同一目录</p>
+<blockquote>
+<p>  Oracle JDK安装目录从</p>
+<p><code>/Library/Java/JavaVirtualMachines/jdk-$&#123;VERSION&#125;.jdk</code> 迁移到</p>
+<p> <code>/Library/Java/JavaVirtualMachines/jdk-$&#123;FEATURE&#125;.jdk</code></p>
+<p>比如:  19.0.1 and 19.0.2 版本都将安装到 <code>/Library/Java/JavaVirtualMachines/jdk-19.jdk</code> 中</p>
+</blockquote>
+</li>
+<li><p>在macOS上，只有用户钥匙串中具有正确信任设置的证书才会在钥匙串类型的钥匙库中作为受信任证书条目公开</p>
+</li>
+<li><p>RC2和ARCFOUR（RC4）算法已添加到java.security配置文件中的jdk.security.legacyAlgorithms安全属性中。当弱RC2或ARCFOUR算法用于与密钥存储中的秘密密钥条目关联的命令时，密钥工具会发出警告。</p>
+</li>
+<li><p>加密算法位数增强</p>
+</li>
+</ol>
+<blockquote>
+<p>RSA, RSASSA-PSS, DH: from 2048 to 3072</p>
+<p>EC: from 256 to 384</p>
+<p>AES: from 128 to 256 (if permitted by crypto policy), falls back to 128 otherwise.</p>
+</blockquote>
+<ol start="26">
+<li>ECDSA 算法的 Signature::getParameters 永远返回<code>null</code> . 参考 <a href="https://datatracker.ietf.org/doc/html/rfc5758#section-3.2">RFC 5758 Section 3.2</a></li>
+<li>DES、DESede和MD5算法已添加到java.security配置文件中的jdk.security.legacyAlgorithms安全属性中。当弱DES或DESede算法用于与密钥库中的秘密密钥条目关联的命令时，keytool工具会发出警告。</li>
+<li>加密算法完成支持 RFC 6125</li>
+<li>移出了一些过时的3DES加密组件</li>
+</ol>
+<blockquote>
+<p>TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA</p>
+<p>TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA</p>
+<p>SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA</p>
+<p>SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA</p>
+<p>TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA</p>
+<p>TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA</p>
+<p>SSL_RSA_WITH_3DES_EDE_CBC_SHA</p>
+</blockquote>
+<p>30 修复了一个StringBuilder bug. 例如, 下面代码输出”foofoobar” 而不是 “foobarfoobar”</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">StringBuilder</span> <span class="hljs-variable">builder</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuilder</span>(<span class="hljs-string">&quot;foo&quot;</span>);<br>System.err.println(<span class="hljs-string">&quot;&quot;</span> + builder + builder.append(<span class="hljs-string">&quot;bar&quot;</span>));<br></code></pre></td></tr></table></figure>
+
+<ol start="31">
+<li><p>JavaDoc生成的API文档现在提供了一个独立的搜索页面，搜索语法已得到增强，允许多个搜索词。</p>
+</li>
+<li><p>JShell现在标记不建议使用的元素，并在控制台中突出显示变量和关键字。</p>
+</li>
+<li><p>实际的java线程堆栈大小可能与-Xss命令行选项指定的值不同；当操作系统要求时，它可以四舍五入到系统页面大小的倍数。</p>
+</li>
+</ol>
+<h2 id="名词解析"><a href="#名词解析" class="headerlink" title="名词解析"></a>名词解析</h2><ul>
+<li><p>HarfBuzz: 一个开源的用于文字塑形的软件开发库，亦即用于转换Unicode文本到字形指标及方位的过程</p>
+</li>
+<li><p>FreeType:  同HarfBuzz一样, 也是一个开源字体库. 它是一个用C语言实现的一个字体光栅化库。它可以用来将字符栅格化并映射成位图以及提供其他字体相关业务的支持</p>
+</li>
+<li><p>Preview(预览): 功能已经基本完整, 可以试用了. 可以简单理解为beta公测版. 来源于 <a href="https://openjdk.org/jeps/12">JEP12</a></p>
+<blockquote>
+<p>功能以预览版的形式发布，以收集有关它们的反馈而不承诺保持其向后兼容性——这意味着鼓励每个人尝试它们，但同时不鼓励在生产中使用它们。</p>
+<p>预览功能不是开箱即用的，为了访问它们，需要使用*–enable-preview*编译器标志。</p>
+</blockquote>
+</li>
+<li><p>Incubator(孵化) : 实验性 API已经到了一定阶段, 已经计划开发出一整套完整的功能.以独立模块的形式发布. 来源于 <a href="https://openjdk.org/jeps/11">JEP11</a></p>
+</li>
+<li><p>Experimental(实验) : vm级的早期功能, 不稳定, 功能不完整. 实验性质.</p>
+<blockquote>
+<p>实验性功能代表（主要是）VM 级功能的早期版本，这些功能可能是有风险的、不完整的，甚至是不稳定的。在大多数情况下，需要使用专用标志启用它们</p>
+<p>出于比较的目的，如果一个实验功能被认为是 25%“完成”，那么一个预览功能应该至少 95%“完成”。</p>
+<p>预览,孵化,实验三者的关系大致: 实验 &#x3D;&gt; 孵化 &#x3D;&gt; 预览 &#x3D;&gt; 合并jdk主体功能.</p>
+</blockquote>
+</li>
+<li><p>JEP : JDK Enhancement Proposal , jdk增强建议. 也就是我们常说的jdk新特性的来源. <a href="https://openjdk.org/jeps/0">JEP大全</a></p>
+</li>
+</ul>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://docs.oracle.com/en/java/javase/19/">jdk19官方文档</a></p>
+<p><a href="https://www.oracle.com/java/technologies/javase/19-relnote-issues.html#NewFeature">jdk19 新特性文档</a></p>
+<p><a href="https://docs.oracle.com/en/java/javase/19/migrate/preface.html#GUID-DFC2A9CB-070F-4880-9069-BD7FA8606EA2">jdk19升级指南</a></p>
+<p><a href="https://cr.openjdk.java.net/~iris/se/19/latestSpec/">jdk19的开发计划</a></p>
+<p><a href="https://bugs.openjdk.org/secure/Dashboard.jspa">openjdk bug反馈系统</a></p>
+<p><a href="https://openjdk.org/">openjdk官网</a></p>
+<p><a href="https://4comprehension.com/preview-experimental-and-incubating-features-in-java/">jdk中预览,实验,孵化的关系</a></p>
+<p><a href="https://www.oschina.net/p/freetype">FreeType开源中国</a></p>
+<p><a href="https://www.oschina.net/p/harfbuzz?hmsr=aladdin1e1">HarfBuzz开源中国</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/java/" class="category-chain-item">java</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/java/java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7/" class="category-chain-item">java版本特性</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/java%E7%89%88%E6%9C%AC%E7%89%B9%E6%80%A7/" class="print-no-link">#java版本特性</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>JDK 19新特性简介</div>
+      <div>https://www.hancher.top/2022/10/20/java-jdk-v19/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>寒澈</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年10月20日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="ND - 禁止演绎">
+                    <i class="iconfont icon-cc-nd"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/11/01/git-in-mac13-invalid/" title="macOS升级13 ventura后git无法使用的解决办法">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">macOS升级13 ventura后git无法使用的解决办法</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/10/06/dubbo-zk-change/" title="dubbo 在线平滑变更zookeeper">
+                        <span class="hidden-mobile">dubbo 在线平滑变更zookeeper</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.8/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"https://hancherblogcommenthahaha.netlify.app/.netlify/functions/twikoo","region":"ap-beijing","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              Fluid.utils.listenDOMLoaded(function() {
+                var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+                Fluid.plugins.imageCaption(imgSelector);
+                Fluid.plugins.fancyBox(imgSelector);
+              });
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <div style="font-size: 0.85rem"> Copyright <i class="iconfont icon-copyright"> 2022 -  <script> document.write(new Date().getFullYear()); </script> <a href="/about" target="_blank" rel="nofollow noopener"> <span> <strong>Hancher</strong> </span> </a>  </i> | Power by  <a href="https://hexo.io" target="_blank" rel="nofollow noopener"> <span> <strong>Hexo</strong> </span> </a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <span> <strong>Fluid</strong> </span> </a> </div> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/duration.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

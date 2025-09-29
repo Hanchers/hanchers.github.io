@@ -1,0 +1,899 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN,zh-HK,en,default" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/images/site/coder.jpeg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="寒澈">
+  <meta name="keywords" content="java,Python，go,vue, 大数据，AI,机器学习,Mysql,数据库,spring">
+  
+    <meta name="description" content="jekyll博客迁移到hexo博客架构全过程，包含hexo环境搭建，文章迁移，图片迁移，网站配置修改，github pages修改等">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jekyll迁移到Hexo博客架构全过程">
+<meta property="og:url" content="https://www.hancher.top/2025/01/07/site-hexo-from-jekyll/index.html">
+<meta property="og:site_name" content="寒澈笔记">
+<meta property="og:description" content="jekyll博客迁移到hexo博客架构全过程，包含hexo环境搭建，文章迁移，图片迁移，网站配置修改，github pages修改等">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.hancher.top/images/site/hexo_raw_init.png">
+<meta property="og:image" content="https://www.hancher.top/images/site/hexo_fluid_init.png">
+<meta property="article:published_time" content="2025-01-07T07:09:15.000Z">
+<meta property="article:modified_time" content="2025-01-09T10:10:15.000Z">
+<meta property="article:author" content="寒澈">
+<meta property="article:tag" content="建站">
+<meta property="article:tag" content="hexo">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.hancher.top/images/site/hexo_raw_init.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>jekyll迁移到Hexo博客架构全过程 - 寒澈笔记</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/blog.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"www.hancher.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"255889a39686581da013e7c8a40eef7c","google":{"measurement_id":"G-4VZMWRNQQE"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"zqhOsrozoSMTfBNVSHXyTh45-gzGzoHsz","app_key":"EUXdctCzoy7rxXqCDUDv1J6a","server_url":"https://zqhosroz.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?255889a39686581da013e7c8a40eef7c";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-4VZMWRNQQE", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-4VZMWRNQQE');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>寒澈笔记</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/game/2048_game.html" target="_self">
+                <i class="iconfont icon-game"></i>
+                <span>游戏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/favorite/" target="_self">
+                <i class="iconfont icon-book"></i>
+                <span>收藏</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/images/site/night.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="jekyll迁移到Hexo博客架构全过程"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          2.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          <!-- compatible with older versions-->
+          18 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">jekyll迁移到Hexo博客架构全过程</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="为什么要迁移到hexo"><a href="#为什么要迁移到hexo" class="headerlink" title="为什么要迁移到hexo"></a>为什么要迁移到hexo</h1><h2 id="什么是Hexo"><a href="#什么是Hexo" class="headerlink" title="什么是Hexo"></a>什么是Hexo</h2><p>Hexo 是一个快速、简洁且高效的博客框架（使用NodeJs）。 Hexo 使用 Markdown（或其他标记语言）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。</p>
+<h2 id="为什么选择了Hexo"><a href="#为什么选择了Hexo" class="headerlink" title="为什么选择了Hexo"></a>为什么选择了Hexo</h2><ol>
+<li>好看，好看，好看</li>
+<li>其中的归档功能做的很好，支持分组、也支持标签</li>
+<li>很好的集成了网站统计相关的功能</li>
+</ol>
+<h1 id="迁移过程"><a href="#迁移过程" class="headerlink" title="迁移过程"></a>迁移过程</h1><h2 id="Hexo环境搭建"><a href="#Hexo环境搭建" class="headerlink" title="Hexo环境搭建"></a>Hexo环境搭建</h2><ol>
+<li>首先确保安装了nodejs和git<br>因为 Hexo 是基于 nodejs 的，所以需要先安装 nodejs，这里我使用的是 nvm 管理 nodejs 版本，安装好 nvm 后，执行 nvm install nodejs 安装 nodejs。</li>
+</ol>
+<p>我安装的是2025年1月最新lts版本的nodejs: <code>v22.12.0</code></p>
+<ol start="2">
+<li>安装Hexo</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install -g hexo-cli<br></code></pre></td></tr></table></figure>
+<p>因为我的nodejs是最新版本，所以我的hexo版本是也是当前最新版本：<code> 7.3.0</code></p>
+<h2 id="创建Hexo博客网站"><a href="#创建Hexo博客网站" class="headerlink" title="创建Hexo博客网站"></a>创建Hexo博客网站</h2><p>选择一个你想创建项目代码的位置，执行以下命令创建Hexo博客网站：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 选择合适的nodejs 版本</span><br>nvm use v22.12.0<br><span class="hljs-comment"># 创建项目</span><br>hexo init my_blod<br><span class="hljs-built_in">cd</span> my_blod<br><span class="hljs-comment"># 初始化依赖</span><br>npm install<br></code></pre></td></tr></table></figure>
+<p>然后我们就得到了一个默认的博客项目<code>my_blog</code>，其中的package.json文件如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;hexo-site&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;version&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;0.0.0&quot;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;private&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;scripts&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;build&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;hexo generate&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;clean&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;hexo clean&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;deploy&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;hexo deploy&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;server&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;hexo server&quot;</span><br>  <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;hexo&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;version&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;7.3.0&quot;</span><br>  <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;dependencies&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;hexo&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;^7.3.0&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;hexo-generator-archive&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;^2.0.0&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;hexo-generator-category&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;^2.0.0&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;hexo-generator-index&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;^4.0.0&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;hexo-generator-tag&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;^2.0.0&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;hexo-renderer-ejs&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;^2.0.0&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;hexo-renderer-marked&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;^7.0.0&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;hexo-renderer-stylus&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;^3.0.1&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;hexo-server&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;^3.0.0&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;hexo-theme-fluid&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;^1.9.8&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;hexo-theme-landscape&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;^1.0.0&quot;</span><br>  <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+<p>到了这一步，我们就可以启动最原始版本的项目了：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> my_blod<br>hexo server<br><span class="hljs-comment"># or </span><br>npm run server<br></code></pre></td></tr></table></figure>
+<p>然后访问 <code>http://localhost:4000</code> 就可以看到默认的博客了。<br><img src="/images/site/hexo_raw_init.png" srcset="/img/loading.gif" lazyload alt="hexo默认主题页面"><br>官方给我们创建了一个<code>hello world</code>的博客. 我们可以参考这个来写我们自己的博客了。</p>
+<p>常用的hexo命令参考<a href="https://hexo.io/zh-cn/docs/commands">这里</a></p>
+<h2 id="安装我喜欢的主题Fluid"><a href="#安装我喜欢的主题Fluid" class="headerlink" title="安装我喜欢的主题Fluid"></a>安装我喜欢的主题<a href="https://hexo.fluid-dev.com/docs/start/#%E4%B8%BB%E9%A2%98%E7%AE%80%E4%BB%8B">Fluid</a></h2><p>当然这里可以使用任何你喜欢的主题，安装模式大同小异。</p>
+<ol>
+<li>安装Fluid主题的最新版本</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> my_blod<br>npm install --save hexo-theme-fluid<br></code></pre></td></tr></table></figure>
+<ol start="2">
+<li>配置主题<br> 如下修改 Hexo 博客目录中的 _config.yml：</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">theme:</span> <span class="hljs-string">fluid</span>  <span class="hljs-comment"># 指定主题</span><br><br><span class="hljs-attr">language:</span> <span class="hljs-string">zh-CN</span>  <span class="hljs-comment"># 指定语言，会影响主题显示的语言，按需修改</span><br></code></pre></td></tr></table></figure>
+<ol start="3">
+<li>创建【关于页】<br> 首次使用主题的「关于页」需要手动创建：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">hexo new page about<br></code></pre></td></tr></table></figure>
+<p>创建成功后修改 &#x2F;source&#x2F;about&#x2F;index.md，添加 <strong>layout</strong> 属性，。</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs markdown">---<br>title: 标题<br><span class="hljs-section">layout: about</span><br><span class="hljs-section">---</span><br><br>这里写关于页的正文，支持 Markdown, HTML<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>layout: about 必须存在，并且不能修改成其他值，否则不会显示头像等样式。</p>
+</blockquote>
+<p><img src="/images/site/hexo_fluid_init.png" srcset="/img/loading.gif" lazyload alt="fluid主题启动后的博客页面"></p>
+<h1 id="迁移jekyll博客文章"><a href="#迁移jekyll博客文章" class="headerlink" title="迁移jekyll博客文章"></a>迁移jekyll博客文章</h1><h2 id="文章迁移"><a href="#文章迁移" class="headerlink" title="文章迁移"></a>文章迁移</h2><ol>
+<li>把 _posts 文件夹内的所有文件复制到 source&#x2F;_posts 文件夹</li>
+<li>在 _config.yml 中修改 new_post_name 参数</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">new_post_name:</span> <span class="hljs-string">:year-:month-:day-:title.md</span><br></code></pre></td></tr></table></figure>
+<ol start="3">
+<li>如果不想使用步骤2，也可以把所有的文章的文件名的年月日前缀去掉，也可以（作为轻度洁癖患者，我选的这种方式）。</li>
+</ol>
+<h2 id="图片迁移"><a href="#图片迁移" class="headerlink" title="图片迁移"></a>图片迁移</h2><p>原先我的所有的图片资源都是在项目的根目录下的 <code>/images</code> 路径下，然后在文章里通过markdown的图片引用方式引用。</p>
+<p>迁移到hexo后，只需将<code>images</code>目录 移动到 <code>source</code> 路径下，其他的都不用动，图片就可以自动解析了。</p>
+<p>因为hexo 会将source目录下的所有文件都移动到网站的根路径下，所以图片的最终引用地址是一样的。</p>
+<h2 id="网站配置修改"><a href="#网站配置修改" class="headerlink" title="网站配置修改"></a>网站配置修改</h2><p>通用hexo配置按照如下配置修改 <code>_config.yml</code> 文件：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># 网站名称</span><br><span class="hljs-attr">title:</span> <span class="hljs-string">寒澈笔记</span><br><span class="hljs-attr">subtitle:</span> <span class="hljs-string">&#x27;一个程序员眼中的世界&#x27;</span><br><span class="hljs-comment"># 网站路径</span><br><span class="hljs-attr">url:</span> <span class="hljs-string">https://www.hancher.top</span><br></code></pre></td></tr></table></figure>
+<p>fluid主题配置特性配置修改如下文件<code>_config.fluid.yml</code>， 会根据主题配置自动选择相应主题的配置。<br>而且这里的配置优先级最高，会覆盖<code>_config.yml</code>配置。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># fluid 主题配置</span><br><br><span class="hljs-comment"># 网站配置</span><br><span class="hljs-comment">## 头部</span><br><span class="hljs-attr">navbar:</span><br>  <span class="hljs-comment"># 博客标题</span><br>  <span class="hljs-attr">blog_title:</span> <span class="hljs-string">寒澈笔记</span><br>  <span class="hljs-comment"># 可以自定义导航栏</span><br><span class="hljs-comment">#  menu:</span><br><span class="hljs-comment">#    - &#123; key: &#x27;home&#x27;, link: &#x27;/&#x27;, icon: &#x27;iconfont icon-home-fill&#x27; &#125;</span><br><span class="hljs-comment">#    - &#123; key: &#x27;tag&#x27;, link: &#x27;/tags/&#x27;, icon: &#x27;iconfont icon-tags-fill&#x27; &#125;</span><br><span class="hljs-comment">#    - &#123; key: &#x27;about&#x27;, link: &#x27;/about/&#x27;, icon: &#x27;iconfont icon-user-fill&#x27;, name: &#x27;联系我&#x27; &#125;</span><br><br><span class="hljs-comment">## 底部</span><br><span class="hljs-attr">footer:</span><br>  <span class="hljs-attr">statistics:</span><br>    <span class="hljs-attr">enable:</span> <span class="hljs-literal">true</span><br>    <span class="hljs-attr">source:</span> <span class="hljs-string">&quot;busuanzi&quot;</span>  <span class="hljs-comment"># 可选 leancloud | busuanzi  根据自己需求选择</span><br>    <span class="hljs-attr">pv_format:</span> <span class="hljs-string">&quot;总访问量 &#123;&#125; 次&quot;</span>  <span class="hljs-comment"># 显示的文本，&#123;&#125;是数字的占位符（必须包含)，下同</span><br>    <span class="hljs-attr">uv_format:</span> <span class="hljs-string">&quot;总访客数 &#123;&#125; 人&quot;</span><br><br><span class="hljs-attr">force_https:</span> <span class="hljs-literal">false</span>  <span class="hljs-comment"># 强制https</span><br><br><span class="hljs-comment"># 内容配置</span><br><span class="hljs-comment">## 首页</span><br><span class="hljs-attr">index:</span><br>  <span class="hljs-attr">slogan:</span><br>    <span class="hljs-attr">enable:</span> <span class="hljs-literal">true</span><br>    <span class="hljs-attr">text:</span> <span class="hljs-string">人生总有一些东西值得回忆</span><br><br><span class="hljs-attr">about:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">&quot;寒澈&quot;</span><br>  <span class="hljs-attr">intro:</span> <span class="hljs-string">&quot;一名喜欢文史哲的程序员&quot;</span><br>  <span class="hljs-attr">icons:</span>  <span class="hljs-comment"># 不要把 icon 注释掉，否则无法覆盖配置</span><br>   <span class="hljs-bullet">-</span> &#123; <span class="hljs-attr">class:</span> <span class="hljs-string">&#x27;iconfont icon-github-fill&#x27;</span>, <span class="hljs-attr">link:</span> <span class="hljs-string">&#x27;https://github.com/Hanchers/hanchers.github.io&#x27;</span> &#125;<br>   <span class="hljs-bullet">-</span> &#123; <span class="hljs-attr">class:</span> <span class="hljs-string">&#x27;iconfont icon-zhihu-fill&#x27;</span>, <span class="hljs-attr">link:</span> <span class="hljs-string">&#x27;https://www.zhihu.com/people/bh.zhi&#x27;</span> &#125;<br>   <span class="hljs-bullet">-</span> &#123; <span class="hljs-attr">class:</span> <span class="hljs-string">&#x27;iconfont icon-wechat2-fill&#x27;</span>, <span class="hljs-attr">qrcode:</span> <span class="hljs-string">&#x27;/images/about/see-history.jpg&#x27;</span> &#125;<br><br><span class="hljs-comment">## 文章</span><br><span class="hljs-attr">post:</span><br>  <span class="hljs-attr">meta:</span><br>    <span class="hljs-attr">author:</span>  <span class="hljs-comment"># 作者，优先根据 front-matter 里 author 字段，其次是 hexo 配置中 author 值</span><br>      <span class="hljs-attr">enable:</span> <span class="hljs-literal">false</span><br>    <span class="hljs-attr">date:</span>  <span class="hljs-comment"># 文章日期，优先根据 front-matter 里 date 字段，其次是 md 文件日期</span><br>      <span class="hljs-attr">enable:</span> <span class="hljs-literal">false</span><br>      <span class="hljs-attr">format:</span> <span class="hljs-string">&quot;dddd, MMMM Do YYYY, h:mm a&quot;</span>  <span class="hljs-comment"># 格式参照 ISO-8601 日期格式化</span><br>    <span class="hljs-attr">wordcount:</span>  <span class="hljs-comment"># 字数统计</span><br>      <span class="hljs-attr">enable:</span> <span class="hljs-literal">true</span><br>      <span class="hljs-attr">format:</span> <span class="hljs-string">&quot;&#123;&#125; 字&quot;</span>  <span class="hljs-comment"># 显示的文本，&#123;&#125;是数字的占位符（必须包含)，下同</span><br>    <span class="hljs-attr">min2read:</span>  <span class="hljs-comment"># 阅读时间</span><br>      <span class="hljs-attr">enable:</span> <span class="hljs-literal">true</span><br>      <span class="hljs-attr">format:</span> <span class="hljs-string">&quot;&#123;&#125; 分钟&quot;</span><br>    <span class="hljs-attr">views:</span>  <span class="hljs-comment"># 阅读次数</span><br>      <span class="hljs-attr">enable:</span> <span class="hljs-literal">true</span><br>      <span class="hljs-attr">source:</span> <span class="hljs-string">&quot;busuanzi&quot;</span>  <span class="hljs-comment"># 统计数据来源，可选：leancloud | busuanzi   注意不蒜子会间歇抽风</span><br>      <span class="hljs-attr">format:</span> <span class="hljs-string">&quot;&#123;&#125; 次&quot;</span><br>  <span class="hljs-attr">copyright:</span>  <span class="hljs-comment"># 版权声明</span><br>    <span class="hljs-attr">license:</span> <span class="hljs-string">&#x27;BY-NC-ND&#x27;</span><br>    <span class="hljs-attr">update_date:</span>   <span class="hljs-comment"># 来源 front-matter 里 updated 字段</span><br>      <span class="hljs-attr">enable:</span> <span class="hljs-literal">true</span><br><br></code></pre></td></tr></table></figure>
+
+<h1 id="github-pages-配置修改"><a href="#github-pages-配置修改" class="headerlink" title="github pages 配置修改"></a>github pages 配置修改</h1><p>我是用的私有项目，然后通过github action的方式来自动编译部署github pages的， 具体可以参考我的历史文章，有记录。</p>
+<p>这里要做的是在github 上重新配置hexo环境和 打包脚本。</p>
+<p>进入本地项目的 <code>.github/workflows</code>目录下，删除以前的workflow文件，然后新建一个文件，文件名随意，内容如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># ci name</span><br><span class="hljs-comment"># ci 脚本名称</span><br><span class="hljs-attr">name:</span> <span class="hljs-string">Deploy</span> <span class="hljs-string">Hexo</span> <span class="hljs-string">site</span> <span class="hljs-string">to</span> <span class="hljs-string">public</span> <span class="hljs-string">github</span> <span class="hljs-string">repos</span><br><br><span class="hljs-attr">on:</span><br>  <span class="hljs-comment"># Runs on pushes targeting the default branch</span><br>  <span class="hljs-comment"># 当代码 push 到 main 分支时, 执行该脚本</span><br>  <span class="hljs-attr">push:</span><br>    <span class="hljs-attr">branches:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">main</span><br><br>  <span class="hljs-comment"># Allows you to run this workflow manually from the Actions tab</span><br>  <span class="hljs-comment"># 允许你 手动执行 这个脚本</span><br>  <span class="hljs-attr">workflow_dispatch:</span><br><br><span class="hljs-comment"># Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages</span><br><span class="hljs-comment"># GITHUB_TOKEN 的操作权限</span><br><span class="hljs-attr">permissions:</span><br>  <span class="hljs-attr">contents:</span> <span class="hljs-string">read</span><br>  <span class="hljs-attr">pages:</span> <span class="hljs-string">write</span><br>  <span class="hljs-attr">id-token:</span> <span class="hljs-string">write</span><br><br><span class="hljs-comment"># Allow one concurrent deployment</span><br><span class="hljs-attr">concurrency:</span><br>  <span class="hljs-attr">group:</span> <span class="hljs-string">&quot;pages&quot;</span><br>  <span class="hljs-attr">cancel-in-progress:</span> <span class="hljs-literal">true</span><br><br><span class="hljs-comment"># job 执行任务, 可以有多个, 默认并行运行, 可以通过 needs 关键字来设置依赖的其他 jobs</span><br><span class="hljs-comment"># step : 任务下的执行步骤, 一个job 会有多个步骤</span><br><span class="hljs-comment"># 操作:  一个step 下可以执行多个操作, 通常一行脚本为一个操作</span><br><span class="hljs-attr">jobs:</span><br>  <span class="hljs-comment"># Build job</span><br>  <span class="hljs-attr">build:</span><br>    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-latest</span><br>    <span class="hljs-attr">steps:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Checkout版本</span><br>        <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/checkout@v4</span><br>      <span class="hljs-comment"># 准备ruby 环境</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">使用Node：</span> <span class="hljs-string">v22.12.0</span><br>        <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/setup-node@v4</span><br>        <span class="hljs-attr">with:</span><br>          <span class="hljs-comment"># Examples: 20, 18.19, &gt;=16.20.2, lts/Iron, lts/Hydrogen, *, latest, current, node</span><br>          <span class="hljs-comment"># Ref: https://github.com/actions/setup-node#supported-version-syntax</span><br>          <span class="hljs-attr">node-version:</span> <span class="hljs-string">&quot;22.12&quot;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">缓存</span> <span class="hljs-string">NPM</span> <span class="hljs-string">依赖</span><br>        <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/cache@v4</span><br>        <span class="hljs-attr">with:</span><br>          <span class="hljs-attr">path:</span> <span class="hljs-string">node_modules</span><br>          <span class="hljs-attr">key:</span> <span class="hljs-string">$&#123;&#123;</span> <span class="hljs-string">runner.OS</span> <span class="hljs-string">&#125;&#125;-npm-cache</span><br>          <span class="hljs-attr">restore-keys:</span> <span class="hljs-string">|</span><br><span class="hljs-string">            $&#123;&#123; runner.OS &#125;&#125;-npm-cache</span><br><span class="hljs-string"></span>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">安装npm依赖</span><br>        <span class="hljs-attr">run:</span> <span class="hljs-string">npm</span> <span class="hljs-string">install</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">构建博客内容</span><br>        <span class="hljs-attr">run:</span> <span class="hljs-string">npm</span> <span class="hljs-string">run</span> <span class="hljs-string">build</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">更新博客网站到public目录</span><br>        <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/upload-pages-artifact@v3</span><br>        <span class="hljs-attr">with:</span><br>          <span class="hljs-attr">path:</span> <span class="hljs-string">./public</span><br><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">部署_site到博客网站仓库</span><br>        <span class="hljs-attr">working-directory:</span> <span class="hljs-string">./public</span><br>        <span class="hljs-attr">run:</span> <span class="hljs-string">|</span><br><span class="hljs-string">          git init</span><br><span class="hljs-string">          git checkout -b main</span><br><span class="hljs-string">          git add -A</span><br><span class="hljs-string">          git -c user.name=&#x27;hancher&#x27; -c user.email=&#x27;hanchers@outlook.com&#x27; commit -m &#x27;update blog&#x27; </span><br><span class="hljs-string">          git push &quot;https://$&#123;&#123;github.actor&#125;&#125;:$&#123;&#123;secrets.PUB_BLOG&#125;&#125;@github.com/Hanchers/hanchers.github.io&quot; HEAD:main -f -q</span><br><span class="hljs-string"></span><br></code></pre></td></tr></table></figure>
+<p>如果不是私有项目部署的话，使用官方的配置即可。官方配置如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">name:</span> <span class="hljs-string">Hexo</span> <span class="hljs-string">博客部署</span><br><br><span class="hljs-attr">on:</span><br>  <span class="hljs-attr">push:</span><br>    <span class="hljs-attr">branches:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">main</span> <span class="hljs-comment"># default branch</span><br><br><span class="hljs-attr">jobs:</span><br>  <span class="hljs-attr">build:</span><br>    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-latest</span><br>    <span class="hljs-attr">steps:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/checkout@v4</span><br>        <span class="hljs-attr">with:</span><br>          <span class="hljs-attr">token:</span> <span class="hljs-string">$&#123;&#123;</span> <span class="hljs-string">secrets.GITHUB_TOKEN</span> <span class="hljs-string">&#125;&#125;</span><br>          <span class="hljs-comment"># If your repository depends on submodule, please see: https://github.com/actions/checkout</span><br>          <span class="hljs-attr">submodules:</span> <span class="hljs-string">recursive</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Use</span> <span class="hljs-string">Node.js</span> <span class="hljs-number">20</span><br>        <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/setup-node@v4</span><br>        <span class="hljs-attr">with:</span><br>          <span class="hljs-comment"># Examples: 20, 18.19, &gt;=16.20.2, lts/Iron, lts/Hydrogen, *, latest, current, node</span><br>          <span class="hljs-comment"># Ref: https://github.com/actions/setup-node#supported-version-syntax</span><br>          <span class="hljs-attr">node-version:</span> <span class="hljs-string">&quot;20&quot;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Cache</span> <span class="hljs-string">NPM</span> <span class="hljs-string">dependencies</span><br>        <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/cache@v4</span><br>        <span class="hljs-attr">with:</span><br>          <span class="hljs-attr">path:</span> <span class="hljs-string">node_modules</span><br>          <span class="hljs-attr">key:</span> <span class="hljs-string">$&#123;&#123;</span> <span class="hljs-string">runner.OS</span> <span class="hljs-string">&#125;&#125;-npm-cache</span><br>          <span class="hljs-attr">restore-keys:</span> <span class="hljs-string">|</span><br><span class="hljs-string">            $&#123;&#123; runner.OS &#125;&#125;-npm-cache</span><br><span class="hljs-string"></span>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Install</span> <span class="hljs-string">Dependencies</span><br>        <span class="hljs-attr">run:</span> <span class="hljs-string">npm</span> <span class="hljs-string">install</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Build</span><br>        <span class="hljs-attr">run:</span> <span class="hljs-string">npm</span> <span class="hljs-string">run</span> <span class="hljs-string">build</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Upload</span> <span class="hljs-string">Pages</span> <span class="hljs-string">artifact</span><br>        <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/upload-pages-artifact@v3</span><br>        <span class="hljs-attr">with:</span><br>          <span class="hljs-attr">path:</span> <span class="hljs-string">./public</span><br>  <span class="hljs-attr">deploy:</span><br>    <span class="hljs-attr">needs:</span> <span class="hljs-string">build</span><br>    <span class="hljs-attr">permissions:</span><br>      <span class="hljs-attr">pages:</span> <span class="hljs-string">write</span><br>      <span class="hljs-attr">id-token:</span> <span class="hljs-string">write</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-attr">name:</span> <span class="hljs-string">github-pages</span><br>      <span class="hljs-attr">url:</span> <span class="hljs-string">$&#123;&#123;</span> <span class="hljs-string">steps.deployment.outputs.page_url</span> <span class="hljs-string">&#125;&#125;</span><br>    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-latest</span><br>    <span class="hljs-attr">steps:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Deploy</span> <span class="hljs-string">to</span> <span class="hljs-string">GitHub</span> <span class="hljs-string">Pages</span><br>        <span class="hljs-attr">id:</span> <span class="hljs-string">deployment</span><br>        <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/deploy-pages@v4</span><br></code></pre></td></tr></table></figure>
+
+<p>然后就可以到 hanchers.github.io 仓库下查看博客内容是否更新成功了。</p>
+<p>如果博客内容更新了，就可以安装你的博客地址去访问博客了。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a href="https://hexo.io/zh-cn/docs/">hexo 建站官方文档</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a href="https://hexo.fluid-dev.com/docs/start">fluid主题官方文档</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a href="https://hexo.io/zh-cn/docs/migration">jekyll博客迁移到hexo</a>
+<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%BD%91%E7%AB%99/" class="category-chain-item">网站</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%BB%BA%E7%AB%99/" class="print-no-link">#建站</a>
+      
+        <a href="/tags/hexo/" class="print-no-link">#hexo</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>jekyll迁移到Hexo博客架构全过程</div>
+      <div>https://www.hancher.top/2025/01/07/site-hexo-from-jekyll/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>寒澈</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年1月7日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年1月9日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-cc-nc"></i>
+                  </span>
+                </a>
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="ND - 禁止演绎">
+                    <i class="iconfont icon-cc-nd"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/01/09/site-hexo-comment-feature/" title="hexo建站增加自己的评论模块">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">hexo建站增加自己的评论模块</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/01/03/site-plan-in-2025/" title="2025年博客更新计划">
+                        <span class="hidden-mobile">2025年博客更新计划</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.8/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"https://hancherblogcommenthahaha.netlify.app/.netlify/functions/twikoo","region":"ap-beijing","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              Fluid.utils.listenDOMLoaded(function() {
+                var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+                Fluid.plugins.imageCaption(imgSelector);
+                Fluid.plugins.fancyBox(imgSelector);
+              });
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <div style="font-size: 0.85rem"> Copyright <i class="iconfont icon-copyright"> 2022 -  <script> document.write(new Date().getFullYear()); </script> <a href="/about" target="_blank" rel="nofollow noopener"> <span> <strong>Hancher</strong> </span> </a>  </i> | Power by  <a href="https://hexo.io" target="_blank" rel="nofollow noopener"> <span> <strong>Hexo</strong> </span> </a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"> <span> <strong>Fluid</strong> </span> </a> </div> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/duration.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
